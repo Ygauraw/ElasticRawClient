@@ -17,5 +17,3 @@
 #}
 
 -dontwarn java.lang.invoke.*
-#-keep class org.apache.http.** { *; }
-#-dontwarn org.apache.http.**

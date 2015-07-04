@@ -1,5 +1,8 @@
 package com.silverforge.elasticsearchrawclient;
 
+import com.google.java.contract.Requires;
+import com.google.java.contract.ThrowEnsures;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -11,25 +14,12 @@ public class Connector {
 
 	private static final String STRING_EMPTY = "";
 
-
-	/*
-		@pre url != ""
-	 */
+	@Requires("!url.equals(\"\") || url !=null")
 	public Connector(String url,
 					 String userName,
-					 String password) {
+					 String password) throws MalformedURLException {
 
-		try {
-			this.url = new URL(url);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			try {
-				this.url = new URL("localhost:9200");
-			} catch (MalformedURLException e1) {
-				e1.printStackTrace();
-			}
-		}
-
+		this.url = new URL(url);
 		this.userName = userName;
 		this.password = password;
 	}
