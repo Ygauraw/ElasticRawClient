@@ -5,6 +5,7 @@ import android.util.Base64;
 
 import com.sf.elastic.R;
 import com.sf.elastic.model.City;
+import com.silverforge.elasticsearchrawclient.Connector;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
@@ -29,6 +30,10 @@ import rx.Observable;
 @EBean
 public class CityRepository implements Repository<City> {
 
+	private static final String ELASTIC_URL = "https://silverforge.east-us.azr.facetflow.io/cities/_search";
+	private static final String ELASTIC_APIKEY = "ZjjnkNMgh0uj5yCFIvYVGQsueESCLj1k";
+	private static final String STRING_EMPTY = "";
+
 	@RootContext
 	public Context context;
 
@@ -36,20 +41,16 @@ public class CityRepository implements Repository<City> {
 	public Observable<City> getNextCity(final String text) {
 		Observable<City> observable
 			= Observable.create(subscriber -> {
+
+
 			String search = getSearch(text);
 			try {
 
-				String result = new String();
-				InputStream is
-					= getInputStream("https://silverforge.east-us.azr.facetflow.io/cities/_search",
-										"ZjjnkNMgh0uj5yCFIvYVGQsueESCLj1k",
-										"",
-										search);
-				BufferedReader in = new BufferedReader(new InputStreamReader(is));
-				String inputLine;
-				while ((inputLine = in.readLine()) != null) {
-					result += inputLine;
-				}
+				Connector connector
+					= new Connector(ELASTIC_URL,
+						ELASTIC_APIKEY,
+						STRING_EMPTY);
+				String result = connector.post(search);
 
 				// JSON objects
 				JSONArray hitsArray = null;
@@ -62,7 +63,7 @@ public class CityRepository implements Repository<City> {
 				hits = json.getJSONObject("hits");
 				hitsArray = hits.getJSONArray("hits");
 
-				for (int i=0; i<hitsArray.length(); i++) {
+				for (int i = 0; i < hitsArray.length(); i++) {
 					JSONObject h = hitsArray.getJSONObject(i);
 					source = h.getJSONObject("_source");
 					//string object = (source.getString("the string you want to get"));
