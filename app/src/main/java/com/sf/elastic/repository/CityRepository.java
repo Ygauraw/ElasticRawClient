@@ -3,6 +3,7 @@ package com.sf.elastic.repository;
 import android.content.Context;
 import android.util.Base64;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sf.elastic.R;
 import com.sf.elastic.model.City;
 import com.silverforge.elasticsearchrawclient.Connector;
@@ -21,6 +22,8 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -43,12 +46,15 @@ public class CityRepository implements Repository<City> {
 		Observable<City> observable = Observable.create(subscriber -> {
 			String search = getSearch(text);
 			try {
+				List<City> cities = new ArrayList<City>();
 
 				Connector connector
 					= new Connector(ELASTIC_URL,
 									ELASTIC_APIKEY,
 									STRING_EMPTY);
 				String result = connector.post(search);
+
+				ObjectMapper mapper = new ObjectMapper();
 
 				// JSON objects
 				JSONArray hitsArray = null;
@@ -64,6 +70,9 @@ public class CityRepository implements Repository<City> {
 				for (int i = 0; i < hitsArray.length(); i++) {
 					JSONObject h = hitsArray.getJSONObject(i);
 					source = h.getJSONObject("_source");
+					City city = mapper.readValue(source.toString(), City.class);
+					cities.add(city);
+
 					//string object = (source.getString("the string you want to get"));
 				}
 
