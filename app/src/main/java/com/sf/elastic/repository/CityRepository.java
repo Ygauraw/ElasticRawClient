@@ -39,17 +39,15 @@ public class CityRepository implements Repository<City> {
 
 	@Override
 	public Observable<City> getNextCity(final String text) {
-		Observable<City> observable
-			= Observable.create(subscriber -> {
 
-
+		Observable<City> observable = Observable.create(subscriber -> {
 			String search = getSearch(text);
 			try {
 
 				Connector connector
 					= new Connector(ELASTIC_URL,
-						ELASTIC_APIKEY,
-						STRING_EMPTY);
+									ELASTIC_APIKEY,
+									STRING_EMPTY);
 				String result = connector.post(search);
 
 				// JSON objects
