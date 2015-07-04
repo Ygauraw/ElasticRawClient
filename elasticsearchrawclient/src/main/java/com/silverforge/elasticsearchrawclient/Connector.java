@@ -27,44 +27,77 @@ public class Connector {
 	private static final int READ_TIMEOUT = 7000;
 	private static final int CONNECT_TIMEOUT = 7000;
 
-	public Connector(String url,
-					 String userName,
-					 String password) throws MalformedURLException {
+	public Connector(String url, String userName, String password)
+			throws MalformedURLException {
 
 		this.url = new URL(url);
 		this.userName = userName;
 		this.password = password;
 	}
 
-	public String get() {
-		return STRING_EMPTY;
+	public String get()
+			throws IOException,
+			KeyManagementException,
+			NoSuchAlgorithmException {
+
+		String httpMethod = HttpMethod.GET.toString();
+		String result = invokeToEndpoint(httpMethod);
+
+		return result;
 	}
 
 	public String post(String data)
-		throws IOException,
-		KeyManagementException,
-		NoSuchAlgorithmException {
+			throws IOException,
+			KeyManagementException,
+			NoSuchAlgorithmException {
 
 		String httpMethod = HttpMethod.POST.toString();
+		String result = invokeToEndpoint(httpMethod, data);
+
+		return result;
+	}
+
+	public String put(String data)
+			throws IOException,
+			KeyManagementException,
+			NoSuchAlgorithmException {
+
+		String httpMethod = HttpMethod.PUT.toString();
+		String result = invokeToEndpoint(httpMethod, data);
+
+		return result;
+	}
+
+	@NonNull
+	private String invokeToEndpoint(String httpMethod)
+			throws IOException,
+			NoSuchAlgorithmException,
+			KeyManagementException {
+
+		return invokeToEndpoint(httpMethod, STRING_EMPTY);
+	}
+
+	@NonNull
+	private String invokeToEndpoint(String httpMethod, String data)
+			throws IOException,
+			NoSuchAlgorithmException,
+			KeyManagementException {
+
 		HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 		addSSLAuthorizationToConnection(conn);
 		setConnectionSettings(conn, httpMethod);
-		addDataToConnection(data, conn);
+		if (data != null && !data.equals(STRING_EMPTY))
+			addDataToConnection(data, conn);
 
 		conn.connect();
-
 		StringBuilder retValue = readInputFromConnection(conn);
-
+		conn.disconnect();
 		return retValue.toString();
-	}
-
-	public String put(String data) {
-		return STRING_EMPTY;
 	}
 
 	@NonNull
 	private StringBuilder readInputFromConnection(HttpsURLConnection conn)
-		throws IOException {
+			throws IOException {
 
 		// Read InputStream
 		InputStream inputStream = conn.getInputStream();
@@ -73,13 +106,13 @@ public class Connector {
 		String inputLine;
 		while ((inputLine = in.readLine()) != null) {
 			retValue.append(inputLine);
-			retValue.append(System.lineSeparator());
+			retValue.append(System.getProperty("line.separator"));
 		}
 		return retValue;
 	}
 
 	private void addDataToConnection(String data, HttpsURLConnection conn)
-		throws IOException {
+			throws IOException {
 
 		// Add any data you wish to post here
 		OutputStreamWriter outputWriter = new OutputStreamWriter(conn.getOutputStream());
@@ -89,7 +122,7 @@ public class Connector {
 	}
 
 	private void setConnectionSettings(HttpsURLConnection conn, String httpMethod)
-		throws ProtocolException {
+			throws ProtocolException {
 
 		// set Timeout and method
 		conn.setReadTimeout(READ_TIMEOUT);
@@ -99,16 +132,20 @@ public class Connector {
 		conn.setDoOutput(true);
 	}
 
-	private void addSSLAuthorizationToConnection(HttpsURLConnection conn) throws NoSuchAlgorithmException, KeyManagementException {
+	private void addSSLAuthorizationToConnection(HttpsURLConnection conn)
+			throws NoSuchAlgorithmException,
+			KeyManagementException {
+
 		// Create the SSL connection
-		SSLContext sc;
-		sc = SSLContext.getInstance("TLS");
+		SSLContext sc = SSLContext.getInstance("TLS");
 		sc.init(null, null, new java.security.SecureRandom());
 		conn.setSSLSocketFactory(sc.getSocketFactory());
 
 		// Use this if you need SSL authentication
 		String userPass = userName + ":" + password;
-		String basicAuth = "Basic " + Base64.encodeToString(userPass.getBytes(), Base64.DEFAULT);
+		String basicAuth = "Basic "
+			+ Base64.encodeToString(userPass.getBytes(),
+									Base64.DEFAULT);
 		conn.setRequestProperty("Authorization", basicAuth);
 	}
 }
