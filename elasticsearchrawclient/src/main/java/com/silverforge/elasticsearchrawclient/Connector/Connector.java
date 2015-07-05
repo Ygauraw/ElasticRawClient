@@ -18,7 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
-public class Connector implements IConnector {
+public class Connector implements Connectable {
 
 	private static final String STRING_EMPTY = "";
 

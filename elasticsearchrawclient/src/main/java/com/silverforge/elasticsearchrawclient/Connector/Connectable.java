@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
-public interface IConnector {
+public interface Connectable {
 	String get()
 		throws IOException,
 				KeyManagementException,

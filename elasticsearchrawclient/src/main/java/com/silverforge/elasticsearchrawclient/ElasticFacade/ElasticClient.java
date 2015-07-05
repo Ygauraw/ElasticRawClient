@@ -1,8 +1,8 @@
 package com.silverforge.elasticsearchrawclient.ElasticFacade;
 
+import com.silverforge.elasticsearchrawclient.Connector.Connectable;
 import com.silverforge.elasticsearchrawclient.Connector.Connector;
 import com.silverforge.elasticsearchrawclient.Connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.Connector.IConnector;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class ElasticClient {
 
-	private IConnector connector;
+	private Connectable connector;
 
 	public Raw raw = new Raw();
 
