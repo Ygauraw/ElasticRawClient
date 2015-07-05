@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient;
+package com.silverforge.elasticsearchrawclient.Connector;
 
 public enum HttpMethod {
 

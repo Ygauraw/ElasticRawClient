@@ -1,6 +1,7 @@
-package com.silverforge.elasticsearchrawclient;
+package com.silverforge.elasticsearchrawclient.Connector;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import java.io.BufferedReader;
@@ -19,20 +20,33 @@ import javax.net.ssl.SSLContext;
 
 public class Connector {
 
-	private URL url;
-	private final String userName;
-	private final String password;
-
 	private static final String STRING_EMPTY = "";
-	private static final int READ_TIMEOUT = 7000;
-	private static final int CONNECT_TIMEOUT = 7000;
 
-	public Connector(String url, String userName, String password)
+	private URL url = new URL("http://localhost:9200");
+	private String userName = STRING_EMPTY;
+	private String password = STRING_EMPTY;
+	private int readTimeout = 7000;
+	private int connectTimeout = 7000;
+
+	public Connector(ConnectorSettings settings)
 			throws MalformedURLException {
 
-		this.url = new URL(url);
-		this.userName = userName;
-		this.password = password;
+		if (settings != null) {
+			if (!TextUtils.isEmpty(settings.getUrl()))
+				this.url = new URL(settings.getUrl());
+
+			if (!TextUtils.isEmpty(settings.getUserName()))
+				this.userName = settings.getUserName();
+
+			if (!TextUtils.isEmpty(settings.getPassword()))
+				this.password = settings.getPassword();
+
+			if (settings.getReadTimeout() > 1000)
+				this.readTimeout = settings.getReadTimeout();
+
+			if (settings.getConnectTimeout() > 1000)
+				this.connectTimeout = settings.getConnectTimeout();
+		}
 	}
 
 	public String get()
@@ -125,8 +139,8 @@ public class Connector {
 			throws ProtocolException {
 
 		// set Timeout and method
-		conn.setReadTimeout(READ_TIMEOUT);
-		conn.setConnectTimeout(CONNECT_TIMEOUT);
+		conn.setReadTimeout(readTimeout);
+		conn.setConnectTimeout(connectTimeout);
 		conn.setRequestMethod(httpMethod);
 		conn.setDoInput(true);
 		conn.setDoOutput(true);
@@ -142,10 +156,12 @@ public class Connector {
 		conn.setSSLSocketFactory(sc.getSocketFactory());
 
 		// Use this if you need SSL authentication
-		String userPass = userName + ":" + password;
-		String basicAuth = "Basic "
-			+ Base64.encodeToString(userPass.getBytes(),
-									Base64.DEFAULT);
-		conn.setRequestProperty("Authorization", basicAuth);
+		if (!TextUtils.isEmpty(userName) || !TextUtils.isEmpty(password)) {
+			String userPass = userName + ":" + password;
+			String basicAuth = "Basic "
+				+ Base64.encodeToString(userPass.getBytes(),
+				Base64.DEFAULT);
+			conn.setRequestProperty("Authorization", basicAuth);
+		}
 	}
 }

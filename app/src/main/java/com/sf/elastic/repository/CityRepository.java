@@ -6,7 +6,8 @@ import android.util.Base64;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sf.elastic.R;
 import com.sf.elastic.model.City;
-import com.silverforge.elasticsearchrawclient.Connector;
+import com.silverforge.elasticsearchrawclient.Connector.Connector;
+import com.silverforge.elasticsearchrawclient.Connector.ConnectorSettings;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
@@ -35,7 +36,6 @@ public class CityRepository implements Repository<City> {
 
 	private static final String ELASTIC_URL = "https://silverforge.east-us.azr.facetflow.io/cities/_search";
 	private static final String ELASTIC_APIKEY = "ZjjnkNMgh0uj5yCFIvYVGQsueESCLj1k";
-	private static final String STRING_EMPTY = "";
 
 	@RootContext
 	public Context context;
@@ -48,10 +48,13 @@ public class CityRepository implements Repository<City> {
 			try {
 				List<City> cities = new ArrayList<City>();
 
-				Connector connector
-					= new Connector(ELASTIC_URL,
-									ELASTIC_APIKEY,
-									STRING_EMPTY);
+				ConnectorSettings settings = ConnectorSettings
+					.builder()
+					.url(ELASTIC_URL)
+					.userName(ELASTIC_APIKEY)
+					.build();
+
+				Connector connector = new Connector(settings);
 				String result = connector.post(search);
 
 				ObjectMapper mapper = new ObjectMapper();
