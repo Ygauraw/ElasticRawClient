@@ -2,28 +2,26 @@ package com.sf.elastic.repository;
 
 import android.content.Context;
 import android.util.Base64;
+import android.util.Log;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sf.elastic.R;
 import com.sf.elastic.model.City;
 import com.silverforge.elasticsearchrawclient.Connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.ElasticFacade.ElasticClient;
+import com.silverforge.elasticsearchrawclient.ElasticFacade.Mappers.RawSourceMapTo;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -34,54 +32,47 @@ import rx.Observable;
 @EBean
 public class CityRepository implements Repository<City> {
 
+	private static final String TAG = CityRepository.class.getName();
 	private static final String ELASTIC_URL = "https://silverforge.east-us.azr.facetflow.io/cities/_search";
 	private static final String ELASTIC_APIKEY = "ZjjnkNMgh0uj5yCFIvYVGQsueESCLj1k";
 
+	private ElasticClient client;
+	private RawSourceMapTo<City> cityMapper = new RawSourceMapTo<>();
+
 	@RootContext
 	public Context context;
+
+	public CityRepository() {
+		ConnectorSettings settings = ConnectorSettings
+			.builder()
+			.url(ELASTIC_URL)
+			.userName(ELASTIC_APIKEY)
+			.build();
+
+		try {
+			client = new ElasticClient(settings);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			Log.e(TAG, e.getMessage());
+		}
+	}
 
 	@Override
 	public Observable<City> getNextCity(final String text) {
 
 		Observable<City> observable = Observable.create(subscriber -> {
 			String search = getSearch(text);
+
 			try {
-				List<City> cities = new ArrayList<City>();
-
-				ConnectorSettings settings = ConnectorSettings
-					.builder()
-					.url(ELASTIC_URL)
-					.userName(ELASTIC_APIKEY)
-					.build();
-
-				ElasticClient client = new ElasticClient(settings);
 				String result = client.raw.post(search);
+				List<City> cities = cityMapper.mapToList(result, City.class);
 
-
-				ObjectMapper mapper = new ObjectMapper();
-
-				// JSON objects
-				JSONArray hitsArray = null;
-				JSONObject hits = null;
-				JSONObject source = null;
-				JSONObject json = null;
-
-				// parse the JSON response
-				json = new JSONObject(result);
-				hits = json.getJSONObject("hits");
-				hitsArray = hits.getJSONArray("hits");
-
-				for (int i = 0; i < hitsArray.length(); i++) {
-					JSONObject h = hitsArray.getJSONObject(i);
-					source = h.getJSONObject("_source");
-					City city = mapper.readValue(source.toString(), City.class);
-					cities.add(city);
-
-					//string object = (source.getString("the string you want to get"));
+				for(City c : cities) {
+					subscriber.onNext(c);
 				}
 
 				subscriber.onCompleted();
-			} catch (JSONException | KeyManagementException | IOException | NoSuchAlgorithmException e) {
+			} catch (KeyManagementException | IOException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
 				subscriber.onError(e);
 			}
