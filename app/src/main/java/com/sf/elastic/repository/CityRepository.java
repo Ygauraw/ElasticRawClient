@@ -8,6 +8,8 @@ import com.sf.elastic.R;
 import com.sf.elastic.model.City;
 import com.silverforge.elasticsearchrawclient.Connector.Connector;
 import com.silverforge.elasticsearchrawclient.Connector.ConnectorSettings;
+import com.silverforge.elasticsearchrawclient.Connector.IConnector;
+import com.silverforge.elasticsearchrawclient.ElasticFacade.ElasticClient;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
@@ -54,8 +56,13 @@ public class CityRepository implements Repository<City> {
 					.userName(ELASTIC_APIKEY)
 					.build();
 
-				Connector connector = new Connector(settings);
-				String result = connector.post(search);
+//				IConnector connector = new Connector(settings);
+
+				ElasticClient client = new ElasticClient(settings);
+				String result = client.raw.post(search);
+
+
+//				String result = connector.post(search);
 
 				ObjectMapper mapper = new ObjectMapper();
 

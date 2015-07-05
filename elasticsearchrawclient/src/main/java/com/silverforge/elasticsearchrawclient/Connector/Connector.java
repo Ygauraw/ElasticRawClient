@@ -18,7 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
-public class Connector {
+public class Connector implements IConnector {
 
 	private static final String STRING_EMPTY = "";
 
@@ -49,6 +49,7 @@ public class Connector {
 		}
 	}
 
+	@Override
 	public String get()
 			throws IOException,
 			KeyManagementException,
@@ -60,6 +61,7 @@ public class Connector {
 		return result;
 	}
 
+	@Override
 	public String post(String data)
 			throws IOException,
 			KeyManagementException,
@@ -71,6 +73,7 @@ public class Connector {
 		return result;
 	}
 
+	@Override
 	public String put(String data)
 			throws IOException,
 			KeyManagementException,
