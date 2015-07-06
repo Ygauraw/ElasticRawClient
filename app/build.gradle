@@ -57,8 +57,9 @@ dependencies {
 	compile project(':elasticsearchrawclient')
 	compile 'com.fasterxml.jackson.core:jackson-core:2.6.0-rc3'
 	compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0-rc3'
+	compile 'jp.wasabeef:recyclerview-animators:1.2.0@aar'
 }
 
-retrolambda {
-    jdk "/usr/lib/jvm/java-8-oracle"
-}
+//retrolambda {
+//    jdk "/usr/lib/jvm/java-8-oracle"
+//}
