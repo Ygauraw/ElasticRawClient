@@ -23,6 +23,7 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
@@ -55,12 +56,12 @@ public class MainActivity extends AppCompatActivity {
 	@AfterViews
 	public void mainAfterViews() {
 		initialize();
-
 		searchOnElastic();
 
 		WidgetObservable.text(cityName, false)
 			.observeOn(Schedulers.newThread())
 			.subscribeOn(AndroidSchedulers.mainThread())
+			.debounce(TimeUnit.SECONDS.toSeconds(1), TimeUnit.SECONDS)
 			.subscribe(nexTextChangedEventArgs -> {
 				runOnUiThread(() -> cityAdapter.clearList());
 				cityRepository
@@ -69,9 +70,7 @@ public class MainActivity extends AppCompatActivity {
 						city -> {
 							runOnUiThread(() -> cityAdapter.add(city));
 						});
-
-			});
-
+				});
 	}
 
 	@Background
