@@ -59,18 +59,31 @@ public class MainActivity extends AppCompatActivity {
 		searchOnElastic();
 
 		WidgetObservable.text(cityName, false)
-			.observeOn(Schedulers.newThread())
-			.subscribeOn(AndroidSchedulers.mainThread())
-			.debounce(TimeUnit.SECONDS.toSeconds(1), TimeUnit.SECONDS)
+			.sample(TimeUnit.SECONDS.toSeconds(2), TimeUnit.SECONDS)
+			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(nexTextChangedEventArgs -> {
-				runOnUiThread(() -> cityAdapter.clearList());
+				cityAdapter.clearList();
+
+				Log.i(null, "------ BEGIN ------");
 				cityRepository
 					.getNextCity(nexTextChangedEventArgs.text().toString())
+					.subscribeOn(Schedulers.newThread())
+//					.observeOn(AndroidSchedulers.mainThread())
+//					.onBackpressureDrop()
 					.subscribe(
 						city -> {
-							runOnUiThread(() -> cityAdapter.add(city));
+							runOnUiThread(() -> {
+								cityAdapter.add(city);
+							});
+							Log.i(null, city.getName());
+						},
+						throwable -> {
+							Log.e(null, throwable.getMessage());
+						},
+						() -> {
+							Log.i(null, "------- END -------");
 						});
-				});
+			});
 	}
 
 	@Background

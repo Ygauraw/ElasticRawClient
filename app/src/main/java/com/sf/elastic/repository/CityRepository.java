@@ -28,6 +28,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 @EBean
 public class CityRepository implements Repository<City> {
@@ -67,14 +68,14 @@ public class CityRepository implements Repository<City> {
 				String result = client.raw.post(search);
 				List<City> cities = cityMapper.mapToList(result, City.class);
 
-				for(City c : cities) {
+				for (City c : cities) {
 					subscriber.onNext(c);
 				}
-
-				subscriber.onCompleted();
 			} catch (KeyManagementException | IOException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
 				subscriber.onError(e);
+			} finally {
+				subscriber.onCompleted();
 			}
 		});
 
