@@ -62,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
 			.sample(TimeUnit.SECONDS.toSeconds(2), TimeUnit.SECONDS)
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(nexTextChangedEventArgs -> {
-				cityAdapter.clearList();
+				runOnUiThread(() -> {
+					cityAdapter.clearList();
+				});
 
 				Log.i(null, "------ BEGIN ------");
 				cityRepository
