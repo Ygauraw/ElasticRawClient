@@ -55,21 +55,19 @@ public class MainActivity extends AppCompatActivity {
 		WidgetObservable.text(cityName, false)
 			.sample(TimeUnit.SECONDS.toSeconds(2), TimeUnit.SECONDS)
 			.observeOn(AndroidSchedulers.mainThread())
-			.subscribe(nexTextChangedEventArgs -> {
+			.subscribe(textChangeEvent -> {
 
 				cityAdapter.clearList();
 
 				Log.i(null, "------ BEGIN ------");
 				cityRepository
-					.getNextCity(nexTextChangedEventArgs.text().toString())
+					.getNextCity(textChangeEvent.text().toString())
 					.subscribeOn(Schedulers.newThread())
 //					.observeOn(AndroidSchedulers.mainThread())
 //					.onBackpressureDrop()
 					.subscribe(
 						city -> {
-							runOnUiThread(() -> {
-								cityAdapter.add(city);
-							});
+							runOnUiThread(() -> cityAdapter.add(city));
 							Log.i(null, city.getName());
 						},
 						throwable -> {
@@ -91,9 +89,7 @@ public class MainActivity extends AppCompatActivity {
 //			.subscribeOn(Schedulers.newThread())
 			.subscribe(
 				city -> {
-					runOnUiThread(() -> {
-						cityAdapter.add(city);
-					});
+					runOnUiThread(() -> cityAdapter.add(city));
 				});
 	}
 

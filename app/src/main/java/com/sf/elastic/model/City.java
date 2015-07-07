@@ -11,7 +11,9 @@ public class City {
 	@Getter
 	private String name;
 
-	public City(@JsonProperty("name")String name) {
+	public City(
+			@JsonProperty("name")
+			String name) {
 		this.name = name;
 	}
 }
