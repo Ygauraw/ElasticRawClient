@@ -62,9 +62,8 @@ public class MainActivity extends AppCompatActivity {
 			.sample(TimeUnit.SECONDS.toSeconds(2), TimeUnit.SECONDS)
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(nexTextChangedEventArgs -> {
-				runOnUiThread(() -> {
-					cityAdapter.clearList();
-				});
+
+				cityAdapter.clearList();
 
 				Log.i(null, "------ BEGIN ------");
 				cityRepository
@@ -90,9 +89,12 @@ public class MainActivity extends AppCompatActivity {
 
 	@Background
 	public void searchOnElastic() {
+
 		cityAdapter.clearList();
+
 		cityRepository
 			.getNextCity("")
+//			.subscribeOn(Schedulers.newThread())
 			.subscribe(
 				city -> {
 					runOnUiThread(() -> {
