@@ -9,9 +9,12 @@ import android.widget.TextView;
 import com.sf.elastic.R;
 import com.sf.elastic.model.City;
 
+import org.androidannotations.annotations.EBean;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@EBean
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {

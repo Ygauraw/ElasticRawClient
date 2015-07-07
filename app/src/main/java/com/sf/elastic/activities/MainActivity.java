@@ -1,18 +1,15 @@
-package com.sf.elastic.view;
+package com.sf.elastic.activities;
 
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.sf.elastic.R;
 import com.sf.elastic.adapters.CityAdapter;
-import com.sf.elastic.model.City;
 import com.sf.elastic.repository.CityRepository;
 
 import org.androidannotations.annotations.AfterViews;
@@ -22,12 +19,8 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
-import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.android.widget.WidgetObservable;
 import rx.schedulers.Schedulers;
@@ -35,8 +28,6 @@ import rx.schedulers.Schedulers;
 @EActivity(R.layout.activity_main2)
 @OptionsMenu(R.menu.menu_main)
 public class MainActivity extends AppCompatActivity {
-
-	private CityAdapter cityAdapter;
 
 	@ViewById(R.id.rootLayout)
 	public LinearLayout rootLayout;
@@ -52,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
 	@Bean
 	public CityRepository cityRepository;
+
+	@Bean
+	public CityAdapter cityAdapter;
 
 	@AfterViews
 	public void mainAfterViews() {
@@ -110,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
 		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 		recyclerView.setLayoutManager(layoutManager);
 
-		cityAdapter = new CityAdapter();
 		recyclerView.setAdapter(cityAdapter);
 	}
 }
