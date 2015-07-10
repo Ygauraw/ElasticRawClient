@@ -1,11 +1,11 @@
-package com.sf.elastic.repository;
+package com.sf.elastic.repositories;
 
 import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
 
 import com.sf.elastic.R;
-import com.sf.elastic.model.City;
+import com.sf.elastic.models.City;
 import com.silverforge.elasticsearchrawclient.Connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.ElasticFacade.ElasticClient;
 import com.silverforge.elasticsearchrawclient.ElasticFacade.Mappers.RawSourceMapTo;
@@ -28,7 +28,6 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 @EBean
 public class CityRepository implements Repository<City> {
@@ -60,7 +59,6 @@ public class CityRepository implements Repository<City> {
 
 	@Override
 	public Observable<City> getNextCity(final String text) {
-
 		Observable<City> observable = Observable.create(subscriber -> {
 			String search = getSearch(text);
 
@@ -68,9 +66,13 @@ public class CityRepository implements Repository<City> {
 				String result = client.raw.post(search);
 				List<City> cities = cityMapper.mapToList(result, City.class);
 
-				for (City c : cities) {
-					subscriber.onNext(c);
-				}
+				Observable
+					.from(cities)
+					.subscribe(city -> subscriber.onNext(city));
+
+//				for (City c : cities) {
+//					subscriber.onNext(c);
+//				}
 			} catch (KeyManagementException | IOException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
 				subscriber.onError(e);

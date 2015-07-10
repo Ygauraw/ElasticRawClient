@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sf.elastic.R;
-import com.sf.elastic.model.City;
+import com.sf.elastic.models.City;
 
 import org.androidannotations.annotations.EBean;
 

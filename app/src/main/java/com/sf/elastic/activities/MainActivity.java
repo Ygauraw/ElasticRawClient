@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 
 import com.sf.elastic.R;
 import com.sf.elastic.adapters.CityAdapter;
-import com.sf.elastic.repository.CityRepository;
+import com.sf.elastic.repositories.CityRepository;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -81,9 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
 	@Background
 	public void searchOnElastic() {
-
 		cityAdapter.clearList();
-
 		cityRepository
 			.getNextCity("")
 //			.subscribeOn(Schedulers.newThread())

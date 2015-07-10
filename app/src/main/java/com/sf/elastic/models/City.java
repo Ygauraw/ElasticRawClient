@@ -1,4 +1,4 @@
-package com.sf.elastic.model;
+package com.sf.elastic.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,4 +1,4 @@
-package com.sf.elastic.repository;
+package com.sf.elastic.repositories;
 
 import rx.Observable;
 
