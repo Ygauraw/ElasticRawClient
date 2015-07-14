@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 		initialize();
 		searchOnElastic();
 
+//		executePosts();
+
 		WidgetObservable.text(cityName, false)
 			.sample(TimeUnit.SECONDS.toSeconds(2), TimeUnit.SECONDS)
 			.observeOn(AndroidSchedulers.mainThread())
@@ -77,6 +79,12 @@ public class MainActivity extends AppCompatActivity {
 							Log.i(null, "------- END -------");
 						});
 			});
+	}
+
+	@Background
+	public void executePosts() {
+		cityRepository
+			.addCities();
 	}
 
 	@Background

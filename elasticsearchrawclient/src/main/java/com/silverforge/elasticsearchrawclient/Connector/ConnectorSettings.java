@@ -8,7 +8,7 @@ import lombok.Getter;
 public class ConnectorSettings {
 
 	@Getter(AccessLevel.MODULE)
-	private String url;
+	private String baseUrl;
 
 	@Getter(AccessLevel.MODULE)
 	private String userName;
@@ -17,9 +17,14 @@ public class ConnectorSettings {
 	private String password;
 
 	@Getter(AccessLevel.MODULE)
+	private String[] indices;
+
+	@Getter(AccessLevel.MODULE)
+	private String[] types;
+
+	@Getter(AccessLevel.MODULE)
 	private int readTimeout;
 
 	@Getter(AccessLevel.MODULE)
 	private int connectTimeout;
-
 }

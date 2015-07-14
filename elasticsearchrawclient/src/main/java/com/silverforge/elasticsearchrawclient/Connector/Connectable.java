@@ -5,17 +5,17 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
 public interface Connectable {
-	String get()
+	String get(String path)
 		throws IOException,
 				KeyManagementException,
 				NoSuchAlgorithmException;
 
-	String post(String data)
+	String post(String path, String data)
 		throws IOException,
 				KeyManagementException,
 				NoSuchAlgorithmException;
 
-	String put(String data)
+	String put(String path, String data)
 		throws IOException,
 				KeyManagementException,
 				NoSuchAlgorithmException;

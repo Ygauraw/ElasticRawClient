@@ -9,8 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -22,83 +23,87 @@ public class Connector implements Connectable {
 
 	private static final String STRING_EMPTY = "";
 
-	private URL url = new URL("http://localhost:9200");
+	private URI baseUrl;
 	private String userName = STRING_EMPTY;
 	private String password = STRING_EMPTY;
 	private int readTimeout = 7000;
 	private int connectTimeout = 7000;
 
 	public Connector(ConnectorSettings settings)
-			throws MalformedURLException {
+		throws URISyntaxException {
 
 		if (settings != null) {
-			if (!TextUtils.isEmpty(settings.getUrl()))
-				this.url = new URL(settings.getUrl());
+			if (!TextUtils.isEmpty(settings.getBaseUrl()))
+				baseUrl = new URI(settings.getBaseUrl());
+			else
+				baseUrl = new URI("http://localhost:9200");
 
 			if (!TextUtils.isEmpty(settings.getUserName()))
-				this.userName = settings.getUserName();
+				userName = settings.getUserName();
 
 			if (!TextUtils.isEmpty(settings.getPassword()))
-				this.password = settings.getPassword();
+				password = settings.getPassword();
 
 			if (settings.getReadTimeout() > 1000)
-				this.readTimeout = settings.getReadTimeout();
+				readTimeout = settings.getReadTimeout();
 
 			if (settings.getConnectTimeout() > 1000)
-				this.connectTimeout = settings.getConnectTimeout();
+				connectTimeout = settings.getConnectTimeout();
 		}
 	}
 
 	@Override
-	public String get()
+	public String get(String path)
 			throws IOException,
 			KeyManagementException,
 			NoSuchAlgorithmException {
 
 		String httpMethod = HttpMethod.GET.toString();
-		String result = invokeToEndpoint(httpMethod);
+		String result = invokeToEndpoint(httpMethod, path);
 
 		return result;
 	}
 
 	@Override
-	public String post(String data)
+	public String post(String path, String data)
 			throws IOException,
 			KeyManagementException,
 			NoSuchAlgorithmException {
 
 		String httpMethod = HttpMethod.POST.toString();
-		String result = invokeToEndpoint(httpMethod, data);
+		String result = invokeToEndpoint(httpMethod, path, data);
 
 		return result;
 	}
 
 	@Override
-	public String put(String data)
+	public String put(String path, String data)
 			throws IOException,
 			KeyManagementException,
 			NoSuchAlgorithmException {
 
 		String httpMethod = HttpMethod.PUT.toString();
-		String result = invokeToEndpoint(httpMethod, data);
+		String result = invokeToEndpoint(httpMethod, path, data);
 
 		return result;
 	}
 
 	@NonNull
-	private String invokeToEndpoint(String httpMethod)
+	private String invokeToEndpoint(String httpMethod, String path)
 			throws IOException,
 			NoSuchAlgorithmException,
 			KeyManagementException {
 
-		return invokeToEndpoint(httpMethod, STRING_EMPTY);
+		return invokeToEndpoint(httpMethod, path, STRING_EMPTY);
 	}
 
 	@NonNull
-	private String invokeToEndpoint(String httpMethod, String data)
+	private String invokeToEndpoint(String httpMethod, String path, String data)
 			throws IOException,
 			NoSuchAlgorithmException,
 			KeyManagementException {
+
+		URL url = baseUrl.resolve(path).toURL();
 
 		HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 		addSSLAuthorizationToConnection(conn);

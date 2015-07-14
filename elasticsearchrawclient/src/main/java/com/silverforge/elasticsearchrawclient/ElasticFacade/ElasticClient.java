@@ -6,17 +6,21 @@ import com.silverforge.elasticsearchrawclient.Connector.ConnectorSettings;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
 public class ElasticClient {
-
 	private Connectable connector;
-
 	public Raw raw = new Raw();
 
-	public ElasticClient(ConnectorSettings settings)
+	public ElasticClient(Connectable connector)
 		throws MalformedURLException {
+		this.connector = connector;
+	}
+
+	public ElasticClient(ConnectorSettings settings)
+		throws URISyntaxException {
 		connector = new Connector(settings);
 	}
 
@@ -40,22 +44,22 @@ public class ElasticClient {
 
 		private Raw() {}
 
-		public String get()
+		public String get(String path)
 			throws NoSuchAlgorithmException, IOException, KeyManagementException {
 
-			return connector.get();
+			return connector.get(path);
 		}
 
-		public String post(String data)
+		public String post(String path, String data)
 			throws NoSuchAlgorithmException, IOException, KeyManagementException {
 
-			return connector.post(data);
+			return connector.post(path, data);
 		}
 
-		public String put(String data)
+		public String put(String path, String data)
 			throws NoSuchAlgorithmException, IOException, KeyManagementException {
 
-			return connector.put(data);
+			return connector.put(path, data);
 		}
 	}
 }
