@@ -74,10 +74,6 @@ public class CityRepository implements Repository<City> {
 				Observable
 					.from(cities)
 					.subscribe(city -> subscriber.onNext(city));
-
-//				for (City c : cities) {
-//					subscriber.onNext(c);
-//				}
 			} catch (KeyManagementException | IOException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
 				subscriber.onError(e);

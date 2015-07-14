@@ -38,6 +38,10 @@ public class ElasticClient {
 
 	}
 
+	public void removeAlias() {
+
+	}
+
 	public void addDocument() {
 
 	}
