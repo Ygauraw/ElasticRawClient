@@ -19,4 +19,11 @@ public interface Connectable {
 		throws IOException,
 				KeyManagementException,
 				NoSuchAlgorithmException;
+
+	String delete(String path, String data)
+		throws IOException,
+				KeyManagementException,
+				NoSuchAlgorithmException;
+
+	ConnectorSettings getSettings();
 }

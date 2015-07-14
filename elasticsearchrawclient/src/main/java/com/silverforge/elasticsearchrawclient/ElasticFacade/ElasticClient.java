@@ -28,11 +28,27 @@ public class ElasticClient {
 
 	}
 
+	public void createAlias() {
+
+	}
+
+	public void removeIndex() {
+
+	}
+
 	public void addDocument() {
 
 	}
 
+	public void removeDocument() {
+
+	}
+
 	public void bulkDocuments() {
+
+	}
+
+	public void getDocument() {
 
 	}
 
@@ -60,6 +76,12 @@ public class ElasticClient {
 			throws NoSuchAlgorithmException, IOException, KeyManagementException {
 
 			return connector.put(path, data);
+		}
+
+		public String delete(String path, String data)
+			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+
+			return connector.delete(path, data);
 		}
 	}
 }

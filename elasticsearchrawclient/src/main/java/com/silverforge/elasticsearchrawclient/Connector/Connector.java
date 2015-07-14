@@ -20,36 +20,53 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
 public class Connector implements Connectable {
-
 	private static final String STRING_EMPTY = "";
+	private static final String DEFAULT_BASE_URL = "http://localhost:9200";
+	private static final int DEFAULT_TIMEOUT = 7000;
 
 	private URI baseUrl;
 	private String userName = STRING_EMPTY;
 	private String password = STRING_EMPTY;
 	private int readTimeout = 7000;
 	private int connectTimeout = 7000;
+	private ConnectorSettings settings;
 
 	public Connector(ConnectorSettings settings)
 		throws URISyntaxException {
+		this.settings = settings;
 
 		if (settings != null) {
 			if (!TextUtils.isEmpty(settings.getBaseUrl()))
 				baseUrl = new URI(settings.getBaseUrl());
-			else
-				baseUrl = new URI("http://localhost:9200");
+			else {
+				baseUrl = new URI(DEFAULT_BASE_URL);
+				this.settings.setBaseUrl(DEFAULT_BASE_URL);
+			}
 
 			if (!TextUtils.isEmpty(settings.getUserName()))
 				userName = settings.getUserName();
+			else
+				this.settings.setUserName(STRING_EMPTY);
 
 			if (!TextUtils.isEmpty(settings.getPassword()))
 				password = settings.getPassword();
+			else
+				this.settings.setPassword(STRING_EMPTY);
 
 			if (settings.getReadTimeout() > 1000)
 				readTimeout = settings.getReadTimeout();
+			else
+				this.settings.setReadTimeout(DEFAULT_TIMEOUT);
 
 			if (settings.getConnectTimeout() > 1000)
 				connectTimeout = settings.getConnectTimeout();
+			else
+				this.settings.setConnectTimeout(DEFAULT_TIMEOUT);
 		}
+	}
+
+	public ConnectorSettings getSettings() {
+		return settings;
 	}
 
 	@Override
@@ -83,6 +100,19 @@ public class Connector implements Connectable {
 			NoSuchAlgorithmException {
 
 		String httpMethod = HttpMethod.PUT.toString();
+		String result = invokeToEndpoint(httpMethod, path, data);
+
+		return result;
+	}
+
+	@Override
+	public String delete(String path, String data)
+			throws IOException,
+			KeyManagementException,
+			NoSuchAlgorithmException {
+
+
+		String httpMethod = HttpMethod.DELETE.toString();
 		String result = invokeToEndpoint(httpMethod, path, data);
 
 		return result;
