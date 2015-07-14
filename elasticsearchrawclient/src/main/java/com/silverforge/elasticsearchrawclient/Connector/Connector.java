@@ -53,6 +53,12 @@ public class Connector implements Connectable {
 			else
 				this.settings.setPassword(STRING_EMPTY);
 
+			if (settings.getIndices() == null)
+				this.settings.setIndices(new String[0]);
+
+			if (settings.getTypes() == null)
+				this.settings.setTypes(new String[0]);
+
 			if (settings.getReadTimeout() > 1000)
 				readTimeout = settings.getReadTimeout();
 			else

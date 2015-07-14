@@ -1,5 +1,7 @@
 package com.silverforge.elasticsearchrawclient.ElasticFacade;
 
+import android.text.TextUtils;
+
 import com.silverforge.elasticsearchrawclient.Connector.Connectable;
 import com.silverforge.elasticsearchrawclient.Connector.Connector;
 import com.silverforge.elasticsearchrawclient.Connector.ConnectorSettings;
@@ -52,8 +54,47 @@ public class ElasticClient {
 
 	}
 
-	public void search() {
+	public String search(String query)
+			throws NoSuchAlgorithmException,
+			IOException,
+			KeyManagementException {
 
+		boolean indicesAreEmpty = true;
+
+		StringBuilder pathBuilder = new StringBuilder();
+
+		String[] indices = connector.getSettings().getIndices();
+		if (indices != null && indices.length > 0) {
+			indicesAreEmpty = false;
+			pathBuilder.append("/");
+			String indicesPath = makeCommaSeparatedList(indices);
+			pathBuilder.append(indicesPath);
+		}
+
+		String[] types = connector.getSettings().getTypes();
+		if (types != null && types.length > 0) {
+			if (indicesAreEmpty)
+				pathBuilder.append("/_all");
+			else
+				pathBuilder.append("/");
+			String typesPath = makeCommaSeparatedList(types);
+			pathBuilder.append(typesPath);
+		}
+		pathBuilder.append("/_search");
+
+		String retValue = connector.post(pathBuilder.toString(), query);
+		return retValue;
+	}
+
+	private String makeCommaSeparatedList(String[] list) {
+		if (list == null || list.length == 0)
+			return "";
+
+		if (list.length == 0)
+			return list[0];
+
+		String commaSeparatedList = TextUtils.join(",", list);
+		return commaSeparatedList;
 	}
 
 	public final class Raw {

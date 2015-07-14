@@ -68,7 +68,7 @@ public class CityRepository implements Repository<City> {
 			String search = getSearch(text);
 
 			try {
-				String result = client.raw.post("/cities/_search", search);
+				String result = client.search(search);
 				List<City> cities = cityMapper.mapToList(result, City.class);
 
 				Observable
