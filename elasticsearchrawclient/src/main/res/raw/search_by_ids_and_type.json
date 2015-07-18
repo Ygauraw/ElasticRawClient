@@ -1,0 +1,8 @@
+{
+  "filter": {
+    "ids": {
+      "type": "{{TYPE}}",
+      "values": [{{IDS}}]
+    }
+  }
+}
