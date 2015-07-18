@@ -72,12 +72,8 @@ public class MainActivity extends AppCompatActivity {
 							runOnUiThread(() -> cityAdapter.add(city));
 							Log.i(null, city.getName());
 						},
-						throwable -> {
-							Log.e(null, throwable.getMessage());
-						},
-						() -> {
-							Log.i(null, "------- END -------");
-						});
+						throwable -> Log.e(null, throwable.getMessage()),
+						() -> Log.i(null, "------- END -------"));
 			});
 	}
 

@@ -86,19 +86,17 @@ public class ElasticClient {
 		}
 		pathBuilder.append("/_search");
 
-		String retValue = connector.post(pathBuilder.toString(), query);
-		return retValue;
+		return connector.post(pathBuilder.toString(), query);
 	}
 
 	private String makeCommaSeparatedList(String[] list) {
 		if (list == null || list.length == 0)
 			return "";
 
-		if (list.length == 0)
+		if (list.length == 1)
 			return list[0];
 
-		String commaSeparatedList = TextUtils.join(",", list);
-		return commaSeparatedList;
+		return TextUtils.join(",", list);
 	}
 
 	public final class Raw {

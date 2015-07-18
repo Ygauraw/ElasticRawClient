@@ -32,7 +32,8 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
 	public CityAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 		View v = LayoutInflater.from(viewGroup.getContext())
 			.inflate(R.layout.row_city, viewGroup, false);
-		return new ViewHolder(v);	}
+		return new ViewHolder(v);
+	}
 
 	@Override
 	public void onBindViewHolder(CityAdapter.ViewHolder viewHolder, int i) {
