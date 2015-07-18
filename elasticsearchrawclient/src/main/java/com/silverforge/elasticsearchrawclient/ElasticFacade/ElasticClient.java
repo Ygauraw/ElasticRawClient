@@ -99,6 +99,10 @@ public class ElasticClient {
 		return TextUtils.join(",", list);
 	}
 
+	public void disconnect() {
+
+	}
+
 	public final class Raw {
 
 		private Raw() {}
