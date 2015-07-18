@@ -205,7 +205,8 @@ public class Connector implements Connectable {
 			String basicAuth = "Basic "
 				+ Base64.encodeToString(userPass.getBytes(),
 				Base64.DEFAULT);
-			conn.setRequestProperty("Authorization", basicAuth);
+			// [known issue in jre] : http://mail-archives.apache.org/mod_mbox/maven-users/201103.mbox/%3CAANLkTikrKWesVvAHxntLVSNoRw=DZRO=SBhsvqUJ0zHy@mail.gmail.com%3E
+			conn.setRequestProperty("Authorization", basicAuth.replace("\n", ""));
 		}
 	}
 }
