@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.Utils;
+package com.silverforge.elasticsearchrawclient.utils;
 
 import android.text.TextUtils;
 

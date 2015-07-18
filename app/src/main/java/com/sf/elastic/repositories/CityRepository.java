@@ -1,15 +1,14 @@
 package com.sf.elastic.repositories;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.util.Base64;
 import android.util.Log;
 
 import com.sf.elastic.R;
 import com.sf.elastic.models.City;
-import com.silverforge.elasticsearchrawclient.Connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.ElasticFacade.ElasticClient;
-import com.silverforge.elasticsearchrawclient.ElasticFacade.Mappers.RawSourceMapTo;
+import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
+import com.silverforge.elasticsearchrawclient.elasticFacade.ElasticClient;
+import com.silverforge.elasticsearchrawclient.elasticFacade.Mappers.RawSourceMapTo;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
@@ -19,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.KeyManagementException;

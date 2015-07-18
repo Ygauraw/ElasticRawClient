@@ -1,14 +1,6 @@
-package com.silverforge.elasticsearchrawclient.Connector;
+package com.silverforge.elasticsearchrawclient.connector;
 
-import com.silverforge.elasticsearchrawclient.BuildConfig;
-
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
-
-import java.net.URISyntaxException;
 
 import static org.junit.Assert.*;
 

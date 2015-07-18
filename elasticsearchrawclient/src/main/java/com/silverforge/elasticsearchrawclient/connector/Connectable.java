@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.Connector;
+package com.silverforge.elasticsearchrawclient.connector;
 
 import java.io.IOException;
 import java.security.KeyManagementException;

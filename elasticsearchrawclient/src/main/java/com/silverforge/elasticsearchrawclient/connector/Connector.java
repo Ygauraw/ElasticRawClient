@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.Connector;
+package com.silverforge.elasticsearchrawclient.connector;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;

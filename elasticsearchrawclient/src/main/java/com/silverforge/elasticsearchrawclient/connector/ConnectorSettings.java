@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.Connector;
+package com.silverforge.elasticsearchrawclient.connector;
 
 import lombok.AccessLevel;
 import lombok.Builder;

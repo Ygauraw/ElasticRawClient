@@ -1,9 +1,9 @@
-package com.silverforge.elasticsearchrawclient.ElasticFacade;
+package com.silverforge.elasticsearchrawclient.elasticFacade;
 
 import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
-import com.silverforge.elasticsearchrawclient.Connector.ConnectorSettings;
+import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 
 import static org.junit.Assert.*;
 

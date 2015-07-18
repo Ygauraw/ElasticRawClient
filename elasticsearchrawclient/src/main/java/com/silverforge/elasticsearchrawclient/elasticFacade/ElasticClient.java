@@ -1,14 +1,14 @@
-package com.silverforge.elasticsearchrawclient.ElasticFacade;
+package com.silverforge.elasticsearchrawclient.elasticFacade;
 
 import android.text.TextUtils;
 
-import com.silverforge.elasticsearchrawclient.Connector.Connectable;
-import com.silverforge.elasticsearchrawclient.Connector.Connector;
-import com.silverforge.elasticsearchrawclient.Connector.ConnectorSettings;
+import com.silverforge.elasticsearchrawclient.connector.Connectable;
+import com.silverforge.elasticsearchrawclient.connector.Connector;
+import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
-import com.silverforge.elasticsearchrawclient.Utils.StreamUtils;
-import com.silverforge.elasticsearchrawclient.Utils.StringUtils;
+import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
+import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

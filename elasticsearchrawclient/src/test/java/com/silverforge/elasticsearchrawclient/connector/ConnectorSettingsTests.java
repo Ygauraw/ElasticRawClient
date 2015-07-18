@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.Connector;
+package com.silverforge.elasticsearchrawclient.connector;
 
 import org.junit.Test;
 import static org.junit.Assert.*;

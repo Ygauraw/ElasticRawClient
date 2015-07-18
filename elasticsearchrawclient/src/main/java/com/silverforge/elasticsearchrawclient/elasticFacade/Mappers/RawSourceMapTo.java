@@ -1,8 +1,7 @@
-package com.silverforge.elasticsearchrawclient.ElasticFacade.Mappers;
+package com.silverforge.elasticsearchrawclient.elasticFacade.Mappers;
 
 import android.util.Log;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONArray;
