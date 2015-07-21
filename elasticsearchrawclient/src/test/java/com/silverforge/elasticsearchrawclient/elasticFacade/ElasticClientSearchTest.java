@@ -1,52 +1,24 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
-import android.util.Log;
-
 import com.silverforge.elasticsearchrawclient.BuildConfig;
-import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class ElasticClientSearchTest {
-    private static final String TAG = ElasticClientSearchTest.class.getName();
-    private static final String ELASTIC_URL = "https://silverforge.east-us.azr.facetflow.io";
-    private static final String ELASTIC_APIKEY = "ZjjnkNMgh0uj5yCFIvYVGQsueESCLj1k";
-    private static final String[] ELASTIC_INDICES = new String[] {"cities"};
+public class ElasticClientSearchTest extends ElasticClientBaseTest {
     private static final String QUERY_SEARCH_ALL = "{\"query\":{\"match_all\": {}}}";
     private static final String QUERY_EMPTY = "{}";
-
-    private ElasticClient client;
-
-    @Before
-    public void setUp() {
-        ConnectorSettings settings = ConnectorSettings
-                .builder()
-                .baseUrl(ELASTIC_URL)
-                .indices(ELASTIC_INDICES)
-                .userName(ELASTIC_APIKEY)
-                .build();
-
-        try {
-            client = new ElasticClient(settings);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            Log.e(TAG, e.getMessage());
-            fail(e.getMessage());
-        }
-    }
 
     // region Happy path
 
@@ -67,9 +39,33 @@ public class ElasticClientSearchTest {
     // region Sad path
 
     @Test
-    public void searchEmptyTest() {
+    public void searchEmptyQueryTest() {
         try {
             String search = client.search(QUERY_EMPTY);
+
+            assertNotNull(search);
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void searchNullTest() {
+        try {
+            String search = client.search(null);
+
+            assertNotNull(search);
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void searchEmptyTest() {
+        try {
+            String search = client.search("");
 
             assertNotNull(search);
         } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
