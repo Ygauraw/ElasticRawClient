@@ -34,6 +34,18 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
         }
     }
 
+    @Test
+    public void searchTestDouble() {
+        try {
+            String search = client.search(QUERY_SEARCH_ALL);
+
+            assertNotNull(search);
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
     // endregion
 
     // region Sad path

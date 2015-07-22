@@ -112,6 +112,7 @@ public class ElasticClient {
 
 	private String getQueryPath() {
 		boolean indicesAreEmpty = true;
+		boolean typesAreEmpty = true;
 
 		StringBuilder pathBuilder = new StringBuilder();
 
@@ -125,6 +126,7 @@ public class ElasticClient {
 
 		String[] types = connector.getSettings().getTypes();
 		if (types != null && types.length > 0) {
+			typesAreEmpty = false;
 			if (indicesAreEmpty)
 				pathBuilder.append("/_all");
 			else
@@ -132,6 +134,10 @@ public class ElasticClient {
 			String typesPath = StringUtils.makeCommaSeparatedList(types);
 			pathBuilder.append(typesPath);
 		}
+
+		if (indicesAreEmpty && typesAreEmpty)
+			pathBuilder.append("/_all");
+
 		pathBuilder.append("/_search");
 		return pathBuilder.toString();
 	}

@@ -25,6 +25,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'org.projectlombok:lombok:1.16.4'
 //    provided 'pl.mg6.hrisey:hrisey:0.3.1'
+    compile "com.github.rholder:guava-retrying:2.0.0"
 
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.0-rc3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0-rc3'

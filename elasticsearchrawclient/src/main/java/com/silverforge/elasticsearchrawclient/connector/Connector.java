@@ -4,6 +4,13 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.github.rholder.retry.RetryException;
+import com.github.rholder.retry.Retryer;
+import com.github.rholder.retry.RetryerBuilder;
+import com.github.rholder.retry.StopStrategies;
+import com.github.rholder.retry.WaitStrategies;
+import com.google.common.base.Predicates;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +22,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -141,16 +151,48 @@ public class Connector implements Connectable {
 
 		URL url = baseUrl.resolve(path).toURL();
 
-		HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+		final HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 		addSSLAuthorizationToConnection(conn);
 		setConnectionSettings(conn, httpMethod);
-		if (data != null && !data.equals(STRING_EMPTY))
-			addDataToConnection(data, conn);
+		if (data != null && !data.equals(STRING_EMPTY)) {
+//			conn.setRequestProperty("Content-Length", Integer.toString(data.getBytes().length));
+//			conn.setRequestProperty("Content-Type", "application/json");
+////			conn.setRequestProperty("Content-Language", "en-US");
+//			conn.setRequestProperty("Content-Encoding", "UTF-8");
+//			conn.setRequestProperty("Accept-Encoding", "compress, gzip");
 
-		conn.connect();
-		StringBuilder retValue = readInputFromConnection(conn);
-		conn.disconnect();
-		return retValue.toString();
+			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setRequestProperty("Cache-Control", "no-cache");
+			conn.setRequestProperty("Content-Length", Integer.toString(data.getBytes().length));
+			addDataToConnection(data, conn);
+		}
+
+		Callable<StringBuilder> callable = new Callable<StringBuilder>() {
+			@Override
+			public StringBuilder call() throws Exception {
+//				conn.connect();
+				StringBuilder retValue = readInputFromConnection(conn);
+//				conn.disconnect();
+				return retValue;
+			}
+		};
+
+		Retryer<StringBuilder> retryer = RetryerBuilder.<StringBuilder>newBuilder()
+			.retryIfResult(Predicates.<StringBuilder>isNull())
+			.retryIfExceptionOfType(IOException.class)
+			.retryIfRuntimeException()
+			.withWaitStrategy(WaitStrategies.fixedWait(500, TimeUnit.MILLISECONDS))
+			.withStopStrategy(StopStrategies.stopAfterAttempt(3))
+			.build();
+
+		StringBuilder returnValue = new StringBuilder();
+		try {
+			returnValue = retryer.call(callable);
+		} catch (ExecutionException | RetryException e) {
+			e.printStackTrace();
+		}
+
+		return returnValue.toString();
 	}
 
 	@NonNull
@@ -186,6 +228,7 @@ public class Connector implements Connectable {
 		conn.setReadTimeout(readTimeout);
 		conn.setConnectTimeout(connectTimeout);
 		conn.setRequestMethod(httpMethod);
+		conn.setUseCaches(false);
 		conn.setDoInput(true);
 		conn.setDoOutput(true);
 	}
