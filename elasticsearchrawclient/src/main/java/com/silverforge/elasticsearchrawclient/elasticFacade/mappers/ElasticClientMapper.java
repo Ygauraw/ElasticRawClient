@@ -2,6 +2,7 @@ package com.silverforge.elasticsearchrawclient.elasticFacade.mappers;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONArray;
@@ -43,5 +44,14 @@ public class ElasticClientMapper<T> {
 		}
 
 		return retValue;
+	}
+
+	public String map(T entity) {
+		try {
+			return mapper.writeValueAsString(entity);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 }

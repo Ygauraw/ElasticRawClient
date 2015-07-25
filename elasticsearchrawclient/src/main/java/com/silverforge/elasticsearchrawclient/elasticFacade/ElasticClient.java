@@ -1,12 +1,16 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.connector.Connector;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
+import com.silverforge.elasticsearchrawclient.elasticFacade.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
@@ -18,9 +22,13 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
 public class ElasticClient {
+	private static final String TAG = ElasticClient.class.getName();
 	private static final String STRING_EMPTY = "";
 	private Connectable connector;
+	private ObjectMapper mapper = new ObjectMapper();
+
 	public Raw raw = new Raw();
+
 
 	public ElasticClient(Connectable connector)
 		throws MalformedURLException {
@@ -48,8 +56,32 @@ public class ElasticClient {
 
 	}
 
-	public void addDocument() {
+	public <T> void addDocument(T entity, String id) {
 
+	}
+
+	public <T> void addDocument(T entity, String index, String id) {
+
+	}
+
+	public <T> void addDocument(T entity, String index, String type, String id) {
+
+	}
+
+	public <T> String addDocument(T entity) {
+
+		try {
+			String entityJson = mapper.writeValueAsString(entity);
+			String addPath = getAddPath();
+
+			String post = connector.post(addPath, entityJson);
+
+		} catch (KeyManagementException | NoSuchAlgorithmException | IOException | IndexCannotBeNullException e) {
+			e.printStackTrace();
+			Log.e(TAG, e.getMessage());
+		}
+
+		return "";
 	}
 
 	public void removeDocument() {
@@ -108,6 +140,34 @@ public class ElasticClient {
 
 		String queryPath = getQueryPath();
 		return connector.post(queryPath, query);
+	}
+
+	private String getAddPath()
+			throws IndexCannotBeNullException {
+
+		boolean indicesAreEmpty = true;
+
+		StringBuilder pathBuilder = new StringBuilder();
+
+		String[] indices = connector.getSettings().getIndices();
+		if (indices != null && indices.length > 0) {
+			indicesAreEmpty = false;
+			pathBuilder.append("/");
+			String indicesPath = StringUtils.makeCommaSeparatedList(indices);
+			pathBuilder.append(indicesPath);
+		}
+
+		if (indicesAreEmpty)
+			throw new IndexCannotBeNullException();
+
+		String[] types = connector.getSettings().getTypes();
+		if (types != null && types.length > 0) {
+			pathBuilder.append("/");
+			String typesPath = StringUtils.makeCommaSeparatedList(types);
+			pathBuilder.append(typesPath);
+		}
+
+		return pathBuilder.toString();
 	}
 
 	private String getQueryPath() {
