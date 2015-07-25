@@ -17,27 +17,12 @@ import static org.junit.Assert.fail;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
 public class ElasticClientSearchTest extends ElasticClientBaseTest {
-    private static final String QUERY_SEARCH_ALL = "{\"query\":{\"match_all\": {}}}";
-    private static final String QUERY_EMPTY = "{}";
-
     // region Happy path
 
     @Test
     public void searchTest() {
         try {
-            String search = client.search(QUERY_SEARCH_ALL);
-
-            assertNotNull(search);
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
-    public void searchTestDouble() {
-        try {
-            String search = client.search(QUERY_SEARCH_ALL);
+            String search = client.search("{\"query\":{\"match_all\": {}}}");
 
             assertNotNull(search);
         } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
@@ -53,7 +38,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
     @Test
     public void searchEmptyQueryTest() {
         try {
-            String search = client.search(QUERY_EMPTY);
+            String search = client.search("{}");
 
             assertNotNull(search);
         } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {

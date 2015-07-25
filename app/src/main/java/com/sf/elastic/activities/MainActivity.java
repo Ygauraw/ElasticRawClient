@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 
 import com.sf.elastic.R;
 import com.sf.elastic.adapters.CityAdapter;
+import com.sf.elastic.models.City;
 import com.sf.elastic.repositories.CityRepository;
 
 import org.androidannotations.annotations.AfterViews;
@@ -21,6 +22,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.concurrent.TimeUnit;
 
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.android.widget.WidgetObservable;
 import rx.schedulers.Schedulers;

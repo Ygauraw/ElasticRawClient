@@ -42,6 +42,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             String[] docIds ={
                     "4kIU9haiQ4ysvGj4TZe0eQ",
                     "y5llcxGFSqCsItk3VBE-7w"};
+
             String documents = client.getDocumentById(docIds);
 
             assertThat(documents, notNullValue());
@@ -58,11 +59,8 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             String[] docIds ={
                     "4kIU9haiQ4ysvGj4TZe0eQ",
                     "y5llcxGFSqCsItk3VBE-7w"};
+
             String documents = client.getDocumentById(docIds);
-
-            assertThat(documents, notNullValue());
-            assertNotEquals(documents, "");
-
             List<City> cities = cityMapper.mapToList(documents, City.class);
 
             assertThat(cities, is(notNullValue()));
@@ -87,8 +85,8 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
                 .build();
         try {
             ElasticClient customClient = new ElasticClient(customSettings);
-            String documents = customClient.getDocumentById(docIds);
 
+            String documents = customClient.getDocumentById(docIds);
             List<City> cities = cityMapper.mapToList(documents, City.class);
 
             assertThat(cities, is(notNullValue()));
@@ -103,6 +101,65 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
+        }
+    }
+
+    // endregion
+
+    // region Sad path
+
+    @Test
+    public void getDocumetsWithNull() {
+        String[] docIds = null;
+        try {
+            String documents = client.getDocumentById(docIds);
+
+            assertThat(documents, notNullValue());
+            assertThat(documents, not(equalTo("")));
+        } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void getDocumetsWithNullMap() {
+        String[] docIds = null;
+        try {
+            String documents = client.getDocumentById(docIds);
+            List<City> cities = cityMapper.mapToList(documents, City.class);
+
+            assertThat(cities, notNullValue());
+            assertThat(cities.size(), equalTo(0));
+        } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void getDocumetsWithEmpty() {
+        String[] docIds = {""};
+        try {
+            String documents = client.getDocumentById(docIds);
+
+            assertThat(documents, notNullValue());
+            assertThat(documents, not(equalTo("")));
+        } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void getDocumetsWithEmptyMap() {
+        String[] docIds = {""};
+        try {
+            String documents = client.getDocumentById(docIds);
+            List<City> cities = cityMapper.mapToList(documents, City.class);
+
+            assertThat(cities, notNullValue());
+            assertThat(cities.size(), equalTo(0));
+        } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
+            e.printStackTrace();
         }
     }
 
