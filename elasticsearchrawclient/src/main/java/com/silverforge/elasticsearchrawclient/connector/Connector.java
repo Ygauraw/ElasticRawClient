@@ -153,12 +153,7 @@ public class Connector implements Connectable {
 			addDataToConnection(data, conn);
 		}
 
-		Callable<StringBuilder> callable = new Callable<StringBuilder>() {
-			@Override
-			public StringBuilder call() throws Exception {
-				return readInputFromConnection(conn);
-			}
-		};
+		Callable<StringBuilder> callable = () -> readInputFromConnection(conn);
 
 		Retryer<StringBuilder> retryer = RetryerBuilder.<StringBuilder>newBuilder()
 			.retryIfResult(Predicates.<StringBuilder>isNull())
