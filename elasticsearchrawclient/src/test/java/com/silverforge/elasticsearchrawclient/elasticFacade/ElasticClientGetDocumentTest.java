@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.elasticFacade.Mappers.RawSourceMapTo;
+import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 
 import org.hamcrest.Matchers;
@@ -32,7 +32,7 @@ import static org.junit.Assert.fail;
 @Config(constants = BuildConfig.class, sdk = 21)
 public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     private static final String TAG = ElasticClientGetDocumentTest.class.getName();
-    private RawSourceMapTo<City> cityMapper = new RawSourceMapTo<>();
+    private ElasticClientMapper<City> cityMapper = new ElasticClientMapper<>();
 
     // region Happy path
 

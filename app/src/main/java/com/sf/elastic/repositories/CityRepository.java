@@ -8,7 +8,7 @@ import com.sf.elastic.R;
 import com.sf.elastic.models.City;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.ElasticClient;
-import com.silverforge.elasticsearchrawclient.elasticFacade.Mappers.RawSourceMapTo;
+import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
@@ -39,7 +39,7 @@ public class CityRepository implements Repository<City> {
 	private static final String[] ELASTIC_INDICES = new String[] {"cities"};
 
 	private ElasticClient client;
-	private RawSourceMapTo<City> cityMapper = new RawSourceMapTo<>();
+	private ElasticClientMapper<City> cityMapper = new ElasticClientMapper<>();
 
 	@RootContext
 	public Context context;

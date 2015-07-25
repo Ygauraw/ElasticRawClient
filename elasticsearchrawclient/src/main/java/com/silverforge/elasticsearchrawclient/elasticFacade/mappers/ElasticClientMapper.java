@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.elasticFacade.Mappers;
+package com.silverforge.elasticsearchrawclient.elasticFacade.mappers;
 
 import android.util.Log;
 
@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RawSourceMapTo<T> {
+public class ElasticClientMapper<T> {
 
-	private static final String TAG = RawSourceMapTo.class.getName();
+	private static final String TAG = ElasticClientMapper.class.getName();
 	private ObjectMapper mapper = new ObjectMapper();
 
 	public List<T> mapToList(String jsonSource, Class<T> typeReference) {
