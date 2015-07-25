@@ -7,8 +7,6 @@ import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.Mappers.RawSourceMapTo;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +33,8 @@ import static org.junit.Assert.fail;
 public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     private static final String TAG = ElasticClientGetDocumentTest.class.getName();
     private RawSourceMapTo<City> cityMapper = new RawSourceMapTo<>();
+
+    // region Happy path
 
     @Test
     public void getDocumentTest() {
@@ -93,9 +93,6 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(2));
-//            assertThat(cities.get(0).getName(), is("Szentendre"));
-//            assertThat(cities.get(1).getName(), is("customCityForTesting"));
-
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Szentendre"))));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTesting"))));
 
@@ -108,4 +105,6 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             fail(e.getMessage());
         }
     }
+
+    // endregion
 }

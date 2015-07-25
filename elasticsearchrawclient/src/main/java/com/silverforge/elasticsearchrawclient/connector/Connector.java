@@ -92,9 +92,7 @@ public class Connector implements Connectable {
 			NoSuchAlgorithmException {
 
 		String httpMethod = HttpMethod.GET.toString();
-		String result = invokeToEndpoint(httpMethod, path);
-
-		return result;
+		return invokeToEndpoint(httpMethod, path);
 	}
 
 	@Override
@@ -104,9 +102,7 @@ public class Connector implements Connectable {
 			NoSuchAlgorithmException {
 
 		String httpMethod = HttpMethod.POST.toString();
-		String result = invokeToEndpoint(httpMethod, path, data);
-
-		return result;
+		return invokeToEndpoint(httpMethod, path, data);
 	}
 
 	@Override
@@ -116,9 +112,7 @@ public class Connector implements Connectable {
 			NoSuchAlgorithmException {
 
 		String httpMethod = HttpMethod.PUT.toString();
-		String result = invokeToEndpoint(httpMethod, path, data);
-
-		return result;
+		return invokeToEndpoint(httpMethod, path, data);
 	}
 
 	@Override
@@ -129,9 +123,7 @@ public class Connector implements Connectable {
 
 
 		String httpMethod = HttpMethod.DELETE.toString();
-		String result = invokeToEndpoint(httpMethod, path, data);
-
-		return result;
+		return invokeToEndpoint(httpMethod, path, data);
 	}
 
 	@NonNull
@@ -155,12 +147,6 @@ public class Connector implements Connectable {
 		addSSLAuthorizationToConnection(conn);
 		setConnectionSettings(conn, httpMethod);
 		if (data != null && !data.equals(STRING_EMPTY)) {
-//			conn.setRequestProperty("Content-Length", Integer.toString(data.getBytes().length));
-//			conn.setRequestProperty("Content-Type", "application/json");
-////			conn.setRequestProperty("Content-Language", "en-US");
-//			conn.setRequestProperty("Content-Encoding", "UTF-8");
-//			conn.setRequestProperty("Accept-Encoding", "compress, gzip");
-
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setRequestProperty("Cache-Control", "no-cache");
 			conn.setRequestProperty("Content-Length", Integer.toString(data.getBytes().length));
@@ -170,10 +156,7 @@ public class Connector implements Connectable {
 		Callable<StringBuilder> callable = new Callable<StringBuilder>() {
 			@Override
 			public StringBuilder call() throws Exception {
-//				conn.connect();
-				StringBuilder retValue = readInputFromConnection(conn);
-//				conn.disconnect();
-				return retValue;
+				return readInputFromConnection(conn);
 			}
 		};
 
