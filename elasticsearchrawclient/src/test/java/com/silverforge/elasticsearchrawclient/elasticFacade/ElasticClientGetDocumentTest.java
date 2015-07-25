@@ -7,7 +7,9 @@ import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.Mappers.RawSourceMapTo;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 
-import org.junit.Ignore;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -19,20 +21,44 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
 public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     private static final String TAG = ElasticClientGetDocumentTest.class.getName();
-    private static final String[] IDS ={"4kIU9haiQ4ysvGj4TZe0eQ", "y5llcxGFSqCsItk3VBE-7w"};
     private RawSourceMapTo<City> cityMapper = new RawSourceMapTo<>();
 
     @Test
-    public void getDocMapTest() {
+    public void getDocumentTest() {
         try {
-            String documents = client.getDocumentById(IDS);
+            String[] docIds ={
+                    "4kIU9haiQ4ysvGj4TZe0eQ",
+                    "y5llcxGFSqCsItk3VBE-7w"};
+            String documents = client.getDocumentById(docIds);
+
+            assertThat(documents, notNullValue());
+            assertThat(documents, not(""));
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void getDocumentAndMapTest() {
+        try {
+            String[] docIds ={
+                    "4kIU9haiQ4ysvGj4TZe0eQ",
+                    "y5llcxGFSqCsItk3VBE-7w"};
+            String documents = client.getDocumentById(docIds);
 
             assertThat(documents, notNullValue());
             assertNotEquals(documents, "");
@@ -47,49 +73,39 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             fail(e.getMessage());
         }
     }
-//
-//    @Test
-//    public void getDocumentTest() {
-//        try {
-//            String documents = client.getDocumentById(IDS);
-//            String documents1 = client.getDocumentById(IDS);
-//
-//            assertNotNull(documents);
-//        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
-//            e.printStackTrace();
-//            fail(e.getMessage());
-//        }
-//    }
 
+    @Test
+    public void getDocumentWithoutIndexTest() {
+        String[] docIds ={
+                "caT_CJqUSaG_6lw1cyNv0w",
+                "y5llcxGFSqCsItk3VBE-7w"};
 
+        ConnectorSettings customSettings = ConnectorSettings
+                .builder()
+                .baseUrl(ELASTIC_URL)
+                .userName(ELASTIC_APIKEY)
+                .build();
+        try {
+            ElasticClient customClient = new ElasticClient(customSettings);
+            String documents = customClient.getDocumentById(docIds);
 
+            List<City> cities = cityMapper.mapToList(documents, City.class);
 
-//
-//    @Test
-//    @Ignore
-//    public void getDocumentWithoutIndexTest() {
-//
-//        ConnectorSettings customSettings = ConnectorSettings
-//                .builder()
-//                .baseUrl(ELASTIC_URL)
-//                .userName(ELASTIC_APIKEY)
-//                .build();
-//        try {
-//            ElasticClient customClient = new ElasticClient(customSettings);
-//            String documents = customClient.getDocumentById(IDS);
-//
-//            List<City> cities = cityMapper.mapToList(documents, City.class);
-//
-//            assertThat(cities, is(notNullValue()));
-//            assertThat(cities.size(), equalTo(1));
+            assertThat(cities, is(notNullValue()));
+            assertThat(cities.size(), equalTo(2));
 //            assertThat(cities.get(0).getName(), is("Szentendre"));
-//        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
-//            e.printStackTrace();
-//            fail(e.getMessage());
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//            Log.e(TAG, e.getMessage());
-//            fail(e.getMessage());
-//        }
-//    }
+//            assertThat(cities.get(1).getName(), is("customCityForTesting"));
+
+            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Szentendre"))));
+            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTesting"))));
+
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
+            fail(e.getMessage());
+        }
+    }
 }

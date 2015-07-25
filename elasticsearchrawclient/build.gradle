@@ -21,16 +21,16 @@ android {
 
 dependencies {
     provided 'org.glassfish:javax.annotation:10.0-b28'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'org.projectlombok:lombok:1.16.4'
-//    provided 'pl.mg6.hrisey:hrisey:0.3.1'
-    compile "com.github.rholder:guava-retrying:2.0.0"
-
+    //    provided 'pl.mg6.hrisey:hrisey:0.3.1'
+    compile 'com.github.rholder:guava-retrying:2.0.0'
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.0-rc3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0-rc3'
-
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:1.9.5"
-    testCompile "org.robolectric:robolectric:3.0"
+    testCompile 'org.mockito:mockito-core:1.9.5'
+    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
+//    androidTestCompile 'org.hamcrest:hamcrest-all:1.3'
 }
