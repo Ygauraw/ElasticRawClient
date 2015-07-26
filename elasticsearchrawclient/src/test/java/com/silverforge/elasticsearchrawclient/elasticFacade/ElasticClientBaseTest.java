@@ -15,6 +15,7 @@ public class ElasticClientBaseTest {
     protected static final String ELASTIC_URL = "https://silverforge.east-us.azr.facetflow.io";
     protected static final String ELASTIC_APIKEY = "ZjjnkNMgh0uj5yCFIvYVGQsueESCLj1k";
     protected static final String[] ELASTIC_INDICES = new String[] {"cities"};
+    protected static final String[] ELASTIC_TYPES = new String[] {"city"};
     protected ElasticClient client;
 
     public ElasticClientBaseTest() {
@@ -22,6 +23,7 @@ public class ElasticClientBaseTest {
                 .builder()
                 .baseUrl(ELASTIC_URL)
                 .indices(ELASTIC_INDICES)
+                .types(ELASTIC_TYPES)
                 .userName(ELASTIC_APIKEY)
                 .build();
 

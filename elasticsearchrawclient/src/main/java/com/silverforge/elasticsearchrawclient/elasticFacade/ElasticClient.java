@@ -189,8 +189,8 @@ public class ElasticClient {
 			typesAreEmpty = false;
 			if (indicesAreEmpty)
 				pathBuilder.append("/_all");
-			else
-				pathBuilder.append("/");
+
+			pathBuilder.append("/");
 			String typesPath = StringUtils.makeCommaSeparatedList(types);
 			pathBuilder.append(typesPath);
 		}

@@ -93,7 +93,36 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             assertThat(cities.size(), equalTo(2));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Szentendre"))));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTesting"))));
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
+            fail(e.getMessage());
+        }
+    }
 
+    @Test
+    public void getDocumentWithTypeTest() {
+        String[] docIds ={
+                "caT_CJqUSaG_6lw1cyNv0w",
+                "y5llcxGFSqCsItk3VBE-7w"};
+
+        ConnectorSettings customSettings = ConnectorSettings
+                .builder()
+                .baseUrl(ELASTIC_URL)
+                .userName(ELASTIC_APIKEY)
+                .build();
+        try {
+            ElasticClient customClient = new ElasticClient(customSettings);
+
+            String documents = customClient.getDocumentByIdAndType(docIds, "city");
+            List<City> cities = cityMapper.mapToList(documents, City.class);
+
+            assertThat(cities, is(notNullValue()));
+            assertThat(cities.size(), equalTo(1));
+            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Szentendre"))));
         } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
             e.printStackTrace();
             fail(e.getMessage());
