@@ -11,6 +11,7 @@ import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.elasticFacade.exceptions.IndexCannotBeNullException;
+import com.silverforge.elasticsearchrawclient.model.AddDocumentResult;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
@@ -69,19 +70,20 @@ public class ElasticClient {
 	}
 
 	public <T> String addDocument(T entity) {
-
+		String retValue = "";
 		try {
 			String entityJson = mapper.writeValueAsString(entity);
 			String addPath = getAddPath();
 
-			String post = connector.post(addPath, entityJson);
-
+			String result = connector.post(addPath, entityJson);
+			AddDocumentResult addDocumentResult = mapper.readValue(result, AddDocumentResult.class);
+			retValue = addDocumentResult.getId();
 		} catch (KeyManagementException | NoSuchAlgorithmException | IOException | IndexCannotBeNullException e) {
 			e.printStackTrace();
 			Log.e(TAG, e.getMessage());
 		}
 
-		return "";
+		return retValue;
 	}
 
 	public void removeDocument() {

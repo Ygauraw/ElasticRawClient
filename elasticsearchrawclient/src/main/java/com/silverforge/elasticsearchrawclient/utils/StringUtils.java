@@ -2,6 +2,8 @@ package com.silverforge.elasticsearchrawclient.utils;
 
 import android.text.TextUtils;
 
+import java.util.UUID;
+
 public class StringUtils {
     public static String makeCommaSeparatedList(String[] list) {
         if (list == null || list.length == 0)
@@ -25,5 +27,10 @@ public class StringUtils {
         }
 
         return TextUtils.join(",", list);
+    }
+
+    public static String generateUUID() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
     }
 }
