@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 
-import org.junit.Before;
-
 import java.net.URISyntaxException;
 
 import static org.junit.Assert.fail;

@@ -69,7 +69,12 @@ public class ElasticClient {
 
 	}
 
-	public <T> String addDocument(T entity) {
+	public <T> String addDocument(T entity)
+			throws IndexCannotBeNullException {
+
+		if (entity == null)
+			throw new IllegalArgumentException("entity cannot be null");
+
 		String retValue = "";
 		try {
 			String entityJson = mapper.writeValueAsString(entity);
@@ -78,9 +83,11 @@ public class ElasticClient {
 			String result = connector.post(addPath, entityJson);
 			AddDocumentResult addDocumentResult = mapper.readValue(result, AddDocumentResult.class);
 			retValue = addDocumentResult.getId();
-		} catch (KeyManagementException | NoSuchAlgorithmException | IOException | IndexCannotBeNullException e) {
+		} catch (KeyManagementException | NoSuchAlgorithmException | IOException e) {
 			e.printStackTrace();
 			Log.e(TAG, e.getMessage());
+		} catch (IndexCannotBeNullException ie) {
+			throw ie;
 		}
 
 		return retValue;
