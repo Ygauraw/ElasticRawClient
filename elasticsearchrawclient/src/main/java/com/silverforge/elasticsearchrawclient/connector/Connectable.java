@@ -20,6 +20,11 @@ public interface Connectable {
 				KeyManagementException,
 				NoSuchAlgorithmException;
 
+	String delete(String path)
+		throws IOException,
+				KeyManagementException,
+				NoSuchAlgorithmException;
+
 	String delete(String path, String data)
 		throws IOException,
 				KeyManagementException,

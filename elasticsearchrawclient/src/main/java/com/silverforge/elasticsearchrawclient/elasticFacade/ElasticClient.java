@@ -57,17 +57,14 @@ public class ElasticClient {
 	}
 
 	public <T> String addDocument(T entity)
-			throws IndexCannotBeNullException,
-			IllegalArgumentException {
+			throws IndexCannotBeNullException, IllegalArgumentException {
 
 		return addDocument(entity, null);
 	}
 
 
 	public <T> String addDocument(T entity, String id)
-			throws IndexCannotBeNullException,
-			IllegalArgumentException {
-
+			throws IndexCannotBeNullException, IllegalArgumentException {
 
 		if (entity == null)
 			throw new IllegalArgumentException("entity cannot be null");
@@ -75,7 +72,7 @@ public class ElasticClient {
 		String retValue = "";
 		try {
 			String entityJson = mapper.writeValueAsString(entity);
-			String addPath = getAddPath(id);
+			String addPath = getOperationPath(id);
 
 			String result = connector.post(addPath, entityJson);
 			AddDocumentResult addDocumentResult = mapper.readValue(result, AddDocumentResult.class);
@@ -119,8 +116,11 @@ public class ElasticClient {
         return retValue;
     }
 
-	public void removeDocument(String id) {
+	public void removeDocument(String id)
+			throws IndexCannotBeNullException, NoSuchAlgorithmException, IOException, KeyManagementException {
 
+		String deletePath = getOperationPath(id);
+		connector.delete(deletePath);
 	}
 
 	public void removeDocument(String index, String type, String id) {
@@ -148,17 +148,13 @@ public class ElasticClient {
     }
 
 	public String getDocument(String[] ids)
-			throws NoSuchAlgorithmException,
-			IOException,
-			KeyManagementException {
+			throws NoSuchAlgorithmException, IOException, KeyManagementException {
 
 		return getDocument(ids, null);
 	}
 
 	public String getDocument(String[] ids, String type)
-			throws NoSuchAlgorithmException,
-			IOException,
-			KeyManagementException {
+			throws NoSuchAlgorithmException, IOException, KeyManagementException {
 
 		InputStream inputStream;
 		if (TextUtils.isEmpty(type)) {
@@ -189,15 +185,13 @@ public class ElasticClient {
 	}
 
 	public String search(String query)
-			throws NoSuchAlgorithmException,
-			IOException,
-			KeyManagementException {
+			throws NoSuchAlgorithmException, IOException, KeyManagementException {
 
 		String queryPath = getQueryPath();
 		return connector.post(queryPath, query);
 	}
 
-	private String getAddPath(String id)
+	protected String getOperationPath(String id)
 			throws IndexCannotBeNullException {
 
 		boolean indicesAreEmpty = true;
@@ -228,7 +222,7 @@ public class ElasticClient {
 		return pathBuilder.toString();
 	}
 
-	private String getQueryPath() {
+	protected String getQueryPath() {
 		boolean indicesAreEmpty = true;
 		boolean typesAreEmpty = true;
 

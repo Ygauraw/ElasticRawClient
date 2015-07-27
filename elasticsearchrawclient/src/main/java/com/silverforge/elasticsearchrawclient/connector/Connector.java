@@ -43,6 +43,7 @@ public class Connector implements Connectable {
 
 	public Connector(ConnectorSettings settings)
 		throws URISyntaxException {
+
 		this.settings = settings;
 
 		if (settings != null) {
@@ -87,9 +88,7 @@ public class Connector implements Connectable {
 
 	@Override
 	public String get(String path)
-			throws IOException,
-			KeyManagementException,
-			NoSuchAlgorithmException {
+			throws IOException, KeyManagementException, NoSuchAlgorithmException {
 
 		String httpMethod = HttpMethod.GET.toString();
 		return invokeToEndpoint(httpMethod, path);
@@ -97,9 +96,7 @@ public class Connector implements Connectable {
 
 	@Override
 	public String post(String path, String data)
-			throws IOException,
-			KeyManagementException,
-			NoSuchAlgorithmException {
+			throws IOException, KeyManagementException, NoSuchAlgorithmException {
 
 		String httpMethod = HttpMethod.POST.toString();
 		return invokeToEndpoint(httpMethod, path, data);
@@ -107,20 +104,22 @@ public class Connector implements Connectable {
 
 	@Override
 	public String put(String path, String data)
-			throws IOException,
-			KeyManagementException,
-			NoSuchAlgorithmException {
+			throws IOException, KeyManagementException, NoSuchAlgorithmException {
 
 		String httpMethod = HttpMethod.PUT.toString();
 		return invokeToEndpoint(httpMethod, path, data);
 	}
 
 	@Override
-	public String delete(String path, String data)
-			throws IOException,
-			KeyManagementException,
-			NoSuchAlgorithmException {
+	public String delete(String path)
+			throws IOException, KeyManagementException, NoSuchAlgorithmException {
 
+		return delete(path, STRING_EMPTY);
+	}
+
+	@Override
+	public String delete(String path, String data)
+			throws IOException, KeyManagementException, NoSuchAlgorithmException {
 
 		String httpMethod = HttpMethod.DELETE.toString();
 		return invokeToEndpoint(httpMethod, path, data);
@@ -128,18 +127,14 @@ public class Connector implements Connectable {
 
 	@NonNull
 	private String invokeToEndpoint(String httpMethod, String path)
-			throws IOException,
-			NoSuchAlgorithmException,
-			KeyManagementException {
+			throws IOException, NoSuchAlgorithmException, KeyManagementException {
 
 		return invokeToEndpoint(httpMethod, path, STRING_EMPTY);
 	}
 
 	@NonNull
 	private String invokeToEndpoint(String httpMethod, String path, String data)
-			throws IOException,
-			NoSuchAlgorithmException,
-			KeyManagementException {
+			throws IOException, NoSuchAlgorithmException, KeyManagementException {
 
 		URL url = baseUrl.resolve(path).toURL();
 
@@ -212,8 +207,7 @@ public class Connector implements Connectable {
 	}
 
 	private void addSSLAuthorizationToConnection(HttpsURLConnection conn)
-			throws NoSuchAlgorithmException,
-			KeyManagementException {
+			throws NoSuchAlgorithmException, KeyManagementException {
 
 		// Create the SSL connection
 		SSLContext sc = SSLContext.getInstance("TLS");
