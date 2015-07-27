@@ -39,8 +39,8 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     public void getDocumentTest() {
         try {
             String[] docIds ={
-                    "4kIU9haiQ4ysvGj4TZe0eQ",
-                    "y5llcxGFSqCsItk3VBE-7w"};
+                    "karcag",
+                    "caT_CJqUSaG_6lw1cyNv0w"};
 
             String documents = client.getDocumentById(docIds);
 
@@ -56,15 +56,15 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     public void getDocumentAndMapTest() {
         try {
             String[] docIds ={
-                    "4kIU9haiQ4ysvGj4TZe0eQ",
-                    "y5llcxGFSqCsItk3VBE-7w"};
+                    "karcag",
+                    "caT_CJqUSaG_6lw1cyNv0w"};
 
             String documents = client.getDocumentById(docIds);
             List<City> cities = cityMapper.mapToList(documents, City.class);
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(1));
-            assertThat(cities.get(0).getName(), is("Szentendre"));
+            assertThat(cities.get(0).getName(), is("Karcag"));
         } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
             e.printStackTrace();
             fail(e.getMessage());
@@ -74,8 +74,8 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     @Test
     public void getDocumentWithoutIndexTest() {
         String[] docIds ={
-                "caT_CJqUSaG_6lw1cyNv0w",
-                "y5llcxGFSqCsItk3VBE-7w"};
+                "karcag",
+                "caT_CJqUSaG_6lw1cyNv0w"};
 
         ConnectorSettings customSettings = ConnectorSettings
                 .builder()
@@ -90,7 +90,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(2));
-            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Szentendre"))));
+            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTesting"))));
         } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
             e.printStackTrace();
@@ -105,8 +105,8 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     @Test
     public void getDocumentWithTypeTest() {
         String[] docIds ={
-                "caT_CJqUSaG_6lw1cyNv0w",
-                "y5llcxGFSqCsItk3VBE-7w"};
+                "karcag",
+                "caT_CJqUSaG_6lw1cyNv0w"};
 
         ConnectorSettings customSettings = ConnectorSettings
                 .builder()
@@ -116,12 +116,12 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             ElasticClient customClient = new ElasticClient(customSettings);
 
-            String documents = customClient.getDocumentByIdAndType(docIds, "city");
+            String documents = customClient.getDocumentById(docIds, "city");
             List<City> cities = cityMapper.mapToList(documents, City.class);
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(1));
-            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Szentendre"))));
+            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
         } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
             e.printStackTrace();
             fail(e.getMessage());

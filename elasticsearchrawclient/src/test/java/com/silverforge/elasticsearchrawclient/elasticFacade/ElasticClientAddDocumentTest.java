@@ -8,7 +8,9 @@ import com.silverforge.elasticsearchrawclient.elasticFacade.exceptions.IndexCann
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -20,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static com.silverforge.elasticsearchrawclient.utils.StringUtils.generateUUID;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -43,6 +46,7 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
 
         try {
             id = client.addDocument(city);
+            System.out.println(String.format("DocumentId : %s", id));
         } catch (IndexCannotBeNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
@@ -51,6 +55,12 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
 
         assertThat(id, notNullValue());
         assertThat(id, not(""));
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         try {
             String document = client.getDocumentById(new String[]{id});
@@ -65,6 +75,32 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
         }
+    }
+
+    @Test
+    public void addDocumentWithIdTest() {
+        String cityName = generateUUID();
+        String cityId = generateUUID();
+        City city = new City(cityName);
+
+        try {
+            String resultId = client.addDocument(city, cityId);
+            assertThat(resultId, equalTo(cityId));
+        } catch (IndexCannotBeNullException e) {
+            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void addDocumentWithFullPath() {
+        String cityName = generateUUID();
+        String cityId = generateUUID();
+        City city = new City(cityName);
+
+        String resultId = client.addDocument(city, "testcities", "testcity", cityId);;
+        assertThat(resultId, equalTo(cityId));
     }
 
     // endregion
@@ -103,6 +139,65 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
         }
+    }
+
+    @Rule
+    public ExpectedException expectedExceptionRuler = ExpectedException.none();
+
+    @Test
+    public void addDocumentNullEntityTest() {
+        expectedExceptionRuler.expect(IllegalArgumentException.class);
+        expectedExceptionRuler.expectMessage("entity cannot be null");
+
+        client.addDocument(null, "a", "b", "c");
+    }
+
+    @Test
+    public void addDocumentNullIndexTest() {
+        expectedExceptionRuler.expect(IllegalArgumentException.class);
+        expectedExceptionRuler.expectMessage("index cannot be null or empty");
+
+        client.addDocument(new City("alma"), null, "b", "c");
+    }
+
+    @Test
+    public void addDocumentNullTypeTest() {
+        expectedExceptionRuler.expect(IllegalArgumentException.class);
+        expectedExceptionRuler.expectMessage("type cannot be null or empty");
+
+        client.addDocument(new City("alma"), "a", null, "c");
+    }
+
+    @Test
+    public void addDocumentNullIdTest() {
+        expectedExceptionRuler.expect(IllegalArgumentException.class);
+        expectedExceptionRuler.expectMessage("id cannot be null or empty");
+
+        client.addDocument(new City("alma"), "a", "b", null);
+    }
+
+    @Test
+    public void addDocumentEmptyIndexTest() {
+        expectedExceptionRuler.expect(IllegalArgumentException.class);
+        expectedExceptionRuler.expectMessage("index cannot be null or empty");
+
+        client.addDocument(new City("alma"), "", "b", "c");
+    }
+
+    @Test
+    public void addDocumentEmptyTypeTest() {
+        expectedExceptionRuler.expect(IllegalArgumentException.class);
+        expectedExceptionRuler.expectMessage("type cannot be null or empty");
+
+        client.addDocument(new City("alma"), "a", "", "c");
+    }
+
+    @Test
+    public void addDocumentEmptyIdTest() {
+        expectedExceptionRuler.expect(IllegalArgumentException.class);
+        expectedExceptionRuler.expectMessage("id cannot be null or empty");
+
+        client.addDocument(new City("alma"), "a", "b", "");
     }
 
     // endregion

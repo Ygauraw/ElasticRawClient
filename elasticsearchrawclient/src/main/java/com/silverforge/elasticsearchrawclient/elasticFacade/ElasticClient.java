@@ -3,7 +3,6 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.connector.Connector;
@@ -22,6 +21,7 @@ import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
+// TODO : create index for elasticclient once the methods are implemented
 public class ElasticClient {
 	private static final String TAG = ElasticClient.class.getName();
 	private static final String STRING_EMPTY = "";
@@ -57,20 +57,18 @@ public class ElasticClient {
 
 	}
 
-	public <T> void addDocument(T entity, String id) {
-
-	}
-
-	public <T> void addDocument(T entity, String index, String id) {
-
-	}
-
-	public <T> void addDocument(T entity, String index, String type, String id) {
-
-	}
-
 	public <T> String addDocument(T entity)
-			throws IndexCannotBeNullException {
+			throws IndexCannotBeNullException,
+			IllegalArgumentException {
+
+		return addDocument(entity, null);
+	}
+
+
+	public <T> String addDocument(T entity, String id)
+			throws IndexCannotBeNullException,
+			IllegalArgumentException {
+
 
 		if (entity == null)
 			throw new IllegalArgumentException("entity cannot be null");
@@ -78,7 +76,7 @@ public class ElasticClient {
 		String retValue = "";
 		try {
 			String entityJson = mapper.writeValueAsString(entity);
-			String addPath = getAddPath();
+			String addPath = getAddPath(id);
 
 			String result = connector.post(addPath, entityJson);
 			AddDocumentResult addDocumentResult = mapper.readValue(result, AddDocumentResult.class);
@@ -93,6 +91,35 @@ public class ElasticClient {
 		return retValue;
 	}
 
+	public <T> String addDocument(T entity, String index, String type, String id) {
+		if (entity == null)
+			throw new IllegalArgumentException("entity cannot be null");
+
+		if (TextUtils.isEmpty(index))
+			throw new IllegalArgumentException("index cannot be null or empty");
+
+		if (TextUtils.isEmpty(type))
+			throw new IllegalArgumentException("type cannot be null or empty");
+
+		if (TextUtils.isEmpty(id))
+			throw new IllegalArgumentException("id cannot be null or empty");
+
+        String retValue = "";
+        try {
+            String entityJson = mapper.writeValueAsString(entity);
+            String addPath = String.format("/%s/%s/%s", index, type, id);
+
+            String result = connector.post(addPath, entityJson);
+            AddDocumentResult addDocumentResult = mapper.readValue(result, AddDocumentResult.class);
+            retValue = addDocumentResult.getId();
+        } catch (KeyManagementException | NoSuchAlgorithmException | IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
+        }
+
+        return retValue;
+    }
+
 	public void removeDocument() {
 
 	}
@@ -106,10 +133,10 @@ public class ElasticClient {
 			IOException,
 			KeyManagementException {
 
-		return getDocumentByIdAndType(ids, null);
+		return getDocumentById(ids, null);
 	}
 
-	public String getDocumentByIdAndType(String[] ids, String type)
+	public String getDocumentById(String[] ids, String type)
 			throws NoSuchAlgorithmException,
 			IOException,
 			KeyManagementException {
@@ -151,7 +178,7 @@ public class ElasticClient {
 		return connector.post(queryPath, query);
 	}
 
-	private String getAddPath()
+	private String getAddPath(String id)
 			throws IndexCannotBeNullException {
 
 		boolean indicesAreEmpty = true;
@@ -175,6 +202,9 @@ public class ElasticClient {
 			String typesPath = StringUtils.makeCommaSeparatedList(types);
 			pathBuilder.append(typesPath);
 		}
+
+		if (!TextUtils.isEmpty(id))
+			pathBuilder.append("/").append(id);
 
 		return pathBuilder.toString();
 	}
