@@ -4,11 +4,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.silverforge.elasticsearchrawclient.ElasticClientApp;
+import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.connector.Connector;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.ElasticClientApp;
-import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.elasticFacade.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.model.AddDocumentResult;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
@@ -29,7 +29,6 @@ public class ElasticClient {
 	private ObjectMapper mapper = new ObjectMapper();
 
 	public Raw raw = new Raw();
-
 
 	public ElasticClient(Connectable connector)
 		throws MalformedURLException {
@@ -120,13 +119,33 @@ public class ElasticClient {
         return retValue;
     }
 
-	public void removeDocument() {
+	public void removeDocument(String id) {
 
 	}
 
-	public void bulkDocuments() {
+	public void removeDocument(String index, String type, String id) {
 
 	}
+
+	public void removeDocumentsQuery(String query) {
+
+	}
+
+	public void removeDocumentsQuery(String index, String type, String query) {
+
+	}
+
+    public <T> void updateDocument(T entity, String id) {
+
+    }
+
+    public <T> void updateDocument(T entity, String index, String type, String id) {
+
+    }
+
+    public void bulk() {
+
+    }
 
 	public String getDocument(String[] ids)
 			throws NoSuchAlgorithmException,

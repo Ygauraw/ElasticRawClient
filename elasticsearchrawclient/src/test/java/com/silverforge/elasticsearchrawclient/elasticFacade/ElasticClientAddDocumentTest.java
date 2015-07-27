@@ -19,7 +19,10 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.silverforge.elasticsearchrawclient.utils.StringUtils.generateUUID;
 import static org.hamcrest.CoreMatchers.equalTo;
