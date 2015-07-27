@@ -63,7 +63,7 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
         }
 
         try {
-            String document = client.getDocumentById(new String[]{id});
+            String document = client.getDocument(new String[]{id});
             assertThat(document, not(nullValue()));
 
             List<City> cities = cityMapper.mapToList(document, City.class);

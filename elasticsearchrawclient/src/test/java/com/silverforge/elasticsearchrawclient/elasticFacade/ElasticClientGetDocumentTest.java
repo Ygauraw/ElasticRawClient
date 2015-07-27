@@ -42,7 +42,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
                     "karcag",
                     "caT_CJqUSaG_6lw1cyNv0w"};
 
-            String documents = client.getDocumentById(docIds);
+            String documents = client.getDocument(docIds);
 
             assertThat(documents, notNullValue());
             assertThat(documents, not(""));
@@ -59,7 +59,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
                     "karcag",
                     "caT_CJqUSaG_6lw1cyNv0w"};
 
-            String documents = client.getDocumentById(docIds);
+            String documents = client.getDocument(docIds);
             List<City> cities = cityMapper.mapToList(documents, City.class);
 
             assertThat(cities, is(notNullValue()));
@@ -85,7 +85,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             ElasticClient customClient = new ElasticClient(customSettings);
 
-            String documents = customClient.getDocumentById(docIds);
+            String documents = customClient.getDocument(docIds);
             List<City> cities = cityMapper.mapToList(documents, City.class);
 
             assertThat(cities, is(notNullValue()));
@@ -116,7 +116,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             ElasticClient customClient = new ElasticClient(customSettings);
 
-            String documents = customClient.getDocumentById(docIds, "city");
+            String documents = customClient.getDocument(docIds, "city");
             List<City> cities = cityMapper.mapToList(documents, City.class);
 
             assertThat(cities, is(notNullValue()));
@@ -140,7 +140,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     public void getDocumetsWithNull() {
         String[] docIds = null;
         try {
-            String documents = client.getDocumentById(docIds);
+            String documents = client.getDocument(docIds);
 
             assertThat(documents, notNullValue());
             assertThat(documents, not(equalTo("")));
@@ -154,7 +154,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     public void getDocumetsWithNullMap() {
         String[] docIds = null;
         try {
-            String documents = client.getDocumentById(docIds);
+            String documents = client.getDocument(docIds);
             List<City> cities = cityMapper.mapToList(documents, City.class);
 
             assertThat(cities, notNullValue());
@@ -168,7 +168,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     public void getDocumetsWithEmpty() {
         String[] docIds = {""};
         try {
-            String documents = client.getDocumentById(docIds);
+            String documents = client.getDocument(docIds);
 
             assertThat(documents, notNullValue());
             assertThat(documents, not(equalTo("")));
@@ -181,7 +181,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     public void getDocumetsWithEmptyMap() {
         String[] docIds = {""};
         try {
-            String documents = client.getDocumentById(docIds);
+            String documents = client.getDocument(docIds);
             List<City> cities = cityMapper.mapToList(documents, City.class);
 
             assertThat(cities, notNullValue());

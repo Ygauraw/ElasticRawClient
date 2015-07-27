@@ -128,15 +128,15 @@ public class ElasticClient {
 
 	}
 
-	public String getDocumentById(String[] ids)
+	public String getDocument(String[] ids)
 			throws NoSuchAlgorithmException,
 			IOException,
 			KeyManagementException {
 
-		return getDocumentById(ids, null);
+		return getDocument(ids, null);
 	}
 
-	public String getDocumentById(String[] ids, String type)
+	public String getDocument(String[] ids, String type)
 			throws NoSuchAlgorithmException,
 			IOException,
 			KeyManagementException {
