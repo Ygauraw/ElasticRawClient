@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
-// TODO : create index for elasticclient once the methods are implemented
+// TODO : create interface for elasticclient once the methods are implemented
 public class ElasticClient {
 	private static final String TAG = ElasticClient.class.getName();
 	private static final String STRING_EMPTY = "";
@@ -78,11 +78,11 @@ public class ElasticClient {
 	public <T> String addDocument(T entity)
 			throws IndexCannotBeNullException, IllegalArgumentException {
 
-		return addDocument(entity, null);
+		return addDocument(null, entity);
 	}
 
 
-	public <T> String addDocument(T entity, String id)
+	public <T> String addDocument(String id, T entity)
 			throws IndexCannotBeNullException, IllegalArgumentException {
 
 		if (entity == null)
@@ -106,7 +106,7 @@ public class ElasticClient {
 		return retValue;
 	}
 
-	public <T> String addDocument(T entity, String index, String type, String id) {
+	public <T> String addDocument(String index, String type, String id, T entity) {
 		if (entity == null)
 			throw new IllegalArgumentException("entity cannot be null");
 
@@ -154,11 +154,11 @@ public class ElasticClient {
 
 	}
 
-    public <T> void updateDocument(T entity, String id) {
+    public <T> void updateDocument(String id, T entity) {
 
     }
 
-    public <T> void updateDocument(T entity, String index, String type, String id) {
+    public <T> void updateDocument(String index, String type, String id, T entity) {
 
     }
 

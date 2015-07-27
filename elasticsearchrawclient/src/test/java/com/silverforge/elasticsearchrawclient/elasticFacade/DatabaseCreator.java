@@ -71,10 +71,10 @@ public final class DatabaseCreator {
             client.createIndex("cities", createCityData);
             client.createIndex("testcities", createTestCityData);
 
-            client.addDocument(new City("Karcag"), "cities", "city", "karcag");
-            client.addDocument(new City("Budapest"), "cities", "city", "budapest");
+            client.addDocument("cities", "city", "karcag", new City("Karcag"));
+            client.addDocument("cities", "city", "budapest", new City("Budapest"));
 
-            client.addDocument(new City("customCityForTesting"), "testcities", "testcity", "customCity");
+            client.addDocument("testcities", "testcity", "customCity", new City("customCityForTesting"));
         } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
