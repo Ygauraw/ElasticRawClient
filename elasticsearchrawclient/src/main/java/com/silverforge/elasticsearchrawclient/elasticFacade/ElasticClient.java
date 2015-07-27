@@ -49,7 +49,7 @@ public class ElasticClient {
 			connector.put("/" + indexName, data);
 	}
 
-	public void createAlias() {
+	public void createAlias(String indexName, String aliasName) {
 
 	}
 
@@ -71,7 +71,7 @@ public class ElasticClient {
 		}
 	}
 
-	public void removeAlias() {
+	public void removeAlias(String aliasName) {
 
 	}
 
@@ -138,12 +138,27 @@ public class ElasticClient {
 	public void removeDocument(String id)
 			throws IndexCannotBeNullException, NoSuchAlgorithmException, IOException, KeyManagementException {
 
+		if (TextUtils.isEmpty(id))
+			throw new IllegalArgumentException("id cannot be null or empty");
+
 		String deletePath = getOperationPath(id);
 		connector.delete(deletePath);
 	}
 
-	public void removeDocument(String index, String type, String id) {
+	public void removeDocument(String index, String type, String id)
+			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+		
+		if (TextUtils.isEmpty(index))
+			throw new IllegalArgumentException("index cannot be null or empty");
 
+		if (TextUtils.isEmpty(type))
+			throw new IllegalArgumentException("type cannot be null or empty");
+
+		if (TextUtils.isEmpty(id))
+			throw new IllegalArgumentException("id cannot be null or empty");
+
+		String deletePath = String.format("/%s/%s/%s", index, type, id);
+		connector.delete(deletePath);
 	}
 
 	public void removeDocumentsQuery(String query) {
