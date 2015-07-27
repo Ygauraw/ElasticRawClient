@@ -40,16 +40,35 @@ public class ElasticClient {
 		connector = new Connector(settings);
 	}
 
-	public void createIndex() {
+	public void createIndex(String indexName, String data)
+			throws NoSuchAlgorithmException, IOException, KeyManagementException {
 
+		if (indexName.startsWith("/"))
+			connector.put(indexName, data);
+		else
+			connector.put("/" + indexName, data);
 	}
 
 	public void createAlias() {
 
 	}
 
-	public void removeIndex() {
+	public void removeIndices()
+			throws NoSuchAlgorithmException, IOException, KeyManagementException {
 
+		removeIndices(connector.getSettings().getIndices());
+	}
+
+	public void removeIndices(String[] indexNames)
+			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+
+		for (String indexName : indexNames) {
+
+			if (indexName.startsWith("/"))
+				connector.delete(indexName);
+			else
+				connector.delete("/" + indexName);
+		}
 	}
 
 	public void removeAlias() {

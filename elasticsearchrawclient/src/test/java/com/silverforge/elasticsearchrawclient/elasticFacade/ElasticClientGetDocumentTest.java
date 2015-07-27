@@ -40,7 +40,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             String[] docIds ={
                     "karcag",
-                    "caT_CJqUSaG_6lw1cyNv0w"};
+                    "customCity"};
 
             String documents = client.getDocument(docIds);
 
@@ -57,7 +57,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             String[] docIds ={
                     "karcag",
-                    "caT_CJqUSaG_6lw1cyNv0w"};
+                    "customCity"};
 
             String documents = client.getDocument(docIds);
             List<City> cities = cityMapper.mapToList(documents, City.class);
@@ -75,7 +75,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     public void getDocumentWithoutIndexTest() {
         String[] docIds ={
                 "karcag",
-                "caT_CJqUSaG_6lw1cyNv0w"};
+                "customCity"};
 
         ConnectorSettings customSettings = ConnectorSettings
                 .builder()
@@ -106,7 +106,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     public void getDocumentWithTypeTest() {
         String[] docIds ={
                 "karcag",
-                "caT_CJqUSaG_6lw1cyNv0w"};
+                "customCity"};
 
         ConnectorSettings customSettings = ConnectorSettings
                 .builder()

@@ -1,0 +1,21 @@
+{
+  "mappings": {
+    "city": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "location": {
+          "type": "geo_point",
+          "fielddata": {
+            "precision": "1cm",
+            "format": "compressed"
+          }
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
