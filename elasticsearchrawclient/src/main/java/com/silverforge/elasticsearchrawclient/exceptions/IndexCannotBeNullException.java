@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.elasticFacade.exceptions;
+package com.silverforge.elasticsearchrawclient.exceptions;
 
 public class IndexCannotBeNullException extends Exception {
 

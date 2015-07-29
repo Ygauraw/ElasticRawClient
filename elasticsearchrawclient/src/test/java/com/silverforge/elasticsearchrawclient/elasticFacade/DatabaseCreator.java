@@ -6,6 +6,7 @@ import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
+import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 
@@ -75,7 +76,7 @@ public final class DatabaseCreator {
             client.addDocument("cities", "city", "budapest", new City("Budapest"));
 
             client.addDocument("testcities", "testcity", "customCity", new City("customCityForTesting"));
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
         }

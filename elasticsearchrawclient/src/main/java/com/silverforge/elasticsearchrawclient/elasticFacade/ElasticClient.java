@@ -9,7 +9,8 @@ import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.connector.Connector;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.elasticFacade.exceptions.IndexCannotBeNullException;
+import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
+import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
 import com.silverforge.elasticsearchrawclient.model.AddDocumentResult;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
@@ -41,7 +42,7 @@ public class ElasticClient {
 	}
 
 	public void createIndex(String indexName, String data)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
 
 		if (indexName.startsWith("/"))
 			connector.put(indexName, data);
@@ -54,13 +55,13 @@ public class ElasticClient {
 	}
 
 	public void removeIndices()
-			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
 
 		removeIndices(connector.getSettings().getIndices());
 	}
 
 	public void removeIndices(String[] indexNames)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
 
 		for (String indexName : indexNames) {
 
@@ -96,7 +97,7 @@ public class ElasticClient {
 			String result = connector.post(addPath, entityJson);
 			AddDocumentResult addDocumentResult = mapper.readValue(result, AddDocumentResult.class);
 			retValue = addDocumentResult.getId();
-		} catch (KeyManagementException | NoSuchAlgorithmException | IOException e) {
+		} catch (KeyManagementException | NoSuchAlgorithmException | IOException | ServerIsNotAvailableException e) {
 			e.printStackTrace();
 			Log.e(TAG, e.getMessage());
 		} catch (IndexCannotBeNullException ie) {
@@ -127,7 +128,7 @@ public class ElasticClient {
             String result = connector.post(addPath, entityJson);
             AddDocumentResult addDocumentResult = mapper.readValue(result, AddDocumentResult.class);
             retValue = addDocumentResult.getId();
-        } catch (KeyManagementException | NoSuchAlgorithmException | IOException e) {
+        } catch (KeyManagementException | NoSuchAlgorithmException | IOException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
         }
@@ -136,7 +137,7 @@ public class ElasticClient {
     }
 
 	public void removeDocument(String id)
-			throws IndexCannotBeNullException, NoSuchAlgorithmException, IOException, KeyManagementException {
+			throws IndexCannotBeNullException, NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
 
 		if (TextUtils.isEmpty(id))
 			throw new IllegalArgumentException("id cannot be null or empty");
@@ -146,8 +147,8 @@ public class ElasticClient {
 	}
 
 	public void removeDocument(String index, String type, String id)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException {
-		
+			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
+
 		if (TextUtils.isEmpty(index))
 			throw new IllegalArgumentException("index cannot be null or empty");
 
@@ -182,13 +183,13 @@ public class ElasticClient {
     }
 
 	public String getDocument(String[] ids)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
 
 		return getDocument(ids, null);
 	}
 
 	public String getDocument(String[] ids, String type)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
 
 		InputStream inputStream;
 		if (TextUtils.isEmpty(type)) {
@@ -219,7 +220,7 @@ public class ElasticClient {
 	}
 
 	public String search(String query)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
 
 		String queryPath = getQueryPath();
 		return connector.post(queryPath, query);
@@ -292,26 +293,32 @@ public class ElasticClient {
 
 		private Raw() {}
 
+		public String head(String path)
+				throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
+
+			return connector.head(path);
+		}
+
 		public String get(String path)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+				throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
 
 			return connector.get(path);
 		}
 
 		public String post(String path, String data)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+				throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
 
 			return connector.post(path, data);
 		}
 
 		public String put(String path, String data)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+				throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
 
 			return connector.put(path, data);
 		}
 
 		public String delete(String path, String data)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException {
+				throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
 
 			return connector.delete(path, data);
 		}

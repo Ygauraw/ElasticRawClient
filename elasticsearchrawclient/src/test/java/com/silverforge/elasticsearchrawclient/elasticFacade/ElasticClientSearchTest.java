@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
+import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
             String searchResult = client.search("{\"query\":{\"match_all\": {}}}");
 
             assertNotNull(searchResult);
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             fail(e.getMessage());
         }
@@ -50,7 +51,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
             String searchResult = testClient.search("{\"query\":{\"match_all\": {}}}");
 
             assertNotNull(searchResult);
-        } catch (URISyntaxException | KeyManagementException | NoSuchAlgorithmException | IOException e) {
+        } catch (URISyntaxException | KeyManagementException | NoSuchAlgorithmException | IOException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -71,7 +72,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
             String searchResult = testClient.search("{\"query\":{\"match_all\": {}}}");
 
             assertNotNull(searchResult);
-        } catch (URISyntaxException | KeyManagementException | NoSuchAlgorithmException | IOException e) {
+        } catch (URISyntaxException | KeyManagementException | NoSuchAlgorithmException | IOException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -92,7 +93,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
             String searchResult = testClient.search("{\"query\":{\"match_all\": {}}}");
 
             assertNotNull(searchResult);
-        } catch (URISyntaxException | KeyManagementException | NoSuchAlgorithmException | IOException e) {
+        } catch (URISyntaxException | KeyManagementException | NoSuchAlgorithmException | IOException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -109,7 +110,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
             String search = client.search("{}");
 
             assertNotNull(search);
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             fail(e.getMessage());
         }
@@ -121,7 +122,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
             String search = client.search(null);
 
             assertNotNull(search);
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             fail(e.getMessage());
         }
@@ -133,7 +134,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
             String search = client.search("");
 
             assertNotNull(search);
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             fail(e.getMessage());
         }

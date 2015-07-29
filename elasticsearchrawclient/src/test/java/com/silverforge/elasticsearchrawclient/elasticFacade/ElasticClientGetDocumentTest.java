@@ -5,6 +5,7 @@ import android.util.Log;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
+import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 
 import org.hamcrest.Matchers;
@@ -46,7 +47,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
             assertThat(documents, notNullValue());
             assertThat(documents, not(""));
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             fail(e.getMessage());
         }
@@ -65,7 +66,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(1));
             assertThat(cities.get(0).getName(), is("Karcag"));
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             fail(e.getMessage());
         }
@@ -92,7 +93,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             assertThat(cities.size(), equalTo(2));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTesting"))));
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             fail(e.getMessage());
         } catch (URISyntaxException e) {
@@ -122,7 +123,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(1));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
             e.printStackTrace();
             fail(e.getMessage());
         } catch (URISyntaxException e) {
@@ -144,7 +145,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
             assertThat(documents, notNullValue());
             assertThat(documents, not(equalTo("")));
-        } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException | IOException | ServerIsNotAvailableException e) {
             e.printStackTrace();
         }
 
@@ -159,7 +160,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
             assertThat(cities, notNullValue());
             assertThat(cities.size(), equalTo(0));
-        } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException | IOException | ServerIsNotAvailableException e) {
             e.printStackTrace();
         }
     }
@@ -172,7 +173,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
             assertThat(documents, notNullValue());
             assertThat(documents, not(equalTo("")));
-        } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException | IOException | ServerIsNotAvailableException e) {
             e.printStackTrace();
         }
     }
@@ -186,7 +187,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
             assertThat(cities, notNullValue());
             assertThat(cities.size(), equalTo(0));
-        } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException | IOException | ServerIsNotAvailableException e) {
             e.printStackTrace();
         }
     }
