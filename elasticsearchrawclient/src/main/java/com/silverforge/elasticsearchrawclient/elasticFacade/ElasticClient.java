@@ -11,7 +11,7 @@ import com.silverforge.elasticsearchrawclient.connector.Connector;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
-import com.silverforge.elasticsearchrawclient.model.AddDocumentResult;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.AddDocumentResult;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
