@@ -88,11 +88,11 @@ public class ElasticClientCreateIndex {
         String indexData = StreamUtils.convertStreamToString(inputStream);
 
         try {
-            client.createIndex("ti1", indexData);
-            client.createIndex("ti2", indexData);
+            client.createIndex(predefinedIndicesForRemove[0], indexData);
+            client.createIndex(predefinedIndicesForRemove[1], indexData);
 
-            client.raw.head("/ti1");
-            client.raw.head("/ti2");
+            client.raw.head("/" + predefinedIndicesForRemove[0]);
+            client.raw.head("/" + predefinedIndicesForRemove[1]);
 
             client.removeIndices();
 
