@@ -1,6 +1,6 @@
 package com.silverforge.elasticsearchrawclient.exceptions;
 
-public class ServerIsNotAvailableException extends Throwable {
+public class ServerIsNotAvailableException extends Exception {
     private String statusCode;
 
     public ServerIsNotAvailableException(String statusCode) {

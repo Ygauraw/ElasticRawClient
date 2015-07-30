@@ -51,34 +51,29 @@ public final class DatabaseCreator {
 
     @Test
     public void prepare() {
-        try {
-            InputStream createIndexCities
-                = ElasticClientApp
-                    .getAppContext()
-                    .getResources()
-                    .openRawResource(R.raw.create_index_cities);
+        InputStream createIndexCities
+            = ElasticClientApp
+                .getAppContext()
+                .getResources()
+                .openRawResource(R.raw.create_index_cities);
 
-            InputStream createIndexTestCities
-                = ElasticClientApp
-                    .getAppContext()
-                    .getResources()
-                    .openRawResource(R.raw.create_index_testcities);
+        InputStream createIndexTestCities
+            = ElasticClientApp
+                .getAppContext()
+                .getResources()
+                .openRawResource(R.raw.create_index_testcities);
 
-            String createCityData = StreamUtils.convertStreamToString(createIndexCities);
-            String createTestCityData = StreamUtils.convertStreamToString(createIndexTestCities);
+        String createCityData = StreamUtils.convertStreamToString(createIndexCities);
+        String createTestCityData = StreamUtils.convertStreamToString(createIndexTestCities);
 
-            client.removeIndices(new String[] {"cities", "testcities"});
+        client.removeIndices(new String[] {"cities", "testcities"});
 
-            client.createIndex("cities", createCityData);
-            client.createIndex("testcities", createTestCityData);
+        client.createIndex("cities", createCityData);
+        client.createIndex("testcities", createTestCityData);
 
-            client.addDocument("cities", "city", "karcag", new City("Karcag"));
-            client.addDocument("cities", "city", "budapest", new City("Budapest"));
+        client.addDocument("cities", "city", "karcag", new City("Karcag"));
+        client.addDocument("cities", "city", "budapest", new City("Budapest"));
 
-            client.addDocument("testcities", "testcity", "customCity", new City("customCityForTesting"));
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            Log.e(TAG, e.getMessage());
-        }
+        client.addDocument("testcities", "testcity", "customCity", new City("customCityForTesting"));
     }
 }

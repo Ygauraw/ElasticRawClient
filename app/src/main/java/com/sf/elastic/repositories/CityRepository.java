@@ -65,19 +65,13 @@ public class CityRepository implements Repository<City> {
 		Observable<City> observable = Observable.create(subscriber -> {
 			String search = getSearch(text);
 
-			try {
-				String result = client.search(search);
-				List<City> cities = cityMapper.mapToList(result, City.class);
+				List<City> cities = client.search(search, City.class);
 
 				Observable
 					.from(cities)
 					.subscribe(city -> subscriber.onNext(city));
-			} catch (KeyManagementException | IOException | NoSuchAlgorithmException e) {
-				e.printStackTrace();
-				subscriber.onError(e);
-			} finally {
+
 				subscriber.onCompleted();
-			}
 		});
 
 		return observable;
@@ -197,11 +191,7 @@ public class CityRepository implements Repository<City> {
 
 					String postData = queryText
 						.replace("{{CITY_NAME}}", city);
-					try {
-						myClient.raw.post("/cities/city", postData);
-					} catch (NoSuchAlgorithmException | IOException | KeyManagementException e) {
-						e.printStackTrace();
-					}
+					myClient.raw.post("/cities/city", postData);
 				});
 		} catch (URISyntaxException e) {
 			e.printStackTrace();

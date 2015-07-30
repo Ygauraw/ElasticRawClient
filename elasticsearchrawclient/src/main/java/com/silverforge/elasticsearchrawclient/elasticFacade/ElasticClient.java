@@ -1,7 +1,6 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
@@ -9,9 +8,10 @@ import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.connector.Connector;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
-import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
+import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.AddDocumentResult;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
+import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
@@ -19,8 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 // TODO : create interface for elasticclient once the methods are implemented
 public class ElasticClient {
@@ -41,35 +40,43 @@ public class ElasticClient {
 		connector = new Connector(settings);
 	}
 
-	public void createIndex(String indexName, String data)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
+	public boolean createIndex(String indexName, String data) {
+		InvokeResult result;
 
 		if (indexName.startsWith("/"))
-			connector.put(indexName, data);
+			result = connector.put(indexName, data);
 		else
-			connector.put("/" + indexName, data);
+			result = connector.put("/" + indexName, data);
+
+		return result.isSuccess();
 	}
 
 	public void createAlias(String indexName, String aliasName) {
 
 	}
 
-	public void removeIndices()
-			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
-
+	public void removeIndices() {
 		removeIndices(connector.getSettings().getIndices());
 	}
 
-	public void removeIndices(String[] indexNames)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
-
+	public void removeIndices(String[] indexNames) {
 		for (String indexName : indexNames) {
-
 			if (indexName.startsWith("/"))
 				connector.delete(indexName);
 			else
 				connector.delete("/" + indexName);
 		}
+	}
+
+	public boolean indexExists(String indexName) {
+		InvokeResult result;
+
+		if (indexName.startsWith("/"))
+			result = connector.head(indexName);
+		else
+			result = connector.head("/" + indexName);
+
+		return result.isSuccess();
 	}
 
 	public void removeAlias(String aliasName) {
@@ -82,32 +89,32 @@ public class ElasticClient {
 		return addDocument(null, entity);
 	}
 
-
 	public <T> String addDocument(String id, T entity)
 			throws IndexCannotBeNullException, IllegalArgumentException {
 
 		if (entity == null)
 			throw new IllegalArgumentException("entity cannot be null");
 
-		String retValue = "";
+		String retValue = STRING_EMPTY;
 		try {
 			String entityJson = mapper.writeValueAsString(entity);
 			String addPath = getOperationPath(id);
 
-			String result = connector.post(addPath, entityJson);
-			AddDocumentResult addDocumentResult = mapper.readValue(result, AddDocumentResult.class);
+			InvokeResult result = connector.post(addPath, entityJson);
+			AddDocumentResult addDocumentResult = mapper.readValue(result.getResult(), AddDocumentResult.class);
 			retValue = addDocumentResult.getId();
-		} catch (KeyManagementException | NoSuchAlgorithmException | IOException | ServerIsNotAvailableException e) {
-			e.printStackTrace();
-			Log.e(TAG, e.getMessage());
 		} catch (IndexCannotBeNullException ie) {
 			throw ie;
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		return retValue;
 	}
 
-	public <T> String addDocument(String index, String type, String id, T entity) {
+	public <T> String addDocument(String index, String type, String id, T entity)
+			throws IllegalArgumentException {
+
 		if (entity == null)
 			throw new IllegalArgumentException("entity cannot be null");
 
@@ -120,24 +127,23 @@ public class ElasticClient {
 		if (TextUtils.isEmpty(id))
 			throw new IllegalArgumentException("id cannot be null or empty");
 
-        String retValue = "";
-        try {
-            String entityJson = mapper.writeValueAsString(entity);
-            String addPath = String.format("/%s/%s/%s", index, type, id);
+        String retValue = STRING_EMPTY;
+		try {
+			String entityJson = mapper.writeValueAsString(entity);
+			String addPath = String.format("/%s/%s/%s", index, type, id);
 
-            String result = connector.post(addPath, entityJson);
-            AddDocumentResult addDocumentResult = mapper.readValue(result, AddDocumentResult.class);
-            retValue = addDocumentResult.getId();
-        } catch (KeyManagementException | NoSuchAlgorithmException | IOException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            Log.e(TAG, e.getMessage());
-        }
+			InvokeResult result = connector.post(addPath, entityJson);
+			AddDocumentResult addDocumentResult = mapper.readValue(result.getResult(), AddDocumentResult.class);
+			retValue = addDocumentResult.getId();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
         return retValue;
     }
 
 	public void removeDocument(String id)
-			throws IndexCannotBeNullException, NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
+			throws IllegalArgumentException, IndexCannotBeNullException {
 
 		if (TextUtils.isEmpty(id))
 			throw new IllegalArgumentException("id cannot be null or empty");
@@ -147,7 +153,7 @@ public class ElasticClient {
 	}
 
 	public void removeDocument(String index, String type, String id)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
+			throws IllegalArgumentException{
 
 		if (TextUtils.isEmpty(index))
 			throw new IllegalArgumentException("index cannot be null or empty");
@@ -182,15 +188,11 @@ public class ElasticClient {
 
     }
 
-	public String getDocument(String[] ids)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
-
-		return getDocument(ids, null);
+	public <T> List<T> getDocument(String[] ids, Class<T> classType) {
+		return getDocument(ids, null, classType);
 	}
 
-	public String getDocument(String[] ids, String type)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
-
+	public <T> List<T> getDocument(String[] ids, String type, Class<T> classType) {
 		InputStream inputStream;
 		if (TextUtils.isEmpty(type)) {
 			inputStream = ElasticClientApp
@@ -216,14 +218,18 @@ public class ElasticClient {
 						.replace("{{TYPE}}", type);
 
 		String queryPath = getQueryPath();
-		return connector.post(queryPath, query);
+		String documents = connector.post(queryPath, query).getResult();
+
+		ElasticClientMapper<T> mapper = new ElasticClientMapper<>();
+		return mapper.mapToList(documents, classType);
 	}
 
-	public String search(String query)
-			throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
-
+	public <T> List<T> search(String query, Class<T> classType) {
 		String queryPath = getQueryPath();
-		return connector.post(queryPath, query);
+		String documents = connector.post(queryPath, query).getResult();
+
+		ElasticClientMapper<T> mapper = new ElasticClientMapper<>();
+		return mapper.mapToList(documents, classType);
 	}
 
 	protected String getOperationPath(String id)
@@ -293,33 +299,23 @@ public class ElasticClient {
 
 		private Raw() {}
 
-		public String head(String path)
-				throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
-
+		public InvokeResult head(String path) {
 			return connector.head(path);
 		}
 
-		public String get(String path)
-				throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
-
+		public InvokeResult get(String path) {
 			return connector.get(path);
 		}
 
-		public String post(String path, String data)
-				throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
-
+		public InvokeResult post(String path, String data) {
 			return connector.post(path, data);
 		}
 
-		public String put(String path, String data)
-				throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
-
+		public InvokeResult put(String path, String data) {
 			return connector.put(path, data);
 		}
 
-		public String delete(String path, String data)
-				throws NoSuchAlgorithmException, IOException, KeyManagementException, ServerIsNotAvailableException {
-
+		public InvokeResult delete(String path, String data) {
 			return connector.delete(path, data);
 		}
 	}

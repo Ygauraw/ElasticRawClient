@@ -5,7 +5,6 @@ import android.util.Log;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
-import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 
 import org.hamcrest.Matchers;
@@ -14,17 +13,14 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -38,38 +34,27 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
     @Test
     public void getDocumentTest() {
-        try {
-            String[] docIds ={
-                    "karcag",
-                    "customCity"};
+        String[] docIds = {
+                "karcag",
+                "customCity"};
 
-            String documents = client.getDocument(docIds);
+        List<City> cities = client.getDocument(docIds, City.class);
 
-            assertThat(documents, notNullValue());
-            assertThat(documents, not(""));
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
+        assertThat(cities, notNullValue());
+        assertThat(cities.size(), greaterThan(0));
     }
 
     @Test
     public void getDocumentAndMapTest() {
-        try {
-            String[] docIds ={
-                    "karcag",
-                    "customCity"};
+        String[] docIds = {
+                "karcag",
+                "customCity"};
 
-            String documents = client.getDocument(docIds);
-            List<City> cities = cityMapper.mapToList(documents, City.class);
+        List<City> cities = client.getDocument(docIds, City.class);
 
-            assertThat(cities, is(notNullValue()));
-            assertThat(cities.size(), equalTo(1));
-            assertThat(cities.get(0).getName(), is("Karcag"));
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
+        assertThat(cities, is(notNullValue()));
+        assertThat(cities.size(), equalTo(1));
+        assertThat(cities.get(0).getName(), is("Karcag"));
     }
 
     @Test
@@ -86,16 +71,12 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             ElasticClient customClient = new ElasticClient(customSettings);
 
-            String documents = customClient.getDocument(docIds);
-            List<City> cities = cityMapper.mapToList(documents, City.class);
+            List<City> cities = customClient.getDocument(docIds, City.class);
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(2));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTesting"))));
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            fail(e.getMessage());
         } catch (URISyntaxException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
@@ -117,15 +98,11 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             ElasticClient customClient = new ElasticClient(customSettings);
 
-            String documents = customClient.getDocument(docIds, "city");
-            List<City> cities = cityMapper.mapToList(documents, City.class);
+            List<City> cities = customClient.getDocument(docIds, "city", City.class);
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(1));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            fail(e.getMessage());
         } catch (URISyntaxException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
@@ -138,58 +115,21 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     // region Sad path
 
     @Test
-    public void getDocumetsWithNull() {
-        String[] docIds = null;
-        try {
-            String documents = client.getDocument(docIds);
-
-            assertThat(documents, notNullValue());
-            assertThat(documents, not(equalTo("")));
-        } catch (NoSuchAlgorithmException | KeyManagementException | IOException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Test
     public void getDocumetsWithNullMap() {
         String[] docIds = null;
-        try {
-            String documents = client.getDocument(docIds);
-            List<City> cities = cityMapper.mapToList(documents, City.class);
+        List<City> cities = client.getDocument(docIds, City.class);
 
-            assertThat(cities, notNullValue());
-            assertThat(cities.size(), equalTo(0));
-        } catch (NoSuchAlgorithmException | KeyManagementException | IOException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void getDocumetsWithEmpty() {
-        String[] docIds = {""};
-        try {
-            String documents = client.getDocument(docIds);
-
-            assertThat(documents, notNullValue());
-            assertThat(documents, not(equalTo("")));
-        } catch (NoSuchAlgorithmException | KeyManagementException | IOException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-        }
+        assertThat(cities, notNullValue());
+        assertThat(cities.size(), equalTo(0));
     }
 
     @Test
     public void getDocumetsWithEmptyMap() {
         String[] docIds = {""};
-        try {
-            String documents = client.getDocument(docIds);
-            List<City> cities = cityMapper.mapToList(documents, City.class);
+        List<City> cities = client.getDocument(docIds, City.class);
 
-            assertThat(cities, notNullValue());
-            assertThat(cities.size(), equalTo(0));
-        } catch (NoSuchAlgorithmException | KeyManagementException | IOException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-        }
+        assertThat(cities, notNullValue());
+        assertThat(cities.size(), equalTo(0));
     }
 
     // endregion

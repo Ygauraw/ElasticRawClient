@@ -10,6 +10,7 @@ import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import com.google.common.base.Predicates;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
 import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
 
 import java.io.BufferedReader;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -88,82 +90,91 @@ public class Connector implements Connectable {
 	}
 
 	@Override
-	public String head(String path)
-			throws IOException, KeyManagementException, NoSuchAlgorithmException, ServerIsNotAvailableException {
-
+	public InvokeResult head(String path) {
 		String httpMethod = HttpMethod.HEAD.toString();
 		return invokeToEndpoint(httpMethod, path);
 	}
 
 	@Override
-	public String get(String path)
-			throws IOException, KeyManagementException, NoSuchAlgorithmException, ServerIsNotAvailableException {
-
+	public InvokeResult get(String path) {
 		String httpMethod = HttpMethod.GET.toString();
 		return invokeToEndpoint(httpMethod, path);
 	}
 
 	@Override
-	public String post(String path, String data)
-			throws IOException, KeyManagementException, NoSuchAlgorithmException, ServerIsNotAvailableException {
-
+	public InvokeResult post(String path, String data) {
 		String httpMethod = HttpMethod.POST.toString();
 		return invokeToEndpoint(httpMethod, path, data);
 	}
 
 	@Override
-	public String put(String path, String data)
-			throws IOException, KeyManagementException, NoSuchAlgorithmException, ServerIsNotAvailableException {
-
+	public InvokeResult put(String path, String data) {
 		String httpMethod = HttpMethod.PUT.toString();
 		return invokeToEndpoint(httpMethod, path, data);
 	}
 
 	@Override
-	public String delete(String path)
-			throws IOException, KeyManagementException, NoSuchAlgorithmException, ServerIsNotAvailableException {
-
+	public InvokeResult delete(String path) {
 		return delete(path, STRING_EMPTY);
 	}
 
 	@Override
-	public String delete(String path, String data)
-			throws IOException, KeyManagementException, NoSuchAlgorithmException, ServerIsNotAvailableException {
-
+	public InvokeResult delete(String path, String data) {
 		String httpMethod = HttpMethod.DELETE.toString();
 		return invokeToEndpoint(httpMethod, path, data);
 	}
 
 	@NonNull
-	private String invokeToEndpoint(String httpMethod, String path)
-			throws IOException, NoSuchAlgorithmException, KeyManagementException, ServerIsNotAvailableException {
-
+	private InvokeResult invokeToEndpoint(String httpMethod, String path) {
 		return invokeToEndpoint(httpMethod, path, STRING_EMPTY);
 	}
 
 	@NonNull
-	private String invokeToEndpoint(String httpMethod, String path, String data)
-			throws IOException, NoSuchAlgorithmException, KeyManagementException, ServerIsNotAvailableException {
+	private InvokeResult invokeToEndpoint(String httpMethod, String path, String data) {
+		InvokeResult returnResult = new InvokeResult();
+		returnResult.setSuccess(true);
 
-		URL url = baseUrl.resolve(path).toURL();
-
-		final HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-		addSSLAuthorizationToConnection(conn);
-		setConnectionSettings(conn, httpMethod);
-		if (data != null && !data.equals(STRING_EMPTY)) {
-			conn.setRequestProperty("Content-Type", "application/json");
-			conn.setRequestProperty("Cache-Control", "no-cache");
-			conn.setRequestProperty("Content-Length", Integer.toString(data.getBytes().length));
-			addDataToConnection(data, conn);
+		// Build up HttpsUrlConnection
+		URL url;
+		HttpsURLConnection conn;
+		try {
+			url = baseUrl.resolve(path).toURL();
+			conn = (HttpsURLConnection) url.openConnection();
+			addSSLAuthorizationToConnection(conn);
+			setConnectionSettings(conn, httpMethod);
+		} catch (MalformedURLException e) {
+			return invokeExceptionResult(returnResult, e);
+		} catch (IOException | NoSuchAlgorithmException | KeyManagementException e) {
+			return invokeExceptionResult(returnResult, e);
 		}
 
-		int code = conn.getResponseCode();
-		String statusCode = Integer.toString(code);
-		if (statusCode.startsWith("4") || statusCode.startsWith("5"))
-			throw new ServerIsNotAvailableException(statusCode);
+		// Add data to connection if any
+		if (data != null && !data.equals(STRING_EMPTY)) {
+			try {
+				addDataToConnection(data, conn);
+			} catch (IOException e) {
+				return invokeExceptionResult(returnResult, e);
+			}
+		}
 
+		// Retrieves with connection status code
+		int code;
+		String statusCode;
+		try {
+			code = conn.getResponseCode();
+			statusCode = Integer.toString(code);
+			if (statusCode.startsWith("4") || statusCode.startsWith("5")) {
+				throw new ServerIsNotAvailableException(statusCode);
+			}
+		} catch (IOException e) {
+			return invokeExceptionResult(returnResult, e);
+		} catch (ServerIsNotAvailableException e) {
+			return invokeExceptionResult(returnResult, e);
+		}
+		returnResult.setStatusCode(statusCode);
+
+		// Retry pattern for 3 times invoke if read input fails
 		Callable<StringBuilder> callable = () -> readInputFromConnection(conn);
-
 		Retryer<StringBuilder> retryer = RetryerBuilder.<StringBuilder>newBuilder()
 			.retryIfResult(Predicates.<StringBuilder>isNull())
 			.retryIfExceptionOfType(IOException.class)
@@ -172,14 +183,22 @@ public class Connector implements Connectable {
 			.withStopStrategy(StopStrategies.stopAfterAttempt(3))
 			.build();
 
-		StringBuilder returnValue = new StringBuilder();
+		// Reads the response from connection
 		try {
-			returnValue = retryer.call(callable);
+			StringBuilder returnValue = retryer.call(callable);
+			returnResult.setResult(returnValue.toString());
 		} catch (ExecutionException | RetryException e) {
-			e.printStackTrace();
+			return invokeExceptionResult(returnResult, e);
 		}
 
-		return returnValue.toString();
+		return returnResult;
+	}
+
+	private InvokeResult invokeExceptionResult(InvokeResult returnResult, Exception e) {
+		e.printStackTrace();
+		returnResult.addExceptionToResult(e);
+		returnResult.setSuccess(false);
+		return returnResult;
 	}
 
 	@NonNull
@@ -200,6 +219,10 @@ public class Connector implements Connectable {
 
 	private void addDataToConnection(String data, HttpsURLConnection conn)
 			throws IOException {
+
+		conn.setRequestProperty("Content-Type", "application/json");
+		conn.setRequestProperty("Cache-Control", "no-cache");
+		conn.setRequestProperty("Content-Length", Integer.toString(data.getBytes().length));
 
 		// Add any data you wish to post here
 		OutputStreamWriter outputWriter = new OutputStreamWriter(conn.getOutputStream());

@@ -4,17 +4,15 @@ import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
+import com.silverforge.elasticsearchrawclient.testModel.City;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -28,14 +26,8 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
 
     @Test
     public void searchWithIndexWithTypeTest() {
-        try {
-            String searchResult = client.search("{\"query\":{\"match_all\": {}}}");
-
-            assertNotNull(searchResult);
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
+        List<City> cities = client.search("{\"query\":{\"match_all\": {}}}", City.class);
+        assertNotNull(cities);
     }
 
     @Test
@@ -48,10 +40,10 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
 
         try {
             ElasticClient testClient = new ElasticClient(settings);
-            String searchResult = testClient.search("{\"query\":{\"match_all\": {}}}");
+            List<City> cities = testClient.search("{\"query\":{\"match_all\": {}}}", City.class);
 
-            assertNotNull(searchResult);
-        } catch (URISyntaxException | KeyManagementException | NoSuchAlgorithmException | IOException | ServerIsNotAvailableException e) {
+            assertNotNull(cities);
+        } catch (URISyntaxException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -69,10 +61,10 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
 
         try {
             ElasticClient testClient = new ElasticClient(settings);
-            String searchResult = testClient.search("{\"query\":{\"match_all\": {}}}");
+            List<City> cities = testClient.search("{\"query\":{\"match_all\": {}}}", City.class);
 
-            assertNotNull(searchResult);
-        } catch (URISyntaxException | KeyManagementException | NoSuchAlgorithmException | IOException | ServerIsNotAvailableException e) {
+            assertNotNull(cities);
+        } catch (URISyntaxException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -90,10 +82,10 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
 
         try {
             ElasticClient testClient = new ElasticClient(settings);
-            String searchResult = testClient.search("{\"query\":{\"match_all\": {}}}");
+            List<City> cities = testClient.search("{\"query\":{\"match_all\": {}}}", City.class);
 
-            assertNotNull(searchResult);
-        } catch (URISyntaxException | KeyManagementException | NoSuchAlgorithmException | IOException | ServerIsNotAvailableException e) {
+            assertNotNull(cities);
+        } catch (URISyntaxException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -106,38 +98,23 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
 
     @Test
     public void searchEmptyQueryTest() {
-        try {
-            String search = client.search("{}");
+        List<City> cities = client.search("{}", City.class);
 
-            assertNotNull(search);
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
+        assertNotNull(cities);
     }
 
     @Test
     public void searchNullTest() {
-        try {
-            String search = client.search(null);
+        List<City> cities = client.search(null, City.class);
 
-            assertNotNull(search);
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
+        assertNotNull(cities);
     }
 
     @Test
     public void searchEmptyTest() {
-        try {
-            String search = client.search("");
+        List<City> cities = client.search("", City.class);
 
-            assertNotNull(search);
-        } catch (NoSuchAlgorithmException | IOException | KeyManagementException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
+        assertNotNull(cities);
     }
 
     // endregion

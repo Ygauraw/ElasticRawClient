@@ -4,9 +4,8 @@ import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
-import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
+import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 
 import org.junit.Rule;
@@ -16,10 +15,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static com.silverforge.elasticsearchrawclient.utils.StringUtils.generateUUID;
@@ -63,19 +59,10 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
             e.printStackTrace();
         }
 
-        try {
-            String document = client.getDocument(new String[]{id});
-            assertThat(document, not(nullValue()));
-
-            List<City> cities = cityMapper.mapToList(document, City.class);
-            assertThat(cities, not(nullValue()));
-            assertThat(cities.size(), is(1));
-            assertThat(cities.get(0).getName(), is(cityName));
-        } catch (NoSuchAlgorithmException | KeyManagementException | IOException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            Log.e(TAG, e.getMessage());
-            fail(e.getMessage());
-        }
+        List<City> cities = client.getDocument(new String[]{id}, City.class);
+        assertThat(cities, not(nullValue()));
+        assertThat(cities.size(), is(1));
+        assertThat(cities.get(0).getName(), is(cityName));
     }
 
     @Test

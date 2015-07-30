@@ -6,10 +6,10 @@ import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
 import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 
-import org.bouncycastle.crypto.engines.CamelliaLightEngine;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -23,6 +23,9 @@ import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -62,20 +65,14 @@ public class ElasticClientCreateIndex {
 
         String indexData = StreamUtils.convertStreamToString(inputStream);
 
-        try {
-            String testIndexName = "testindex";
+        String testIndexName = "testindex";
 
-            client.createIndex(testIndexName, indexData);
+        client.createIndex(testIndexName, indexData);
 
-            client.raw.head("/" + testIndexName);
+        boolean indexExists = client.indexExists(testIndexName);
+        assertThat(indexExists, is(true));
 
-            client.removeIndices(new String[] {testIndexName});
-
-        } catch (NoSuchAlgorithmException | KeyManagementException | IOException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            Log.e(TAG, e.getMessage());
-            fail(e.getMessage());
-        }
+        client.removeIndices(new String[] {testIndexName});
     }
 
     @Test
@@ -87,20 +84,15 @@ public class ElasticClientCreateIndex {
 
         String indexData = StreamUtils.convertStreamToString(inputStream);
 
-        try {
-            client.createIndex(predefinedIndicesForRemove[0], indexData);
-            client.createIndex(predefinedIndicesForRemove[1], indexData);
+        client.createIndex(predefinedIndicesForRemove[0], indexData);
+        client.createIndex(predefinedIndicesForRemove[1], indexData);
 
-            client.raw.head("/" + predefinedIndicesForRemove[0]);
-            client.raw.head("/" + predefinedIndicesForRemove[1]);
+        boolean predefinedIndexOneExists = client.indexExists(predefinedIndicesForRemove[0]);
+        boolean predefinedIndexTwoExists = client.indexExists(predefinedIndicesForRemove[1]);
+        assertThat(predefinedIndexOneExists, is(true));
+        assertThat(predefinedIndexTwoExists, is(true));
 
-            client.removeIndices();
-
-        } catch (NoSuchAlgorithmException | KeyManagementException | IOException | ServerIsNotAvailableException e) {
-            e.printStackTrace();
-            Log.e(TAG, e.getMessage());
-            fail(e.getMessage());
-        }
+        client.removeIndices();
     }
 
     // endregion
@@ -112,12 +104,17 @@ public class ElasticClientCreateIndex {
 
     @Test
     public void wrongIndexCheck()
-            throws ServerIsNotAvailableException, KeyManagementException, NoSuchAlgorithmException, IOException {
+            throws Exception {
 
         expectedException.expect(ServerIsNotAvailableException.class);
         expectedException.expectMessage("Server response code : 404");
 
-        client.raw.head("/thereisnosuchindex");
+        InvokeResult head = client.raw.head("/thereisnosuchindex");
+        assertThat(head.getAggregatedExceptions().size(), greaterThan(0));
+
+        for (Exception exception : head.getAggregatedExceptions()) {
+            throw exception;
+        }
     }
 
     // endregion

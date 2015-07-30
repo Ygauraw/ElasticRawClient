@@ -2,11 +2,23 @@ package com.silverforge.elasticsearchrawclient.elasticFacade.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+
 public class AddDocumentResult {
+
+    @Getter
     private String index;
+
+    @Getter
     private String type;
+
+    @Getter
     private String id;
+
+    @Getter
     private Integer version;
+
+    @Getter
     private Boolean created;
 
     public AddDocumentResult(
@@ -26,25 +38,5 @@ public class AddDocumentResult {
         this.id = id;
         this.version = version;
         this.created = created;
-    }
-
-    public String getIndex() {
-        return index;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public Boolean getCreated() {
-        return created;
     }
 }
