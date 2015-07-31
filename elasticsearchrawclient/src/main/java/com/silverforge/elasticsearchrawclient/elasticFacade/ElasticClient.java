@@ -1,5 +1,6 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -169,14 +170,16 @@ public class ElasticClient {
 	}
 
 	public void removeDocumentsQuery(String query) {
-
+		String deletePath = getQueryPath();
+		connector.delete(deletePath, query);
 	}
 
-	public void removeDocumentsQuery(String index, String type, String query) {
-
+	public void removeDocumentsQuery(String[] indices, String[] types, String query) {
+		String deleteQueryPath = getDeleteQueryPath(indices, types);
+		connector.delete(deleteQueryPath.toString(), query);
 	}
 
-    public <T> void updateDocument(String id, T entity) {
+	public <T> void updateDocument(String id, T entity) {
 
     }
 
@@ -292,6 +295,29 @@ public class ElasticClient {
 			pathBuilder.append("/_all");
 
 		pathBuilder.append("/_search");
+		return pathBuilder.toString();
+	}
+
+	@NonNull
+	protected String getDeleteQueryPath(String[] indices, String[] types) {
+		StringBuilder pathBuilder = new StringBuilder();
+		if (indices == null || indices.length == 0)
+			pathBuilder.append("/_all");
+		else {
+			String indexList = StringUtils.makeCommaSeparatedList(indices);
+			pathBuilder
+					.append("/")
+					.append(indexList);
+		}
+
+		if (types != null && types.length > 0) {
+			String typeList = StringUtils.makeCommaSeparatedList(types);
+			pathBuilder
+					.append("/")
+					.append(typeList);
+		}
+
+		pathBuilder.append("/_query");
 		return pathBuilder.toString();
 	}
 
