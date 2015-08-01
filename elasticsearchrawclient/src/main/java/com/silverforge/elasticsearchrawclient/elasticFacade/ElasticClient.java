@@ -3,6 +3,7 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
@@ -23,6 +24,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 // TODO : create interface for elasticclient once the methods are implemented
+// TODO : QueryManagr should be created to maintain and reuse certain queries by user
 public class ElasticClient {
 	private static final String TAG = ElasticClient.class.getName();
 	private static final String STRING_EMPTY = "";
@@ -99,7 +101,7 @@ public class ElasticClient {
 		String retValue = STRING_EMPTY;
 		try {
 			String entityJson = mapper.writeValueAsString(entity);
-			String addPath = getOperationPath(id);
+			String addPath = getOperationPath(id, OperationType.CREATE);
 
 			InvokeResult result = connector.post(addPath, entityJson);
 			AddDocumentResult addDocumentResult = mapper.readValue(result.getResult(), AddDocumentResult.class);
@@ -149,7 +151,7 @@ public class ElasticClient {
 		if (TextUtils.isEmpty(id))
 			throw new IllegalArgumentException("id cannot be null or empty");
 
-		String deletePath = getOperationPath(id);
+		String deletePath = getOperationPath(id, OperationType.DELETE);
 		connector.delete(deletePath);
 	}
 
@@ -181,12 +183,47 @@ public class ElasticClient {
 		connector.delete(deleteQueryPath.toString(), query);
 	}
 
-	public <T> void updateDocument(String id, T entity) {
+	public <T> void updateDocument(String id, T entity)
+			throws IndexCannotBeNullException {
 
+		if (entity == null)
+			throw new IllegalArgumentException("entity cannot be null");
+
+		try {
+			String entityJson = mapper.writeValueAsString(entity);
+			String updatePath = getOperationPath(id, OperationType.UPDATE);
+			
+			connector.post(updatePath, entityJson);
+		} catch (IndexCannotBeNullException ie) {
+			throw ie;
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
     }
 
-    public <T> void updateDocument(String index, String type, String id, T entity) {
+    public <T> void updateDocument(String index, String type, String id, T entity)
+			throws IllegalArgumentException {
 
+		if (entity == null)
+			throw new IllegalArgumentException("entity cannot be null");
+
+		if (TextUtils.isEmpty(index))
+			throw new IllegalArgumentException("index cannot be null or empty");
+
+		if (TextUtils.isEmpty(type))
+			throw new IllegalArgumentException("type cannot be null or empty");
+
+		if (TextUtils.isEmpty(id))
+			throw new IllegalArgumentException("id cannot be null or empty");
+
+		try {
+			String entityJson = mapper.writeValueAsString(entity);
+			String updatePath = String.format("/%s/%s/%s/_update", index, type, id);
+
+			connector.post(updatePath, entityJson);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 
     public void bulk() {
@@ -248,7 +285,7 @@ public class ElasticClient {
 		return mapper.mapToList(documents, classType);
 	}
 
-	protected String getOperationPath(String id)
+	protected String getOperationPath(String id, OperationType operationType)
 			throws IndexCannotBeNullException {
 
 		boolean indicesAreEmpty = true;
@@ -275,6 +312,12 @@ public class ElasticClient {
 
 		if (!TextUtils.isEmpty(id))
 			pathBuilder.append("/").append(id);
+
+		if (operationType != null) {
+			String operationPath = operationType.getOperationTypePath();
+			if (!TextUtils.isEmpty(operationPath))
+				pathBuilder.append("/").append(operationPath);
+		}
 
 		return pathBuilder.toString();
 	}

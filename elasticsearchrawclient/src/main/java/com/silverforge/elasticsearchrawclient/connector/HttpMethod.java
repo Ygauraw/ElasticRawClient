@@ -11,8 +11,8 @@ public enum HttpMethod {
 	private String methodName;
 
 	HttpMethod(String methodName) {
-
 		this.methodName = methodName;
+
 	}
 
 	@Override
