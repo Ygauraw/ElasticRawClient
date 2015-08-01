@@ -170,7 +170,9 @@ public class ElasticClient {
 	}
 
 	public void removeDocumentsQuery(String query) {
-		String deletePath = getQueryPath();
+		String deletePath
+			= getDeleteQueryPath(connector.getSettings().getIndices(),
+				connector.getSettings().getTypes());
 		connector.delete(deletePath, query);
 	}
 
@@ -229,6 +231,17 @@ public class ElasticClient {
 
 	public <T> List<T> search(String query, Class<T> classType) {
 		String queryPath = getQueryPath();
+		String documents = connector.post(queryPath, query).getResult();
+
+		ElasticClientMapper<T> mapper = new ElasticClientMapper<>();
+		return mapper.mapToList(documents, classType);
+	}
+
+	public <T> List<T> search(String index, String query, Class<T> classType) {
+		if (TextUtils.isEmpty(index))
+			throw new IllegalArgumentException("index cannot be null or empty");
+
+		String queryPath = String.format("/%s/_search", index);
 		String documents = connector.post(queryPath, query).getResult();
 
 		ElasticClientMapper<T> mapper = new ElasticClientMapper<>();

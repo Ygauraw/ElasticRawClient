@@ -17,11 +17,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
@@ -30,14 +27,14 @@ import static org.junit.Assert.fail;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class ElasticClientCreateIndex {
-    private static final String TAG = ElasticClientCreateIndex.class.getName();
+public class ElasticClientCreateIndexTest {
+    private static final String TAG = ElasticClientCreateIndexTest.class.getName();
     protected static final String ELASTIC_URL = "https://silverforge.east-us.azr.facetflow.io";
     protected static final String ELASTIC_APIKEY = "ZjjnkNMgh0uj5yCFIvYVGQsueESCLj1k";
     private final String[] predefinedIndicesForRemove = new String[] {"ti1", "ti2"};
     protected ElasticClient client;
 
-    public ElasticClientCreateIndex() {
+    public ElasticClientCreateIndexTest() {
         ConnectorSettings settings = ConnectorSettings
                 .builder()
                 .baseUrl(ELASTIC_URL)

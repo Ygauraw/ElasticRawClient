@@ -54,7 +54,7 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
         assertThat(id, not(""));
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
