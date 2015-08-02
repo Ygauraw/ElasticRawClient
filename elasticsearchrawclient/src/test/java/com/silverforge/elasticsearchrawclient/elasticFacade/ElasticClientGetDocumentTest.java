@@ -98,7 +98,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             ElasticClient customClient = new ElasticClient(customSettings);
 
-            List<City> cities = customClient.getDocument(docIds, "city", City.class);
+            List<City> cities = customClient.getDocument("city", docIds, City.class);
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(1));

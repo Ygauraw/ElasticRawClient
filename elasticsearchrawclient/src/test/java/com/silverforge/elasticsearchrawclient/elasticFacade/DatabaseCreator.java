@@ -6,7 +6,6 @@ import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 
@@ -16,11 +15,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 import static org.junit.Assert.fail;
 

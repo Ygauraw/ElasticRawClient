@@ -192,8 +192,16 @@ public class ElasticClient {
 		try {
 			String entityJson = mapper.writeValueAsString(entity);
 			String updatePath = getOperationPath(id, OperationType.UPDATE);
-			
-			connector.post(updatePath, entityJson);
+
+			InputStream inputStream
+				= ElasticClientApp
+					.getAppContext()
+					.getResources()
+					.openRawResource(R.raw.update_template);
+			String updateTemplate = StreamUtils.convertStreamToString(inputStream);
+			String data = updateTemplate.replace("{{ENTITYJSON}}", entityJson);
+
+			connector.post(updatePath, data);
 		} catch (IndexCannotBeNullException ie) {
 			throw ie;
 		} catch (JsonProcessingException e) {
@@ -220,7 +228,15 @@ public class ElasticClient {
 			String entityJson = mapper.writeValueAsString(entity);
 			String updatePath = String.format("/%s/%s/%s/_update", index, type, id);
 
-			connector.post(updatePath, entityJson);
+			InputStream inputStream
+					= ElasticClientApp
+					.getAppContext()
+					.getResources()
+					.openRawResource(R.raw.update_template);
+			String updateTemplate = StreamUtils.convertStreamToString(inputStream);
+			String data = updateTemplate.replace("{{ENTITYJSON}}", entityJson);
+
+			connector.post(updatePath, data);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -231,10 +247,14 @@ public class ElasticClient {
     }
 
 	public <T> List<T> getDocument(String[] ids, Class<T> classType) {
-		return getDocument(ids, null, classType);
+		return getDocument(null, ids, classType);
 	}
 
-	public <T> List<T> getDocument(String[] ids, String type, Class<T> classType) {
+	public <T> List<T> getDocument(String type, String[] ids, Class<T> classType) {
+		return getDocument(null, type, ids, classType);
+	}
+
+	public <T> List<T> getDocument(String index, String type, String[] ids, Class<T> classType) {
 		InputStream inputStream;
 		if (TextUtils.isEmpty(type)) {
 			inputStream = ElasticClientApp
@@ -259,7 +279,11 @@ public class ElasticClient {
 						.replace("{{IDS}}", queryIds)
 						.replace("{{TYPE}}", type);
 
-		String queryPath = getQueryPath();
+		String queryPath;
+		if (TextUtils.isEmpty(index))
+			queryPath = getQueryPath();
+		else
+			queryPath = String.format("/%s/_search", index);
 		String documents = connector.post(queryPath, query).getResult();
 
 		ElasticClientMapper<T> mapper = new ElasticClientMapper<>();
@@ -310,13 +334,14 @@ public class ElasticClient {
 			pathBuilder.append(typesPath);
 		}
 
-		if (!TextUtils.isEmpty(id))
+		if (!TextUtils.isEmpty(id))	{
 			pathBuilder.append("/").append(id);
-
-		if (operationType != null) {
-			String operationPath = operationType.getOperationTypePath();
-			if (!TextUtils.isEmpty(operationPath))
-				pathBuilder.append("/").append(operationPath);
+			
+			if (operationType != null) {
+				String operationPath = operationType.getOperationTypePath();
+				if (!TextUtils.isEmpty(operationPath))
+					pathBuilder.append("/").append(operationPath);
+			}
 		}
 
 		return pathBuilder.toString();

@@ -38,10 +38,15 @@ public class ElasticClientRemoveDocumentTest extends ElasticClientBaseTest {
 
             client.removeDocument(docId);
 
+            Thread.sleep(1000);
+
             List<City> document = client.getDocument(new String[]{docId}, City.class);
             assertThat(document, not(nullValue()));
             assertThat(document.size(), equalTo(0));
         } catch (IndexCannotBeNullException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        } catch (InterruptedException e) {
             e.printStackTrace();
             fail(e.getMessage());
         }
