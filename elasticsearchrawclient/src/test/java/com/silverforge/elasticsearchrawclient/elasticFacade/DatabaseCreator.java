@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.InputStream;
 import java.net.URISyntaxException;
 
 import static org.junit.Assert.fail;
@@ -47,20 +46,12 @@ public final class DatabaseCreator {
 
     @Test
     public void prepare() {
-        InputStream createIndexCities
-            = ElasticClientApp
-                .getAppContext()
-                .getResources()
-                .openRawResource(R.raw.create_index_cities);
-
-        InputStream createIndexTestCities
-            = ElasticClientApp
-                .getAppContext()
-                .getResources()
-                .openRawResource(R.raw.create_index_testcities);
-
-        String createCityData = StreamUtils.convertStreamToString(createIndexCities);
-        String createTestCityData = StreamUtils.convertStreamToString(createIndexTestCities);
+        String createCityData
+            = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
+                                        R.raw.create_index_cities);
+        String createTestCityData
+            = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
+                                        R.raw.create_index_testcities);
 
         client.removeIndices(new String[] {"cities", "testcities"});
 

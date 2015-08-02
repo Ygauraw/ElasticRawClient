@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.InputStream;
 import java.net.URISyntaxException;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -55,12 +54,9 @@ public class ElasticClientCreateIndexTest {
 
     @Test
     public void createIndicesTest() {
-        InputStream inputStream = ElasticClientApp
-                .getAppContext()
-                .getResources()
-                .openRawResource(R.raw.create_index_testcities);
-
-        String indexData = StreamUtils.convertStreamToString(inputStream);
+        String indexData
+            = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
+                                        R.raw.create_index_testcities);
 
         String testIndexName = "testindex";
 
@@ -74,12 +70,9 @@ public class ElasticClientCreateIndexTest {
 
     @Test
     public void createIndicesBySettingsTest() {
-        InputStream inputStream = ElasticClientApp
-                .getAppContext()
-                .getResources()
-                .openRawResource(R.raw.create_index_testcities);
-
-        String indexData = StreamUtils.convertStreamToString(inputStream);
+        String indexData
+            = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
+                                        R.raw.create_index_testcities);
 
         client.createIndex(predefinedIndicesForRemove[0], indexData);
         client.createIndex(predefinedIndicesForRemove[1], indexData);

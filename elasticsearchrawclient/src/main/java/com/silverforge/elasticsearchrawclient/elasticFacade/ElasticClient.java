@@ -18,7 +18,6 @@ import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -91,7 +90,7 @@ public class ElasticClient {
 
 	public void removeAlias(String indexName, String aliasName) {
 		String addAliasTemplate
-				= StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.remove_alias);
+			= StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.remove_alias);
 
 		String data = addAliasTemplate
 				.replace("{{INDEXNAME}}", indexName)
@@ -207,12 +206,7 @@ public class ElasticClient {
 			String entityJson = mapper.writeValueAsString(entity);
 			String updatePath = getOperationPath(id, OperationType.UPDATE);
 
-			InputStream inputStream
-				= ElasticClientApp
-					.getAppContext()
-					.getResources()
-					.openRawResource(R.raw.update_template);
-			String updateTemplate = StreamUtils.convertStreamToString(inputStream);
+			String updateTemplate = StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.update_template);
 			String data = updateTemplate.replace("{{ENTITYJSON}}", entityJson);
 
 			connector.post(updatePath, data);
@@ -242,12 +236,7 @@ public class ElasticClient {
 			String entityJson = mapper.writeValueAsString(entity);
 			String updatePath = String.format("/%s/%s/%s/_update", index, type, id);
 
-			InputStream inputStream
-					= ElasticClientApp
-					.getAppContext()
-					.getResources()
-					.openRawResource(R.raw.update_template);
-			String updateTemplate = StreamUtils.convertStreamToString(inputStream);
+			String updateTemplate = StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.update_template);
 			String data = updateTemplate.replace("{{ENTITYJSON}}", entityJson);
 
 			connector.post(updatePath, data);
@@ -269,21 +258,12 @@ public class ElasticClient {
 	}
 
 	public <T> List<T> getDocument(String index, String type, String[] ids, Class<T> classType) {
-		InputStream inputStream;
-		if (TextUtils.isEmpty(type)) {
-			inputStream = ElasticClientApp
-					.getAppContext()
-					.getResources()
-					.openRawResource(R.raw.search_by_ids);
-		} else {
-			inputStream = ElasticClientApp
-					.getAppContext()
-					.getResources()
-					.openRawResource(R.raw.search_by_ids_and_type);
-		}
-
+		String queryTemplate;
 		String queryIds = StringUtils.makeCommaSeparatedListWithQuotationMark(ids);
-		String queryTemplate = StreamUtils.convertStreamToString(inputStream);
+		if (TextUtils.isEmpty(type))
+			queryTemplate = StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.search_by_ids);
+		else
+			queryTemplate = StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.search_by_ids_and_type);
 
 		String query;
 		if (TextUtils.isEmpty(type))

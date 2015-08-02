@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.InputStream;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -78,13 +77,9 @@ public class ElasticClientRemoveDocumentTest extends ElasticClientBaseTest {
 
             Thread.sleep(1000);
 
-            InputStream removeCityQuery
-                = ElasticClientApp
-                    .getAppContext()
-                    .getResources()
-                    .openRawResource(R.raw.remove_cities_query);
-
-            String removeCityData = StreamUtils.convertStreamToString(removeCityQuery);
+            String removeCityData
+                = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
+                                            R.raw.remove_cities_query);
             String query = removeCityData.replace("{{CITYNAME}}", cityName);
 
             List<City> initialSearch = client.search(query, City.class);
@@ -114,13 +109,9 @@ public class ElasticClientRemoveDocumentTest extends ElasticClientBaseTest {
 
             Thread.sleep(1000);
 
-            InputStream removeCityQuery
-                = ElasticClientApp
-                    .getAppContext()
-                    .getResources()
-                    .openRawResource(R.raw.remove_cities_query);
-
-            String removeCityData = StreamUtils.convertStreamToString(removeCityQuery);
+            String removeCityData
+                = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
+                                            R.raw.remove_cities_query);
             String query = removeCityData.replace("{{CITYNAME}}", cityName);
 
             List<City> initialSearch = client.search("testcities", query, City.class);
