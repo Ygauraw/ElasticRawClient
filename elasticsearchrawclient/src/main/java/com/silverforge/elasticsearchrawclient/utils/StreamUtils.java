@@ -1,5 +1,7 @@
 package com.silverforge.elasticsearchrawclient.utils;
 
+import android.content.Context;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,5 +27,11 @@ public class StreamUtils {
             }
         }
         return sb.toString();
+    }
+
+    public static String getRawContent(Context context, int rawId) {
+        InputStream inputStream = context.getResources().openRawResource(rawId);
+        String retValue = convertStreamToString(inputStream);
+        return retValue;
     }
 }

@@ -55,7 +55,14 @@ public class ElasticClient {
 	}
 
 	public void createAlias(String indexName, String aliasName) {
+		String addAliasTemplate
+			= StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.add_alias);
 
+		String data = addAliasTemplate
+				.replace("{{INDEXNAME}}", indexName)
+				.replace("{{ALIASNAME}}", aliasName);
+
+		connector.post("/_aliases", data);
 	}
 
 	public void removeIndices() {
@@ -82,8 +89,15 @@ public class ElasticClient {
 		return result.isSuccess();
 	}
 
-	public void removeAlias(String aliasName) {
+	public void removeAlias(String indexName, String aliasName) {
+		String addAliasTemplate
+				= StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.remove_alias);
 
+		String data = addAliasTemplate
+				.replace("{{INDEXNAME}}", indexName)
+				.replace("{{ALIASNAME}}", aliasName);
+
+		connector.post("/_aliases", data);
 	}
 
 	public <T> String addDocument(T entity)
@@ -336,7 +350,7 @@ public class ElasticClient {
 
 		if (!TextUtils.isEmpty(id))	{
 			pathBuilder.append("/").append(id);
-			
+
 			if (operationType != null) {
 				String operationPath = operationType.getOperationTypePath();
 				if (!TextUtils.isEmpty(operationPath))
