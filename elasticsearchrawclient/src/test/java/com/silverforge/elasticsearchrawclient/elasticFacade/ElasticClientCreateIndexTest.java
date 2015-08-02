@@ -10,6 +10,7 @@ import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
 import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -18,8 +19,12 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -83,6 +88,24 @@ public class ElasticClientCreateIndexTest {
         assertThat(predefinedIndexTwoExists, is(true));
 
         client.removeIndices();
+    }
+
+    @Test
+    public void addAndRemoveAlias() {
+        String aliasName = "myFunnyCities";
+        String indexName = "cities";
+        client.addAlias(indexName, aliasName);
+        List<String> cities = client.getAliases(indexName);
+
+        assertThat(cities, not(nullValue()));
+        assertThat(cities.size(), equalTo(1));
+        assertThat(cities.get(0), equalTo(aliasName));
+
+        client.removeAlias(indexName, aliasName);
+        List<String> retCities = client.getAliases(indexName);
+
+        assertThat(retCities, not(nullValue()));
+        assertThat(retCities.size(), equalTo(0));
     }
 
     // endregion

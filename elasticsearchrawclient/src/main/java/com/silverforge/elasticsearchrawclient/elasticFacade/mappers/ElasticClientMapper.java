@@ -21,20 +21,14 @@ public class ElasticClientMapper<T> {
 	public List<T> mapToList(String jsonSource, Class<T> typeReference) {
 
 		List<T> retValue = new ArrayList<>();
-
-		JSONArray hitsArray;
-		JSONObject hits;
-		JSONObject source;
-		JSONObject json;
-
 		try {
-			json = new JSONObject(jsonSource);
-			hits = json.getJSONObject("hits");
-			hitsArray = hits.getJSONArray("hits");
+			JSONObject json = new JSONObject(jsonSource);
+			JSONObject hits = json.getJSONObject("hits");
+			JSONArray hitsArray = hits.getJSONArray("hits");
 
 			for (int i = 0; i < hitsArray.length(); i++) {
 				JSONObject h = hitsArray.getJSONObject(i);
-				source = h.getJSONObject("_source");
+				JSONObject source = h.getJSONObject("_source");
 				T entity = mapper.readValue(source.toString(), typeReference);
 				retValue.add(entity);
 			}

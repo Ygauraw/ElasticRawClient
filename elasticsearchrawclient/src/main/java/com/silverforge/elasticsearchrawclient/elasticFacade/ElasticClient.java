@@ -10,6 +10,7 @@ import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.connector.Connector;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
+import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.AliasParser;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.AddDocumentResult;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
@@ -18,8 +19,10 @@ import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 // TODO : create interface for elasticclient once the methods are implemented
@@ -28,6 +31,7 @@ public class ElasticClient {
 	private static final String TAG = ElasticClient.class.getName();
 	private static final String STRING_EMPTY = "";
 	private Connectable connector;
+	// TODO : use ElasticClientMapper instead
 	private ObjectMapper mapper = new ObjectMapper();
 
 	public Raw raw = new Raw();
@@ -53,7 +57,7 @@ public class ElasticClient {
 		return result.isSuccess();
 	}
 
-	public void createAlias(String indexName, String aliasName) {
+	public void addAlias(String indexName, String aliasName) {
 		String addAliasTemplate
 			= StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.add_alias);
 
@@ -86,6 +90,17 @@ public class ElasticClient {
 			result = connector.head("/" + indexName);
 
 		return result.isSuccess();
+	}
+
+	public List<String> getAliases(String index) {
+		ArrayList<String> retValue = new ArrayList<>();
+		String getPath = String.format("/%s/_aliases", index);
+		InvokeResult invokeResult = connector.get(getPath);
+		if (invokeResult.isSuccess()) {
+			List<String> aliasesFromJson = AliasParser.getAliasesFromJson(index, invokeResult.getResult());
+			retValue.addAll(aliasesFromJson);
+		}
+		return retValue;
 	}
 
 	public void removeAlias(String indexName, String aliasName) {
