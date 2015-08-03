@@ -19,7 +19,6 @@ import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -34,18 +33,67 @@ public class ElasticClient {
 	// TODO : use ElasticClientMapper instead
 	private ObjectMapper mapper = new ObjectMapper();
 
+	/**
+	 * Proxy class for connector in order to have "raw" access to ElasticSearch
+	 */
 	public Raw raw = new Raw();
 
+	/**
+	 * Constructor of ElasticClient
+	 * @param connector the Connector instance
+	 * @throws MalformedURLException
+	 * @see com.silverforge.elasticsearchrawclient.connector.Connector
+	 */
 	public ElasticClient(Connectable connector)
 		throws MalformedURLException {
 		this.connector = connector;
 	}
 
+	/**
+	 * Constructor of ElasticClient
+	 *<strong><pre>
+	 *ConnectorSettings settings = ConnectorSettings
+	 *    .builder()
+	 *    .baseUrl(ELASTIC_URL)
+	 *    .indices(ELASTIC_INDICES)
+	 *    .types(ELASTIC_TYPES)
+	 *    .userName(ELASTIC_APIKEY)
+	 *    .build();
+	 *
+	 *    try {
+	 *        client = new ElasticClient(settings);
+	 *    } catch (URISyntaxException e) {
+	 *        e.printStackTrace();
+	 *        Log.e(TAG, e.getMessage());
+	 *        fail(e.getMessage());
+	 *    }
+	 *</pre></strong>
+	 * @param settings the settings of the ElasticClient
+	 * @throws URISyntaxException
+	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+	 */
 	public ElasticClient(ConnectorSettings settings)
 		throws URISyntaxException {
 		connector = new Connector(settings);
 	}
 
+	/**
+	 * Creates index based on indexName and the data
+	 * @param indexName the name of the index
+	 * @param data the json string defines structure of the index for example
+	 * <pre>
+	 * {<br/>
+	 *   "mappings" : {<br/>
+	 *     "testcity" : {<br/>
+	 *       "properties" : {<br/>
+	 *         "name" : { "type": "string"}<br/>
+	 *       }<br/>
+	 *     }<br/>
+	 *   }<br/>
+	 * }
+	 * </pre>
+	 * @return true : if success
+	 */
 	public boolean createIndex(String indexName, String data) {
 		InvokeResult result;
 
@@ -57,6 +105,11 @@ public class ElasticClient {
 		return result.isSuccess();
 	}
 
+	/**
+	 * Adds alias to an index
+	 * @param indexName the index name, it could be a group as well e.g.: "testind*"
+	 * @param aliasName the alias
+	 */
 	public void addAlias(String indexName, String aliasName) {
 		String addAliasTemplate
 			= StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.add_alias);
@@ -68,10 +121,19 @@ public class ElasticClient {
 		connector.post("/_aliases", data);
 	}
 
+	/**
+	 * Removes all the indices defined in the ConnectorSettings
+	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+	 */
 	public void removeIndices() {
 		removeIndices(connector.getSettings().getIndices());
 	}
 
+	/**
+	 * Removes all indices given by parameter
+	 * @param indexNames the indices
+	 */
 	public void removeIndices(String[] indexNames) {
 		for (String indexName : indexNames) {
 			if (indexName.startsWith("/"))
@@ -81,6 +143,11 @@ public class ElasticClient {
 		}
 	}
 
+	/**
+	 * Checks if the index already exists
+	 * @param indexName The name of the index
+	 * @return true if exists
+	 */
 	public boolean indexExists(String indexName) {
 		InvokeResult result;
 
@@ -92,6 +159,11 @@ public class ElasticClient {
 		return result.isSuccess();
 	}
 
+	/**
+	 * Retrieves the aliases of the given index
+	 * @param index the index
+	 * @return List of aliases
+	 */
 	public List<String> getAliases(String index) {
 		ArrayList<String> retValue = new ArrayList<>();
 		String getPath = String.format("/%s/_aliases", index);
@@ -103,6 +175,11 @@ public class ElasticClient {
 		return retValue;
 	}
 
+	/**
+	 * Removes alias from index
+	 * @param indexName the index name
+	 * @param aliasName the alias name
+	 */
 	public void removeAlias(String indexName, String aliasName) {
 		String addAliasTemplate
 			= StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.remove_alias);
@@ -114,12 +191,33 @@ public class ElasticClient {
 		connector.post("/_aliases", data);
 	}
 
+	/**
+	 * Adds a document to the index defined in ConnectorSettings
+	 * @param entity the entity should be added to index (will be json serialized)
+	 * @param <T> the type of the entity
+	 * @return the id of the newly created document
+	 * @throws IndexCannotBeNullException
+	 * @throws IllegalArgumentException
+	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+	 */
 	public <T> String addDocument(T entity)
 			throws IndexCannotBeNullException, IllegalArgumentException {
 
 		return addDocument(null, entity);
 	}
 
+	/**
+	 * Adds a document to the index defined in ConnectorSettings
+	 * @param id the id of the document
+	 * @param entity the entity should be added to index (will be json serialized)
+	 * @param <T> the type of the entity
+	 * @return the id of the newly created document
+	 * @throws IndexCannotBeNullException
+	 * @throws IllegalArgumentException
+	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+	 */
 	public <T> String addDocument(String id, T entity)
 			throws IndexCannotBeNullException, IllegalArgumentException {
 
@@ -134,8 +232,6 @@ public class ElasticClient {
 			InvokeResult result = connector.post(addPath, entityJson);
 			AddDocumentResult addDocumentResult = mapper.readValue(result.getResult(), AddDocumentResult.class);
 			retValue = addDocumentResult.getId();
-		} catch (IndexCannotBeNullException ie) {
-			throw ie;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -143,6 +239,16 @@ public class ElasticClient {
 		return retValue;
 	}
 
+	/**
+	 * Adds a document to the index, in case of IOException empty id will be retrieved
+	 * @param index the index (Elastic)
+	 * @param type the type of the document (Elastic)
+	 * @param id the id of the document
+	 * @param entity the entity
+	 * @param <T> the type of the entity
+	 * @return the id of the newly created document, it's equal to the param id
+	 * @throws IllegalArgumentException
+	 */
 	public <T> String addDocument(String index, String type, String id, T entity)
 			throws IllegalArgumentException {
 
@@ -173,6 +279,14 @@ public class ElasticClient {
         return retValue;
     }
 
+	/**
+	 * Removes document from index defined in ConnectorSettings based on the given id
+	 * @param id the id
+	 * @throws IllegalArgumentException
+	 * @throws IndexCannotBeNullException
+	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+	 */
 	public void removeDocument(String id)
 			throws IllegalArgumentException, IndexCannotBeNullException {
 
@@ -183,6 +297,13 @@ public class ElasticClient {
 		connector.delete(deletePath);
 	}
 
+	/**
+	 * Removes document from index given by parameters
+	 * @param index the index (Elastic)
+	 * @param type the type (Elastic)
+	 * @param id the id (Elastic)
+	 * @throws IllegalArgumentException
+	 */
 	public void removeDocument(String index, String type, String id)
 			throws IllegalArgumentException{
 
@@ -199,6 +320,23 @@ public class ElasticClient {
 		connector.delete(deletePath);
 	}
 
+	/**
+	 * Removes documents by query from index defined in ConnectorSettings
+	 * @param query the query, e.g.:
+	 *<pre>
+	 *{<br/>
+	 *  "query": {<br/>
+	 *    "term": {<br/>
+	 *      "name": {<br/>
+	 *        "value": "myCityName"<br/>
+	 *      }<br/>
+	 *    }<br/>
+	 *  }<br/>
+	 *}
+	 *</pre>
+	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+	 */
 	public void removeDocumentsQuery(String query) {
 		String deletePath
 			= getDeleteQueryPath(connector.getSettings().getIndices(),
@@ -206,11 +344,37 @@ public class ElasticClient {
 		connector.delete(deletePath, query);
 	}
 
+	/**
+	 * Removes documents based on the given query on the given indices
+	 * @param indices the indices
+	 * @param types the types of the indices
+	 * @param query the query, e.g.:
+	 *<pre>
+	 *{<br/>
+	 *  "query": {<br/>
+	 *    "term": {<br/>
+	 *      "name": {<br/>
+	 *        "value": "myCityName"<br/>
+	 *      }<br/>
+	 *    }<br/>
+	 *  }<br/>
+	 *}
+	 *</pre>
+	 */
 	public void removeDocumentsQuery(String[] indices, String[] types, String query) {
 		String deleteQueryPath = getDeleteQueryPath(indices, types);
 		connector.delete(deleteQueryPath.toString(), query);
 	}
 
+	/**
+	 * Updates document based on the given parameters in index defined in ConnectorSettings
+	 * @param id the id
+	 * @param entity the entity (will be json serialized)
+	 * @param <T> the type of the entity
+	 * @throws IndexCannotBeNullException
+	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+	 */
 	public <T> void updateDocument(String id, T entity)
 			throws IndexCannotBeNullException {
 
@@ -232,6 +396,15 @@ public class ElasticClient {
 		}
     }
 
+	/**
+	 * Updates document based on the given parameters
+	 * @param index the index (Elastic)
+	 * @param type the type (Elastic)
+	 * @param id the id of the document (Elastic)
+	 * @param entity the entity (will be json serialized)
+	 * @param <T> the tpe of the entity
+	 * @throws IllegalArgumentException
+	 */
     public <T> void updateDocument(String index, String type, String id, T entity)
 			throws IllegalArgumentException {
 
@@ -260,18 +433,45 @@ public class ElasticClient {
 		}
     }
 
+	/**
+	 * In progress
+	 */
     public void bulk() {
 
     }
 
+	/**
+	 * Retrieves with document(s) based on the given parameters
+	 * @param ids the id(s) of the document(s) (Elastic)
+	 * @param classType the type of the entity will be retrieved for mapping, e.g.: <strong>City.class</strong>
+	 * @param <T> the type of the entity
+	 * @return List of entity/entities retrieved by the given id(s)
+	 */
 	public <T> List<T> getDocument(String[] ids, Class<T> classType) {
 		return getDocument(null, ids, classType);
 	}
 
+	/**
+	 * Retrieves with document(s) based on the given parameters
+	 * @param type the type of the document (Elastic)
+	 * @param ids the id(s) of the document(s) (Elastic)
+	 * @param classType the type of the entity will be retrieved for mapping, e.g.: <strong>City.class</strong>
+	 * @param <T> the type of the entity
+	 * @return List of entity/entities retrieved by the given id(s)
+	 */
 	public <T> List<T> getDocument(String type, String[] ids, Class<T> classType) {
 		return getDocument(null, type, ids, classType);
 	}
 
+	/**
+	 * Retrieves with document(s) based on the given parameters
+	 * @param index the index (Elastic)
+	 * @param type the type of the document (Elastic)
+	 * @param ids the id(s) of the document(s) (Elastic)
+	 * @param classType the type of the entity will be retrieved for mapping, e.g.: <strong>City.class</strong>
+	 * @param <T> the type of the entity
+	 * @return List of entity/entities retrieved by the given id(s)
+	 */
 	public <T> List<T> getDocument(String index, String type, String[] ids, Class<T> classType) {
 		String queryTemplate;
 		String queryIds = StringUtils.makeCommaSeparatedListWithQuotationMark(ids);
@@ -299,6 +499,22 @@ public class ElasticClient {
 		return mapper.mapToList(documents, classType);
 	}
 
+	/**
+	 * Searches in index based on the query and retrieves with the list of entities from index defined in ConnectorSettings
+	 * @param query the query, e.g.:
+	 *<pre>
+	 *{<br/>
+	 *  "query": {<br/>
+	 *    "match_all": {}<br/>
+	 *  }<br/>
+	 *}<br/>
+	 *</pre>
+	 * @param classType the type of the entity will be retrieved for mapping, e.g.: <strong>City.class</strong>
+	 * @param <T> the type of the entity
+	 * @return List of entity/entities retrieved by query
+	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+	 */
 	public <T> List<T> search(String query, Class<T> classType) {
 		String queryPath = getQueryPath();
 		String documents = connector.post(queryPath, query).getResult();
@@ -307,6 +523,21 @@ public class ElasticClient {
 		return mapper.mapToList(documents, classType);
 	}
 
+	/**
+	 * Searches in index based on the query and retrieves with the list of entities
+	 * @param index the index
+	 * @param query the query, e.g.:
+	 *<pre>
+	 *{<br/>
+	 *  "query": {<br/>
+	 *    "match_all": {}<br/>
+	 *  }<br/>
+	 *}<br/>
+	 *</pre>
+	 * @param classType the type of the entity will be retrieved for mapping, e.g.: <strong>City.class</strong>
+	 * @param <T> the type of the entity
+	 * @return List of entity/entities retrieved by query
+	 */
 	public <T> List<T> search(String index, String query, Class<T> classType) {
 		if (TextUtils.isEmpty(index))
 			throw new IllegalArgumentException("index cannot be null or empty");
@@ -318,6 +549,16 @@ public class ElasticClient {
 		return mapper.mapToList(documents, classType);
 	}
 
+	/**
+	 * Retrives with the path of the operation defined in OperationType based on ConnectorSettings
+	 * @param id the id of the document. could be <strong>null</strong>
+	 * @param operationType the type of the operation
+	 * @return the path, e.g.: /myindex,yourindex/mytype,yourtype/2
+	 * @throws IndexCannotBeNullException
+	 * @see com.silverforge.elasticsearchrawclient.elasticFacade.OperationType
+	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+	 */
 	protected String getOperationPath(String id, OperationType operationType)
 			throws IndexCannotBeNullException {
 
@@ -356,6 +597,12 @@ public class ElasticClient {
 		return pathBuilder.toString();
 	}
 
+	/**
+	 * Retrieves with the query path based on ConnectorSettings
+	 * @return the path, e.g.: /myindex,yourindex/mytype,yourtype/_search or if no indices/types defined with /_all/search
+	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+	 */
 	protected String getQueryPath() {
 		boolean indicesAreEmpty = true;
 		boolean typesAreEmpty = true;
@@ -388,6 +635,12 @@ public class ElasticClient {
 		return pathBuilder.toString();
 	}
 
+	/**
+	 * Retrieves with path for delete
+	 * @param indices the indices
+	 * @param types the types
+	 * @return the path, e.g.: /myindex,yourindex/mytype,yourtype/_query
+	 */
 	@NonNull
 	protected String getDeleteQueryPath(String[] indices, String[] types) {
 		StringBuilder pathBuilder = new StringBuilder();
@@ -411,26 +664,72 @@ public class ElasticClient {
 		return pathBuilder.toString();
 	}
 
+	/**
+	 * Proxy class for connector in order to have "raw" access to ElasticSearch
+	 */
 	public final class Raw {
 
 		private Raw() {}
 
+		/**
+		 * HTTP method HEAD on given path. The url is defined in ConnectorSettings
+		 * @param path the path, e.g.: /apple/pear/1
+		 * @return the result of the invoke
+		 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+		 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+		 * @see com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult
+		 */
 		public InvokeResult head(String path) {
 			return connector.head(path);
 		}
 
+		/**
+		 * HTTP method GET on given path. The url is defined in ConnectorSettings
+		 * @param path the path, e.g.: /apple/pear/1
+		 * @return the result of the invoke
+		 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+		 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+		 * @see com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult
+		 */
 		public InvokeResult get(String path) {
 			return connector.get(path);
 		}
 
+		/**
+		 * HTTP method POST on given path. The url is defined in ConnectorSettings
+		 * @param path the path, e.g.: /apple/pear/1
+		 * @param data the request data
+		 * @return the result of the invoke
+		 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+		 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+		 * @see com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult
+		 */
 		public InvokeResult post(String path, String data) {
 			return connector.post(path, data);
 		}
 
+		/**
+		 * HTTP method PUT on given path. The url is defined in ConnectorSettings
+		 * @param path the path, e.g.: /apple/pear/1
+		 * @param data the request data
+		 * @return the result of the invoke
+		 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+		 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+		 * @see com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult
+		 */
 		public InvokeResult put(String path, String data) {
 			return connector.put(path, data);
 		}
 
+		/**
+		 * HTTP method DELETE on given path. The url is defined in ConnectorSettings
+		 * @param path the path, e.g.: /apple/pear/1
+		 * @param data the request data
+		 * @return the result of the invoke
+		 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+		 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+		 * @see com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult
+		 */
 		public InvokeResult delete(String path, String data) {
 			return connector.delete(path, data);
 		}

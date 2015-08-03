@@ -6,6 +6,9 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Result of the HTTP(S) invoke for Connector. (The response)
+ */
 public class InvokeResult {
 
     @Getter
