@@ -1,14 +1,14 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
-
 ### What is this repository for? ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+The ElasticSearchRawClient is a lightweight ElasticSearch client module for Android devs.
+
+Current version : 1.0
 
 ### How do I get set up? ###
+
+[TBD]
 
 * Summary of set up
 * Configuration
@@ -17,13 +17,11 @@ This README would normally document whatever steps are necessary to get your app
 * How to run tests
 * Deployment instructions
 
-### Contribution guidelines ###
+#### Set up ####
+Currently there is no gradle or maven setup for this repo (I'm working on it, and will be :)) so  currently download this module and add
 
-* Writing tests
-* Code review
-* Other guidelines
+	compile project(':elasticsearchrawclient')
 
-### Who do I talk to? ###
+to your build.gradle.
 
-* Repo owner or admin
-* Other community or team contact
+
