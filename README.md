@@ -24,4 +24,37 @@ Currently there is no gradle or maven setup for this repo (I'm working on it, an
 
 to your build.gradle.
 
+#### Configuration ####
+
+Currently the ElasticSearchRawClient (ESRC) works only with https urls.
+Instantiate a ConnectorSettings via builder and pass it to the ElasticClient instance.
+
+    try {
+        ConnectorSettings settings = ConnectorSettings
+                .builder()
+                .baseUrl(ELASTIC_URL)
+                .indices(ELASTIC_INDICES)
+                .types(ELASTIC_TYPES)
+                .userName(ELASTIC_APIKEY)
+                .build();
+
+        client = new ElasticClient(settings);
+    } catch (URISyntaxException e) {
+        e.printStackTrace();
+        Log.e(TAG, e.getMessage());
+    }
+
+
+Once you have set up the client you can use this **client** instance for operating with ElasticSearch server.
+
+
+
+
+
+
+
+
+
+
+
 
