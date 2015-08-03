@@ -26,7 +26,7 @@ to your build.gradle.
 
 #### Configuration ####
 
-Currently the ElasticSearchRawClient (ESRC) works only with https urls.
+Currently the ElasticClient works only with https urls.
 Instantiate a ConnectorSettings via builder and pass it to the ElasticClient instance.
 
     try {
@@ -46,15 +46,3 @@ Instantiate a ConnectorSettings via builder and pass it to the ElasticClient ins
 
 
 Once you have set up the client you can use this **client** instance for operating with ElasticSearch server.
-
-
-
-
-
-
-
-
-
-
-
-
