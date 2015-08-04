@@ -33,4 +33,11 @@ public class StringUtils {
         UUID uuid = UUID.randomUUID();
         return uuid.toString();
     }
+
+    public static String ensurePath(String path) {
+        if (path.startsWith("/"))
+            return path;
+
+        return String.format("/%s", path);
+    }
 }

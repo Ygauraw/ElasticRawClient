@@ -13,14 +13,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ElasticClientMapper<T> {
-
+public class ElasticClientMapper {
 	private static final String TAG = ElasticClientMapper.class.getName();
-	private ObjectMapper mapper = new ObjectMapper();
+	private static final ObjectMapper mapper = new ObjectMapper();
 
-	public List<T> mapToList(String jsonSource, Class<T> typeReference) {
+	public static <TEntity> List<TEntity> mapToHitList(String jsonSource, Class<TEntity> typeReference) {
 
-		List<T> retValue = new ArrayList<>();
+		List<TEntity> retValue = new ArrayList<>();
 		try {
 			JSONObject json = new JSONObject(jsonSource);
 			JSONObject hits = json.getJSONObject("hits");
@@ -29,7 +28,7 @@ public class ElasticClientMapper<T> {
 			for (int i = 0; i < hitsArray.length(); i++) {
 				JSONObject h = hitsArray.getJSONObject(i);
 				JSONObject source = h.getJSONObject("_source");
-				T entity = mapper.readValue(source.toString(), typeReference);
+				TEntity entity = mapper.readValue(source.toString(), typeReference);
 				retValue.add(entity);
 			}
 		} catch (JSONException | IOException e) {
@@ -40,12 +39,29 @@ public class ElasticClientMapper<T> {
 		return retValue;
 	}
 
-	public String map(T entity) {
+	public static <TEntity> String mapToJson(TEntity entity) {
+		String retValue = "";
+
 		try {
-			return mapper.writeValueAsString(entity);
+			retValue = mapper.writeValueAsString(entity);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
-			return "";
+			Log.e(TAG, e.getMessage());
 		}
+
+		return retValue;
+	}
+
+	public static <TEntity> TEntity mapToEntity(String json, Class<TEntity> typeReference) {
+		TEntity retValue = null;
+
+		try {
+			retValue = mapper.readValue(json, typeReference);
+		} catch (IOException e) {
+			e.printStackTrace();
+			Log.e(TAG, e.getMessage());
+		}
+
+		return retValue;
 	}
 }

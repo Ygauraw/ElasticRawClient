@@ -10,7 +10,9 @@ public enum OperationType {
     CREATE("CREATE"),
     UPDATE("UPDATE"),
     DELETE("DELETE"),
-    INDEX("INDEX");
+    INDEX("INDEX"),
+    QUERY("QUERY"),
+    SEARCH("SEARCH");
 
     private static final HashMap<String, String> operationPathType = new HashMap<>();
     static {
@@ -18,6 +20,8 @@ public enum OperationType {
         operationPathType.put("UPDATE", "_update");
         operationPathType.put("DELETE", "");
         operationPathType.put("INDEX", "");
+        operationPathType.put("QUERY", "_query");
+        operationPathType.put("SEARCH", "_search");
     }
 
     private String operationType;
@@ -29,7 +33,7 @@ public enum OperationType {
 
     /**
      * Override of the toString
-     * @return the operationtype, e.g.: "CREATE", "UPDATE", "DELETE", "INDEX"
+     * @return the operationtype, e.g.: "CREATE", "UPDATE", "DELETE", "INDEX", "QUERY", "SEARCH"
      */
     @Override
     public String toString() {
@@ -38,7 +42,7 @@ public enum OperationType {
 
     /**
      * Retrieves with the operation path
-     * @return the operation type path, e.g.: "_create", "_update"
+     * @return the operation type path, e.g.: "_create", "_update", "_query", "_search"
      */
     public String getOperationTypePath() {
         return operationPathType.get(operationType);

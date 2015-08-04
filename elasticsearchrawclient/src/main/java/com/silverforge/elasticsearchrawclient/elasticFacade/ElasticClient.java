@@ -3,8 +3,6 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.connector.Connectable;
@@ -18,7 +16,6 @@ import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullExcept
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -27,11 +24,7 @@ import java.util.List;
 // TODO : create interface for elasticclient once the methods are implemented
 // TODO : QueryManagr should be created to maintain and reuse certain queries by user
 public class ElasticClient {
-	private static final String TAG = ElasticClient.class.getName();
-	private static final String STRING_EMPTY = "";
 	private Connectable connector;
-	// TODO : use ElasticClientMapper instead
-	private ObjectMapper mapper = new ObjectMapper();
 
 	/**
 	 * Proxy class for connector in order to have "raw" access to ElasticSearch
@@ -95,13 +88,8 @@ public class ElasticClient {
 	 * @return true : if success
 	 */
 	public boolean createIndex(String indexName, String data) {
-		InvokeResult result;
-
-		if (indexName.startsWith("/"))
-			result = connector.put(indexName, data);
-		else
-			result = connector.put("/" + indexName, data);
-
+		String path = StringUtils.ensurePath(indexName);
+		InvokeResult result = connector.put(path, data);
 		return result.isSuccess();
 	}
 
@@ -136,10 +124,8 @@ public class ElasticClient {
 	 */
 	public void removeIndices(String[] indexNames) {
 		for (String indexName : indexNames) {
-			if (indexName.startsWith("/"))
-				connector.delete(indexName);
-			else
-				connector.delete("/" + indexName);
+			String path = StringUtils.ensurePath(indexName);
+			connector.delete(path);
 		}
 	}
 
@@ -149,13 +135,8 @@ public class ElasticClient {
 	 * @return true if exists
 	 */
 	public boolean indexExists(String indexName) {
-		InvokeResult result;
-
-		if (indexName.startsWith("/"))
-			result = connector.head(indexName);
-		else
-			result = connector.head("/" + indexName);
-
+		String path = StringUtils.ensurePath(indexName);
+		InvokeResult result = connector.head(path);
 		return result.isSuccess();
 	}
 
@@ -167,6 +148,7 @@ public class ElasticClient {
 	public List<String> getAliases(String index) {
 		ArrayList<String> retValue = new ArrayList<>();
 		String getPath = String.format("/%s/_aliases", index);
+
 		InvokeResult invokeResult = connector.get(getPath);
 		if (invokeResult.isSuccess()) {
 			List<String> aliasesFromJson = AliasParser.getAliasesFromJson(index, invokeResult.getResult());
@@ -224,19 +206,14 @@ public class ElasticClient {
 		if (entity == null)
 			throw new IllegalArgumentException("entity cannot be null");
 
-		String retValue = STRING_EMPTY;
-		try {
-			String entityJson = mapper.writeValueAsString(entity);
-			String addPath = getOperationPath(id, OperationType.CREATE);
+		String entityJson = ElasticClientMapper.mapToJson(entity);
+		String addPath = getOperationPath(id, OperationType.CREATE);
 
-			InvokeResult result = connector.post(addPath, entityJson);
-			AddDocumentResult addDocumentResult = mapper.readValue(result.getResult(), AddDocumentResult.class);
-			retValue = addDocumentResult.getId();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		InvokeResult result = connector.post(addPath, entityJson);
+		AddDocumentResult addDocumentResult
+				= ElasticClientMapper.mapToEntity(result.getResult(), AddDocumentResult.class);
 
-		return retValue;
+		return addDocumentResult.getId();
 	}
 
 	/**
@@ -264,19 +241,14 @@ public class ElasticClient {
 		if (TextUtils.isEmpty(id))
 			throw new IllegalArgumentException("id cannot be null or empty");
 
-        String retValue = STRING_EMPTY;
-		try {
-			String entityJson = mapper.writeValueAsString(entity);
-			String addPath = String.format("/%s/%s/%s", index, type, id);
+		String entityJson = ElasticClientMapper.mapToJson(entity);
+		String addPath = String.format("/%s/%s/%s", index, type, id);
 
-			InvokeResult result = connector.post(addPath, entityJson);
-			AddDocumentResult addDocumentResult = mapper.readValue(result.getResult(), AddDocumentResult.class);
-			retValue = addDocumentResult.getId();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		InvokeResult result = connector.post(addPath, entityJson);
+		AddDocumentResult addDocumentResult
+                = ElasticClientMapper.mapToEntity(result.getResult(), AddDocumentResult.class);
 
-        return retValue;
+		return addDocumentResult.getId();
     }
 
 	/**
@@ -363,7 +335,7 @@ public class ElasticClient {
 	 */
 	public void removeDocumentsQuery(String[] indices, String[] types, String query) {
 		String deleteQueryPath = getDeleteQueryPath(indices, types);
-		connector.delete(deleteQueryPath.toString(), query);
+		connector.delete(deleteQueryPath, query);
 	}
 
 	/**
@@ -381,20 +353,16 @@ public class ElasticClient {
 		if (entity == null)
 			throw new IllegalArgumentException("entity cannot be null");
 
-		try {
-			String entityJson = mapper.writeValueAsString(entity);
-			String updatePath = getOperationPath(id, OperationType.UPDATE);
+		String entityJson = ElasticClientMapper.mapToJson(entity);
+		String updatePath = getOperationPath(id, OperationType.UPDATE);
 
-			String updateTemplate = StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.update_template);
-			String data = updateTemplate.replace("{{ENTITYJSON}}", entityJson);
+		String updateTemplate
+                = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
+                                            R.raw.update_template);
+		String data = updateTemplate.replace("{{ENTITYJSON}}", entityJson);
 
-			connector.post(updatePath, data);
-		} catch (IndexCannotBeNullException ie) {
-			throw ie;
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-    }
+		connector.post(updatePath, data);
+	}
 
 	/**
 	 * Updates document based on the given parameters
@@ -420,18 +388,16 @@ public class ElasticClient {
 		if (TextUtils.isEmpty(id))
 			throw new IllegalArgumentException("id cannot be null or empty");
 
-		try {
-			String entityJson = mapper.writeValueAsString(entity);
-			String updatePath = String.format("/%s/%s/%s/_update", index, type, id);
+		String entityJson = ElasticClientMapper.mapToJson(entity);
+		String updatePath = String.format("/%s/%s/%s/_update", index, type, id);
 
-			String updateTemplate = StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.update_template);
-			String data = updateTemplate.replace("{{ENTITYJSON}}", entityJson);
+		String updateTemplate
+                = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
+                                            R.raw.update_template);
+		String data = updateTemplate.replace("{{ENTITYJSON}}", entityJson);
 
-			connector.post(updatePath, data);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
+		connector.post(updatePath, data);
+	}
 
 	/**
 	 * In progress
@@ -475,28 +441,27 @@ public class ElasticClient {
 	public <T> List<T> getDocument(String index, String type, String[] ids, Class<T> classType) {
 		String queryTemplate;
 		String queryIds = StringUtils.makeCommaSeparatedListWithQuotationMark(ids);
-		if (TextUtils.isEmpty(type))
-			queryTemplate = StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.search_by_ids);
-		else
-			queryTemplate = StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.search_by_ids_and_type);
-
 		String query;
-		if (TextUtils.isEmpty(type))
-			query = queryTemplate.replace("{{IDS}}", queryIds);
-		else
-			query = queryTemplate
-						.replace("{{IDS}}", queryIds)
-						.replace("{{TYPE}}", type);
-
 		String queryPath;
-		if (TextUtils.isEmpty(index))
+		if (TextUtils.isEmpty(type)) {
+			queryTemplate = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
+														R.raw.search_by_ids);
+			query = queryTemplate.replace("{{IDS}}", queryIds);
 			queryPath = getQueryPath();
-		else
-			queryPath = String.format("/%s/_search", index);
-		String documents = connector.post(queryPath, query).getResult();
+		} else {
+			queryTemplate = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
+					R.raw.search_by_ids_and_type);
+			query = queryTemplate
+					.replace("{{IDS}}", queryIds)
+					.replace("{{TYPE}}", type);
+			if (TextUtils.isEmpty(index))
+				queryPath = "/_all/_search";
+			else
+				queryPath = String.format("/%s/_search", index);
+		}
 
-		ElasticClientMapper<T> mapper = new ElasticClientMapper<>();
-		return mapper.mapToList(documents, classType);
+		String documents = connector.post(queryPath, query).getResult();
+		return ElasticClientMapper.mapToHitList(documents, classType);
 	}
 
 	/**
@@ -519,8 +484,7 @@ public class ElasticClient {
 		String queryPath = getQueryPath();
 		String documents = connector.post(queryPath, query).getResult();
 
-		ElasticClientMapper<T> mapper = new ElasticClientMapper<>();
-		return mapper.mapToList(documents, classType);
+		return ElasticClientMapper.mapToHitList(documents, classType);
 	}
 
 	/**
@@ -545,9 +509,9 @@ public class ElasticClient {
 		String queryPath = String.format("/%s/_search", index);
 		String documents = connector.post(queryPath, query).getResult();
 
-		ElasticClientMapper<T> mapper = new ElasticClientMapper<>();
-		return mapper.mapToList(documents, classType);
+		return ElasticClientMapper.mapToHitList(documents, classType);
 	}
+
 
 	/**
 	 * Retrives with the path of the operation defined in OperationType based on ConnectorSettings

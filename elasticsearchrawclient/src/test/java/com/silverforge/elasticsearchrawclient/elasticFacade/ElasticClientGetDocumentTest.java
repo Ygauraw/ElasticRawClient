@@ -28,7 +28,6 @@ import static org.junit.Assert.fail;
 @Config(constants = BuildConfig.class, sdk = 21)
 public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     private static final String TAG = ElasticClientGetDocumentTest.class.getName();
-    private ElasticClientMapper<City> cityMapper = new ElasticClientMapper<>();
 
     // region Happy path
 
