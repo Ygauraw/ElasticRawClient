@@ -1,9 +1,12 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
+import android.util.Log;
+
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
+import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 
@@ -42,7 +45,7 @@ public class ElasticClientRemoveDocumentTest extends ElasticClientBaseTest {
             List<City> document = client.getDocument(new String[]{docId}, City.class);
             assertThat(document, not(nullValue()));
             assertThat(document.size(), equalTo(0));
-        } catch (IndexCannotBeNullException e) {
+        } catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
             e.printStackTrace();
             fail(e.getMessage());
         } catch (InterruptedException e) {
@@ -53,17 +56,22 @@ public class ElasticClientRemoveDocumentTest extends ElasticClientBaseTest {
 
     @Test
     public void removeDocumentTest() {
-        String docId = "mydeldoc";
+        try {
+            String docId = "mydeldoc";
 
-        City testCity = new City("mydelcity");
-        String retId = client.addDocument("testcities", "testcity", docId, testCity);
-        assertThat(docId, equalTo(retId));
+            City testCity = new City("mydelcity");
+            String retId = client.addDocument("testcities", "testcity", docId, testCity);
+            assertThat(docId, equalTo(retId));
 
-        client.removeDocument("testcities", "testcity", docId);
+            client.removeDocument("testcities", "testcity", docId);
 
-        List<City> document = client.getDocument(new String[]{docId}, City.class);
-        assertThat(document, not(nullValue()));
-        assertThat(document.size(), equalTo(0));
+            List<City> document = client.getDocument(new String[]{docId}, City.class);
+            assertThat(document, not(nullValue()));
+            assertThat(document.size(), equalTo(0));
+        } catch (IndexCannotBeNullException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
     }
 
     @Test
@@ -89,7 +97,7 @@ public class ElasticClientRemoveDocumentTest extends ElasticClientBaseTest {
 
             List<City> search = client.search(query, City.class);
             assertThat(search.size(), equalTo(0));
-        } catch (IndexCannotBeNullException e) {
+        } catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
             e.printStackTrace();
             fail(e.getMessage());
         } catch (InterruptedException e) {

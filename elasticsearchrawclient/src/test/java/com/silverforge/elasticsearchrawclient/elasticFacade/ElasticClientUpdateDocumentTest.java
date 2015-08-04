@@ -2,6 +2,7 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
+import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 
 import org.hamcrest.Matchers;
@@ -50,7 +51,7 @@ public class ElasticClientUpdateDocumentTest extends ElasticClientBaseTest {
             assertThat(retCities, not(nullValue()));
             assertThat(retCities.size(), equalTo(1));
             assertThat(retCities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
-        } catch (IndexCannotBeNullException e) {
+        } catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
             e.printStackTrace();
             fail(e.getMessage());
         } catch (InterruptedException e) {

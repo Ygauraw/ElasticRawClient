@@ -21,7 +21,6 @@ import static org.junit.Assert.fail;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-@Ignore("execute manually once it is needed to rebuild the db")
 public final class DatabaseCreator {
     private static final String TAG = DatabaseCreator.class.getName();
     private ElasticClient client;
@@ -45,6 +44,7 @@ public final class DatabaseCreator {
     }
 
     @Test
+    @Ignore("Execute manually once it is needed to rebuild the Elastic indices")
     public void prepare() {
         String createCityData
             = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),

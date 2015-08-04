@@ -17,7 +17,7 @@ public class ElasticClientMapper {
 	private static final String TAG = ElasticClientMapper.class.getName();
 	private static final ObjectMapper mapper = new ObjectMapper();
 
-	public static <TEntity> List<TEntity> mapToHitList(String jsonSource, Class<TEntity> typeReference) {
+	public static synchronized  <TEntity> List<TEntity> mapToHitList(String jsonSource, Class<TEntity> typeReference) {
 
 		List<TEntity> retValue = new ArrayList<>();
 		try {
@@ -39,7 +39,8 @@ public class ElasticClientMapper {
 		return retValue;
 	}
 
-	public static <TEntity> String mapToJson(TEntity entity) {
+	public static synchronized  <TEntity> String mapToJson(TEntity entity) {
+
 		String retValue = "";
 
 		try {
@@ -52,7 +53,7 @@ public class ElasticClientMapper {
 		return retValue;
 	}
 
-	public static <TEntity> TEntity mapToEntity(String json, Class<TEntity> typeReference) {
+	public static synchronized  <TEntity> TEntity mapToEntity(String json, Class<TEntity> typeReference) {
 		TEntity retValue = null;
 
 		try {

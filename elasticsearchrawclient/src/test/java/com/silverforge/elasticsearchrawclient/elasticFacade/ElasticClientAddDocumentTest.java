@@ -6,6 +6,7 @@ import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
+import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 
 import org.junit.Rule;
@@ -43,25 +44,22 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
         try {
             id = client.addDocument(city);
             System.out.println(String.format("DocumentId : %s", id));
-        } catch (IndexCannotBeNullException e) {
+
+            assertThat(id, notNullValue());
+            assertThat(id, not(""));
+
+            Thread.sleep(1000);
+
+            List<City> cities = client.getDocument(new String[]{id}, City.class);
+            assertThat(cities, not(nullValue()));
+            assertThat(cities.size(), is(1));
+            assertThat(cities.get(0).getName(), is(cityName));
+
+        } catch (IndexCannotBeNullException | TypeCannotBeNullException |InterruptedException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
         }
-
-        assertThat(id, notNullValue());
-        assertThat(id, not(""));
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        List<City> cities = client.getDocument(new String[]{id}, City.class);
-        assertThat(cities, not(nullValue()));
-        assertThat(cities.size(), is(1));
-        assertThat(cities.get(0).getName(), is(cityName));
     }
 
     @Test
@@ -73,7 +71,7 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
         try {
             String resultId = client.addDocument(cityId, city);
             assertThat(resultId, equalTo(cityId));
-        } catch (IndexCannotBeNullException e) {
+        } catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -98,7 +96,7 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
     public void addDocumentWithNullTest() {
         try {
             client.addDocument(null);
-        } catch (IndexCannotBeNullException e) {
+        } catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -121,7 +119,7 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
             String cityName = generateUUID();
             City city = new City(cityName);
             testClient.addDocument(city);
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | TypeCannotBeNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
