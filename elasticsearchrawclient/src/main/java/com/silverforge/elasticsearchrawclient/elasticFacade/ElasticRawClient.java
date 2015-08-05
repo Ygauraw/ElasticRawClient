@@ -23,35 +23,35 @@ public interface ElasticRawClient {
 	void removeAlias(String indexName, String aliasName);
 
 	<T> String addDocument(T entity)
-			throws IndexCannotBeNullException, IllegalArgumentException, TypeCannotBeNullException;
+            throws IndexCannotBeNullException, IllegalArgumentException, TypeCannotBeNullException;
 
 	<T> String addDocument(String id, T entity)
-                    throws IndexCannotBeNullException, IllegalArgumentException, TypeCannotBeNullException;
+            throws IndexCannotBeNullException, IllegalArgumentException, TypeCannotBeNullException;
 
 	<T> String addDocument(String index, String type, String id, T entity)
-                            throws IllegalArgumentException;
+            throws IllegalArgumentException;
 
 	void removeDocument(String id)
-                                    throws IllegalArgumentException, IndexCannotBeNullException, TypeCannotBeNullException;
+            throws IllegalArgumentException, IndexCannotBeNullException, TypeCannotBeNullException;
 
 	void removeDocument(String index, String type, String id)
-                                            throws IllegalArgumentException;
+            throws IllegalArgumentException;
 
 	void removeDocumentsQuery(String query);
 
 	void removeDocumentsQuery(String[] indices, String[] types, String query);
 
 	<T> void updateDocument(String id, T entity)
-			throws IndexCannotBeNullException, TypeCannotBeNullException;
+            throws IndexCannotBeNullException, TypeCannotBeNullException;
 
 	<T> void updateDocument(String index, String type, String id, T entity)
-                    throws IllegalArgumentException;
+            throws IllegalArgumentException;
 
 	<T> List<T> getDocument(String[] ids, Class<T> classType)
-                            throws IndexCannotBeNullException;
+            throws IndexCannotBeNullException;
 
 	<T> List<T> getDocument(String type, String[] ids, Class<T> classType)
-                                    throws IndexCannotBeNullException;
+            throws IndexCannotBeNullException;
 
 	<T> List<T> getDocument(String index, String type, String[] ids, Class<T> classType);
 
