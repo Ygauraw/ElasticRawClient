@@ -10,8 +10,8 @@ import static org.junit.Assert.fail;
 
 public class ElasticClientBaseTest {
     private static final String TAG = ElasticClientSearchTest.class.getName();
-    protected static final String ELASTIC_URL = "https://silverforge.east-us.azr.facetflow.io";
-    protected static final String ELASTIC_APIKEY = "ZjjnkNMgh0uj5yCFIvYVGQsueESCLj1k";
+    protected static final String ELASTIC_URL = "https://mgj.east-us.azr.facetflow.io";
+    protected static final String ELASTIC_APIKEY = "wihIilbbekmCeppKlgQXDwpSZEUekkk0";
     protected static final String[] ELASTIC_INDICES = new String[] {"cities"};
     protected static final String[] ELASTIC_TYPES = new String[] {"city"};
     protected ElasticRawClient client;

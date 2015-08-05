@@ -26,8 +26,8 @@ public final class DatabaseCreator {
     private ElasticRawClient client;
 
     public DatabaseCreator() {
-        String elasticUrl = "https://silverforge.east-us.azr.facetflow.io";
-        String elasticApiKey = "ZjjnkNMgh0uj5yCFIvYVGQsueESCLj1k";
+        String elasticUrl = "https://mgj.east-us.azr.facetflow.io";
+        String elasticApiKey = "wihIilbbekmCeppKlgQXDwpSZEUekkk0";
         ConnectorSettings settings = ConnectorSettings
                 .builder()
                 .baseUrl(elasticUrl)

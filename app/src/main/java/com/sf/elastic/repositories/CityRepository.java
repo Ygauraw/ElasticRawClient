@@ -34,8 +34,8 @@ import rx.Observable;
 public class CityRepository implements Repository<City> {
 
 	private static final String TAG = CityRepository.class.getName();
-	private static final String ELASTIC_URL = "https://silverforge.east-us.azr.facetflow.io";
-	private static final String ELASTIC_APIKEY = "ZjjnkNMgh0uj5yCFIvYVGQsueESCLj1k";
+	private static final String ELASTIC_URL = "https://mgj.east-us.azr.facetflow.io";
+	private static final String ELASTIC_APIKEY = "wihIilbbekmCeppKlgQXDwpSZEUekkk0";
 	private static final String[] ELASTIC_INDICES = new String[] {"cities"};
 
 	private ElasticRawClient client;
@@ -165,7 +165,7 @@ public class CityRepository implements Repository<City> {
 	public void addCities() {
 		ConnectorSettings mySettings = ConnectorSettings
 			.builder()
-			.baseUrl("https://silverforge.east-us.azr.facetflow.io")
+			.baseUrl("https://mgj.east-us.azr.facetflow.io")
 			.userName(ELASTIC_APIKEY)
 			.build();
 

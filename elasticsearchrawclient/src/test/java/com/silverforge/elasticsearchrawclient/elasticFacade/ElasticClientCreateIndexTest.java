@@ -33,8 +33,8 @@ import static org.junit.Assert.fail;
 @Config(constants = BuildConfig.class, sdk = 21)
 public class ElasticClientCreateIndexTest {
     private static final String TAG = ElasticClientCreateIndexTest.class.getName();
-    protected static final String ELASTIC_URL = "https://silverforge.east-us.azr.facetflow.io";
-    protected static final String ELASTIC_APIKEY = "ZjjnkNMgh0uj5yCFIvYVGQsueESCLj1k";
+    protected static final String ELASTIC_URL = "https://mgj.east-us.azr.facetflow.io";
+    protected static final String ELASTIC_APIKEY = "wihIilbbekmCeppKlgQXDwpSZEUekkk0";
     private final String[] predefinedIndicesForRemove = new String[] {"ti1", "ti2"};
     protected ElasticClient client;
 
