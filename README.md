@@ -394,7 +394,7 @@ In that case when you wanted to execute GET/POST/PUT/DELETE/HEAD requests direct
 
         InvokeResult head = client.executeRawRequest().head("/thereisnosuchindex");
 
-The result type of the "raw" requests is the *InvokeResult* which have four properties:
+The result type of the "raw" requests is the *InvokeResult* which has four properties:
 
         @Getter
         @Setter
