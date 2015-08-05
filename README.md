@@ -20,6 +20,11 @@ to your build.gradle.
 Currently the ElasticClient works only with https urls.
 Instantiate a ConnectorSettings via builder and pass it to the ElasticClient instance.
 
+    private final static String ELASTIC_URL = "https://my.custom.url.to.elastic.search.io";
+    private final static String[] ELASTIC_INDICES = new String[] {"myindex", "mysecondindex"};
+    private final static String[] ELASTIC_TYPES = new String[] {"mytype", "mysecondtype"};
+    private final static String[] ELASTIC_APIKEY = "mySpec1alAPIK3y";
+    ...
     try {
         ConnectorSettings settings = ConnectorSettings
                 .builder()
