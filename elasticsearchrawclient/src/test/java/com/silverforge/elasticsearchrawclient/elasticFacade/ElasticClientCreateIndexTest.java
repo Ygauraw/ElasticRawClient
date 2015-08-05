@@ -122,7 +122,7 @@ public class ElasticClientCreateIndexTest {
         expectedException.expect(ServerIsNotAvailableException.class);
         expectedException.expectMessage("Server response code : 404");
 
-        InvokeResult head = client.raw.head("/thereisnosuchindex");
+        InvokeResult head = client.executeRawRequest().head("/thereisnosuchindex");
         assertThat(head.getAggregatedExceptions().size(), greaterThan(0));
 
         for (Exception exception : head.getAggregatedExceptions()) {

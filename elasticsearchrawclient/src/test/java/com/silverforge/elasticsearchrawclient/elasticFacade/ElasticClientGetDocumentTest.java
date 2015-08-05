@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 
@@ -80,7 +79,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
                 .userName(ELASTIC_APIKEY)
                 .build();
         try {
-            ElasticClient customClient = new ElasticClient(customSettings);
+            ElasticRawClient customClient = new ElasticClient(customSettings);
 
             List<City> cities = customClient.getDocument(docIds, City.class);
 
@@ -108,7 +107,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
                 .userName(ELASTIC_APIKEY)
                 .build();
         try {
-            ElasticClient customClient = new ElasticClient(customSettings);
+            ElasticRawClient customClient = new ElasticClient(customSettings);
 
             List<City> cities = customClient.getDocument("city", docIds, City.class);
 
@@ -138,7 +137,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
                 .userName(ELASTIC_APIKEY)
                 .build();
         try {
-            ElasticClient customClient = new ElasticClient(customSettings);
+            ElasticRawClient customClient = new ElasticClient(customSettings);
 
             customClient.getDocument(docIds, City.class);
         } catch (URISyntaxException e) {
@@ -160,7 +159,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
                 .userName(ELASTIC_APIKEY)
                 .build();
         try {
-            ElasticClient customClient = new ElasticClient(customSettings);
+            ElasticRawClient customClient = new ElasticClient(customSettings);
 
             List<City> cities = customClient.getDocument("city", docIds, City.class);
 

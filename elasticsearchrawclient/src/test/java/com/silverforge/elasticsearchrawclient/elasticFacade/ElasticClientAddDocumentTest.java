@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
@@ -114,7 +113,7 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
                 .build();
 
         try {
-            ElasticClient testClient = new ElasticClient(settings);
+            ElasticRawClient testClient = new ElasticClient(settings);
 
             String cityName = generateUUID();
             City city = new City(cityName);

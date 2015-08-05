@@ -23,7 +23,7 @@ import static org.junit.Assert.fail;
 @Config(constants = BuildConfig.class, sdk = 21)
 public final class DatabaseCreator {
     private static final String TAG = DatabaseCreator.class.getName();
-    private ElasticClient client;
+    private ElasticRawClient client;
 
     public DatabaseCreator() {
         String elasticUrl = "https://silverforge.east-us.azr.facetflow.io";

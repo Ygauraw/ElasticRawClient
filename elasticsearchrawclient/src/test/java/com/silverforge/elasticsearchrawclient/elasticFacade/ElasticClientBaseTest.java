@@ -14,7 +14,7 @@ public class ElasticClientBaseTest {
     protected static final String ELASTIC_APIKEY = "ZjjnkNMgh0uj5yCFIvYVGQsueESCLj1k";
     protected static final String[] ELASTIC_INDICES = new String[] {"cities"};
     protected static final String[] ELASTIC_TYPES = new String[] {"city"};
-    protected ElasticClient client;
+    protected ElasticRawClient client;
 
     public ElasticClientBaseTest() {
         ConnectorSettings settings = ConnectorSettings

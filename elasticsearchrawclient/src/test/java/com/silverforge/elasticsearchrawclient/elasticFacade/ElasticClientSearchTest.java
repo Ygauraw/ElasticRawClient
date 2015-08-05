@@ -39,7 +39,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
                 .build();
 
         try {
-            ElasticClient testClient = new ElasticClient(settings);
+            ElasticRawClient testClient = new ElasticClient(settings);
             List<City> cities = testClient.search("{\"query\":{\"match_all\": {}}}", City.class);
 
             assertNotNull(cities);
@@ -60,7 +60,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
                 .build();
 
         try {
-            ElasticClient testClient = new ElasticClient(settings);
+            ElasticRawClient testClient = new ElasticClient(settings);
             List<City> cities = testClient.search("{\"query\":{\"match_all\": {}}}", City.class);
 
             assertNotNull(cities);
@@ -81,7 +81,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
                 .build();
 
         try {
-            ElasticClient testClient = new ElasticClient(settings);
+            ElasticRawClient testClient = new ElasticClient(settings);
             List<City> cities = testClient.search("{\"query\":{\"match_all\": {}}}", City.class);
 
             assertNotNull(cities);
