@@ -394,7 +394,7 @@ In that case when you wanted to execute GET/POST/PUT/DELETE/HEAD requests direct
 
         InvokeResult head = client.executeRawRequest().head("/thereisnosuchindex");
 
-The result type of the "raw" requests is the *InvokeResult* which lhave four property
+The result type of the "raw" requests is the *InvokeResult* which have four properties:
 
         @Getter
         @Setter
@@ -412,10 +412,10 @@ The result type of the "raw" requests is the *InvokeResult* which lhave four pro
         private List<Exception> aggregatedExceptions = new ArrayList<>();
 
 
-The *isSuccess* is true if the request executed successfully and there is response from server.
-The *statusCode* is the response HTTP code, for example: 200, 404, 500.
-The *result* is the response from server, usually the json response from Elastic.
-The *aggregatedExceptions* list contains all exceptions happened during the request.
+* The *isSuccess* is true if the request executed successfully and there is response from server.
+* The *statusCode* is the response HTTP code, for example: 200, 404, 500.
+* The *result* is the response from server, usually the json response from Elastic.
+* The *aggregatedExceptions* list contains all exceptions happened during the request.
 
 
 
