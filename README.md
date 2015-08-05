@@ -6,6 +6,8 @@ The ElasticSearchRawClient is a lightweight [Elastic](https://www.elastic.co/blo
 
 It's built upon HttpsURLConnection. [Connector.java](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/main/java/com/silverforge/elasticsearchrawclient/connector/Connector.java)
 
+The Connector applies a retry pattern, by default it tries three times to get the response from server. 
+
 
 Current version : 1.0
 
@@ -72,6 +74,7 @@ If you have defined index in ConnectorSettings passed to ElasticClient, you need
 	<T> List<T> getDocument(String[] ids, Class<T> classType)
                             throws IndexCannotBeNullException;
 or
+
 	<T> List<T> getDocument(String type, String[] ids, Class<T> classType)
                                     throws IndexCannotBeNullException;
 
@@ -101,12 +104,14 @@ If you don't have defined index at ConnecorSettings you can use either
 
 	<T> List<T> getDocument(String index, String type, String[] ids, Class<T> classType);
 or
+
 	<T> List<T> getDocument(String[] indices, String type, String[] ids, Class<T> classType);
 
 methods like this:
 
         List<City> cities = client.getDocument("testcities", "testcity", new String[]{cityId}, City.class);
 or
+
         List<City> cities = client.getDocument(new String[] {"cities","testcities"}, "testcity", new String[]{cityId}, City.class);
 
 
