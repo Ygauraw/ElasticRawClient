@@ -17,7 +17,7 @@ to your build.gradle.
 
 #### Configuration ####
 
-Currently the ElasticClient works only with https urls.
+Currently the ElasticClient **works only with https urls**.
 Instantiate a ConnectorSettings via builder and pass it to the ElasticClient instance.
 
     private final static String ELASTIC_URL = "https://my.custom.url.to.elastic.search.io";
@@ -42,3 +42,23 @@ Instantiate a ConnectorSettings via builder and pass it to the ElasticClient ins
 
 
 Once you have set up the client you can use this **client** instance for operating with ElasticSearch server.
+
+
+### Search/Get document(s) ###
+
+#### Search ####
+
+You can search documents via *search* method, you have to pass the query string and the type reference for mapping. The result is a List<T> :
+
+        List<City> cities = client.search("{\"query\":{\"match_all\": {}}}", City.class);
+
+You can find further doc about ElasticSearch Query language here : https://www.elastic.co/guide/en/elasticsearch/reference/current/_introducing_the_query_language.html
+
+[SearchTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientSearchTest.java)
+
+You can find *search* tests on [SearchTests]
+
+#### Get ###
+
+
+
