@@ -1,6 +1,5 @@
 package com.silverforge.elasticsearchrawclient.connector;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -124,12 +123,10 @@ public class Connector implements Connectable {
 		return invokeToEndpoint(httpMethod, path, data);
 	}
 
-	@NonNull
 	private InvokeResult invokeToEndpoint(String httpMethod, String path) {
 		return invokeToEndpoint(httpMethod, path, STRING_EMPTY);
 	}
 
-	@NonNull
 	private InvokeResult invokeToEndpoint(String httpMethod, String path, String data) {
 		InvokeResult returnResult = new InvokeResult();
 		returnResult.setSuccess(true);
@@ -201,7 +198,6 @@ public class Connector implements Connectable {
 		return returnResult;
 	}
 
-	@NonNull
 	private StringBuilder readInputFromConnection(HttpsURLConnection conn)
 			throws IOException {
 

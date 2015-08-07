@@ -8,7 +8,7 @@ import lombok.Setter;
 /**
  * The ConnectorSettings contains all the necessary info to connect to the ElasticSearch server(s)
  * Use the <strong>.builder()</strong> to setup the ConnectorSettings properly
- *<strong><pre>
+ *<pre>
  *ConnectorSettings settings = ConnectorSettings
  *    .builder()
  *    .baseUrl(ELASTIC_URL)
@@ -24,7 +24,7 @@ import lombok.Setter;
  *        Log.e(TAG, e.getMessage());
  *        fail(e.getMessage());
  *    }
- *</pre></strong>
+ *</pre>
  */
 @Builder
 public class ConnectorSettings {

@@ -39,7 +39,8 @@ public class ElasticClient implements ElasticRawClient {
 
 	/**
 	 * Constructor of ElasticClient
-	 *<strong><pre>
+	 *<pre>
+     *<code>
 	 *ConnectorSettings settings = ConnectorSettings
 	 *    .builder()
 	 *    .baseUrl(ELASTIC_URL)
@@ -55,7 +56,8 @@ public class ElasticClient implements ElasticRawClient {
 	 *        Log.e(TAG, e.getMessage());
 	 *        fail(e.getMessage());
 	 *    }
-	 *</pre></strong>
+     *</code>
+	 *</pre>
 	 * @param settings the settings of the ElasticClient
 	 * @throws URISyntaxException
 	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
@@ -69,17 +71,19 @@ public class ElasticClient implements ElasticRawClient {
 	 * Creates index based on indexName and the data
 	 * @param indexName the name of the index
 	 * @param data the json string defines structure of the index for example
-	 * <pre>
-	 * {<br/>
-	 *   "mappings" : {<br/>
-	 *     "testcity" : {<br/>
-	 *       "properties" : {<br/>
-	 *         "name" : { "type": "string"}<br/>
-	 *       }<br/>
-	 *     }<br/>
-	 *   }<br/>
+	 *<pre>
+     *{@code
+	 * {
+	 *   "mappings" : {
+	 *     "testcity" : {
+	 *       "properties" : {
+	 *         "name" : { "type": "string"}
+	 *       }
+	 *     }
+	 *   }
 	 * }
-	 * </pre>
+	 *}
+     *</pre>
 	 * @return true : if success
 	 */
 	@Override
@@ -320,15 +324,17 @@ public class ElasticClient implements ElasticRawClient {
 	 * Removes documents by query from index defined in ConnectorSettings
 	 * @param query the query, e.g.:
 	 *<pre>
-	 *{<br/>
-	 *  "query": {<br/>
-	 *    "term": {<br/>
-	 *      "name": {<br/>
-	 *        "value": "myCityName"<br/>
-	 *      }<br/>
-	 *    }<br/>
-	 *  }<br/>
+     *{@code
+	 *{
+	 *  "query": {
+	 *    "term": {
+	 *      "name": {
+	 *        "value": "myCityName"
+	 *      }
+	 *    }
+	 *  }
 	 *}
+     *}
 	 *</pre>
 	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
 	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
@@ -350,15 +356,17 @@ public class ElasticClient implements ElasticRawClient {
 	 * @param types the types of the indices
 	 * @param query the query, e.g.:
 	 *<pre>
-	 *{<br/>
-	 *  "query": {<br/>
-	 *    "term": {<br/>
-	 *      "name": {<br/>
-	 *        "value": "myCityName"<br/>
-	 *      }<br/>
-	 *    }<br/>
-	 *  }<br/>
+     *{@code
+	 *{
+	 *  "query": {
+	 *    "term": {
+	 *      "name": {
+	 *        "value": "myCityName"
+	 *      }
+	 *    }
+	 *  }
 	 *}
+     *}
 	 *</pre>
 	 */
 	@Override
@@ -552,11 +560,13 @@ public class ElasticClient implements ElasticRawClient {
 	 * Searches in index based on the query and retrieves with the list of entities from index defined in ConnectorSettings
 	 * @param query the query, e.g.:
 	 *<pre>
-	 *{<br/>
-	 *  "query": {<br/>
-	 *    "match_all": {}<br/>
-	 *  }<br/>
-	 *}<br/>
+     *{@code
+	 *{
+	 *  "query": {
+	 *    "match_all": {}
+	 *  }
+	 *}
+     *}
 	 *</pre>
 	 * @param classType the type of the entity will be retrieved for mapping, e.g.: <strong>City.class</strong>
 	 * @param <T> the type of the entity
@@ -586,11 +596,13 @@ public class ElasticClient implements ElasticRawClient {
 	 * @param index the index
 	 * @param query the query, e.g.:
 	 *<pre>
-	 *{<br/>
-	 *  "query": {<br/>
-	 *    "match_all": {}<br/>
-	 *  }<br/>
-	 *}<br/>
+     *{@code
+	 *{
+	 *  "query": {
+	 *    "match_all": {}
+	 *  }
+	 *}
+     *}
 	 *</pre>
 	 * @param classType the type of the entity will be retrieved for mapping, e.g.: <strong>City.class</strong>
 	 * @param <T> the type of the entity
