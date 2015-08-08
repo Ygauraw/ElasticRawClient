@@ -1,6 +1,7 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkActionResult;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkTuple;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 
@@ -10,6 +11,10 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -58,6 +63,8 @@ public class ElasticClientBulkTest extends ElasticClientBaseTest {
                         .build()
         );
 
-        client.bulk(bulkItems);
+        List<BulkActionResult> actionResults = client.bulk(bulkItems);
+
+        assertThat(actionResults, not(nullValue()));
     }
 }

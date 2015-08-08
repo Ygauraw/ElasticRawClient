@@ -7,6 +7,7 @@ import java.util.HashMap;
  */
 public enum OperationType {
 
+    NONE("NONE"),
     CREATE("CREATE"),
     UPDATE("UPDATE"),
     DELETE("DELETE"),
@@ -46,5 +47,25 @@ public enum OperationType {
      */
     public String getOperationTypePath() {
         return operationPathType.get(operationType);
+    }
+
+    /**
+     * Retrieves the Operation type from "create", "update", "delete", "index"
+     * @param bulktype the type of the result of bulk response
+     * @return operationType
+     */
+    public static OperationType getOperationType(String bulktype) {
+        switch (bulktype.toLowerCase()) {
+            case "create":
+                return CREATE;
+            case "update":
+                return UPDATE;
+            case "delete":
+                return DELETE;
+            case "index":
+                return INDEX;
+            default:
+                return NONE;
+        }
     }
 }

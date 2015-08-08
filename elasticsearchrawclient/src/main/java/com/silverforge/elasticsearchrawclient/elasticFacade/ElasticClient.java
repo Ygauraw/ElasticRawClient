@@ -9,8 +9,11 @@ import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.connector.Connector;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.AliasParser;
+import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.BulkResultParser;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.AddDocumentResult;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkActionResult;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkResultItem;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkTuple;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
@@ -18,6 +21,7 @@ import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullExcepti
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -455,7 +459,7 @@ public class ElasticClient implements ElasticRawClient {
 	/**
 	 * In progress
 	 */
-    public void bulk(List<BulkTuple> bulkItems) {
+    public List<BulkActionResult> bulk(List<BulkTuple> bulkItems) {
 
         String createTemplate = StreamUtils.getRawContent(context, R.raw.create_action_template);
         String indexTemplate = StreamUtils.getRawContent(context, R.raw.index_action_template);
@@ -553,7 +557,25 @@ public class ElasticClient implements ElasticRawClient {
         }
 
         String bulkRequestBody = bodyBuilder.append(lineSeparator).toString();
-        connector.post("/_bulk", bulkRequestBody);
+        InvokeResult bulkResult = connector.post("/_bulk", bulkRequestBody);
+
+        List<BulkResultItem> bulkResultItemList = BulkResultParser.getResults(bulkResult.getResult());
+        ArrayList<BulkActionResult> retValue = new ArrayList<>();
+        for (int i = 0; i < bulkItems.size(); i++) {
+            BulkTuple tuple = bulkItems.get(i);
+            BulkResultItem resultItem = bulkResultItemList.get(i);
+            BulkActionResult bulkActionResult
+                = new BulkActionResult(resultItem.getOperation(),
+                                        resultItem.getIndexName(),
+                                        resultItem.getTypeName(),
+                                        resultItem.getId(),
+                                        resultItem.getVersion(),
+                                        resultItem.getStatus(),
+                                        resultItem.getFound(), tuple);
+
+            retValue.add(bulkActionResult);
+        }
+        return retValue;
     }
 
 	/**
