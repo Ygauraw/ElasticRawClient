@@ -1,5 +1,6 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
@@ -10,6 +11,7 @@ import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.AliasParser;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.AddDocumentResult;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkTuple;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
@@ -23,7 +25,8 @@ import java.util.List;
 
 // TODO : QueryManager should be created to maintain and reuse certain queries by user
 public class ElasticClient implements ElasticRawClient {
-	private Connectable connector;
+    private Context context;
+    private Connectable connector;
 	private Raw raw = new Raw();
 
 	/**
@@ -35,6 +38,7 @@ public class ElasticClient implements ElasticRawClient {
 	public ElasticClient(Connectable connector)
 		throws MalformedURLException {
 		this.connector = connector;
+        context = ElasticClientApp.getAppContext();
 	}
 
 	/**
@@ -65,6 +69,7 @@ public class ElasticClient implements ElasticRawClient {
 	public ElasticClient(ConnectorSettings settings)
 		throws URISyntaxException {
 		connector = new Connector(settings);
+        context = ElasticClientApp.getAppContext();
 	}
 
 	/**
@@ -101,7 +106,7 @@ public class ElasticClient implements ElasticRawClient {
 	@Override
 	public void addAlias(String indexName, String aliasName) {
 		String addAliasTemplate
-			= StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.add_alias);
+			= StreamUtils.getRawContent(context, R.raw.add_alias);
 
 		String data = addAliasTemplate
 				.replace("{{INDEXNAME}}", indexName)
@@ -170,7 +175,7 @@ public class ElasticClient implements ElasticRawClient {
 	@Override
 	public void removeAlias(String indexName, String aliasName) {
 		String addAliasTemplate
-			= StreamUtils.getRawContent(ElasticClientApp.getAppContext(), R.raw.remove_alias);
+			= StreamUtils.getRawContent(context, R.raw.remove_alias);
 
 		String data = addAliasTemplate
 				.replace("{{INDEXNAME}}", indexName)
@@ -402,8 +407,7 @@ public class ElasticClient implements ElasticRawClient {
 		String updatePath = getOperationPath(id, OperationType.UPDATE);
 
 		String updateTemplate
-                = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
-                                            R.raw.update_template);
+                = StreamUtils.getRawContent(context, R.raw.update_template);
 		String data = updateTemplate.replace("{{ENTITYJSON}}", entityJson);
 
 		connector.post(updatePath, data);
@@ -439,8 +443,7 @@ public class ElasticClient implements ElasticRawClient {
 			String updatePath = getOperationPath(index, type, id, OperationType.UPDATE);
 
 			String updateTemplate
-					= StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
-					R.raw.update_template);
+					= StreamUtils.getRawContent(context, R.raw.update_template);
 			String data = updateTemplate.replace("{{ENTITYJSON}}", entityJson);
 
 			connector.post(updatePath, data);
@@ -452,8 +455,101 @@ public class ElasticClient implements ElasticRawClient {
 	/**
 	 * In progress
 	 */
-    public void bulk() {
+    public void bulk(List<BulkTuple> bulkItems) {
 
+        String createTemplate = StreamUtils.getRawContent(context, R.raw.create_action_template);
+        String indexTemplate = StreamUtils.getRawContent(context, R.raw.index_action_template);
+        String updateTemplate = StreamUtils.getRawContent(context, R.raw.update_action_template);
+        String deleteTemplate = StreamUtils.getRawContent(context, R.raw.delete_action_template);
+
+        StringBuilder bodyBuilder = new StringBuilder();
+        String lineSeparator = System.getProperty("line.separator");
+
+        for (BulkTuple bulkItem : bulkItems) {
+            OperationType operationType = bulkItem.getOperationType();
+
+            String indexName = bulkItem.getIndexName();
+            if (TextUtils.isEmpty(indexName)) {
+                String[] indices = connector.getSettings().getIndices();
+                if (indices != null && indices.length > 0)
+                    indexName = indices[0];
+            }
+
+            String typeName = bulkItem.getTypeName();
+            if (TextUtils.isEmpty(typeName)) {
+                String[] types = connector.getSettings().getTypes();
+                if (types != null && types.length > 0)
+                    typeName = types[0];
+            }
+
+            String documentId = bulkItem.getId();
+
+            String bulkItemEntityJson = "";
+            if (operationType != OperationType.DELETE)
+                bulkItemEntityJson = ElasticClientMapper.mapToJson(bulkItem.getEntity());
+
+            switch (operationType) {
+                case CREATE:
+                    if (!TextUtils.isEmpty(indexName)
+                            && !TextUtils.isEmpty(typeName)
+                            && !TextUtils.isEmpty(documentId)
+                            && !TextUtils.isEmpty(bulkItemEntityJson)) {
+
+                        String createActionJson
+                            = createTemplate
+                                .replace("{{INDEX}}", indexName)
+                                .replace("{{TYPE}}", typeName)
+                                .replace("{{ID}}", documentId);
+
+                        bodyBuilder.append(createActionJson);
+                        bodyBuilder.append(bulkItemEntityJson).append(lineSeparator);
+                    }
+                case DELETE:
+                    if (!TextUtils.isEmpty(indexName)
+                            && !TextUtils.isEmpty(typeName)
+                            && !TextUtils.isEmpty(documentId)) {
+
+                        String deleteActionJson
+                            = deleteTemplate
+                                .replace("{{INDEX}}", indexName)
+                                .replace("{{TYPE}}", typeName)
+                                .replace("{{ID}}", documentId);
+
+                        bodyBuilder.append(deleteActionJson);
+                    }
+                case UPDATE:
+                    if (!TextUtils.isEmpty(indexName)
+                            && !TextUtils.isEmpty(typeName)
+                            && !TextUtils.isEmpty(documentId)
+                            && !TextUtils.isEmpty(bulkItemEntityJson)) {
+
+                        String updateActionJson
+                            = updateTemplate
+                                .replace("{{INDEX}}", indexName)
+                                .replace("{{TYPE}}", typeName)
+                                .replace("{{ID}}", documentId);
+
+                        bodyBuilder.append(updateActionJson);
+                        bodyBuilder.append("{\"doc\":").append(bulkItemEntityJson).append("}").append(lineSeparator);
+                    }
+                case INDEX:
+                    if (!TextUtils.isEmpty(indexName)
+                            && !TextUtils.isEmpty(typeName)
+                            && !TextUtils.isEmpty(bulkItemEntityJson)) {
+
+                        String indexActionJson
+                            = indexTemplate
+                                .replace("{{INDEX}}", indexName)
+                                .replace("{{TYPE}}", typeName);
+
+                        bodyBuilder.append(indexActionJson);
+                        bodyBuilder.append(bulkItemEntityJson).append(lineSeparator);
+                    }
+            }
+        }
+
+        String bulkRequestBody = bodyBuilder.append(lineSeparator).toString();
+        connector.post("/_bulk", bulkRequestBody);
     }
 
 	/**
@@ -534,12 +630,10 @@ public class ElasticClient implements ElasticRawClient {
 			String query;
 			String queryPath;
 			if (TextUtils.isEmpty(type)) {
-				queryTemplate = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
-						R.raw.search_by_ids);
+				queryTemplate = StreamUtils.getRawContent(context, R.raw.search_by_ids);
 				query = queryTemplate.replace("{{IDS}}", queryIds);
 			} else {
-				queryTemplate = StreamUtils.getRawContent(ElasticClientApp.getAppContext(),
-						R.raw.search_by_ids_and_type);
+				queryTemplate = StreamUtils.getRawContent(context, R.raw.search_by_ids_and_type);
 				query = queryTemplate
 						.replace("{{IDS}}", queryIds)
 						.replace("{{TYPE}}", type);

@@ -1,5 +1,6 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkTuple;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
 
@@ -46,6 +47,8 @@ public interface ElasticRawClient {
 
 	<T> void updateDocument(String index, String type, String id, T entity)
             throws IllegalArgumentException;
+
+    void bulk(List<BulkTuple> bulkItems);
 
 	<T> List<T> getDocument(String[] ids, Class<T> classType)
             throws IndexCannotBeNullException;
