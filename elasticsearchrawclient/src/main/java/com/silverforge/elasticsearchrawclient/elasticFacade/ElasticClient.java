@@ -504,6 +504,7 @@ public class ElasticClient implements ElasticRawClient {
                         bodyBuilder.append(createActionJson);
                         bodyBuilder.append(bulkItemEntityJson).append(lineSeparator);
                     }
+                    break;
                 case DELETE:
                     if (!TextUtils.isEmpty(indexName)
                             && !TextUtils.isEmpty(typeName)
@@ -517,6 +518,7 @@ public class ElasticClient implements ElasticRawClient {
 
                         bodyBuilder.append(deleteActionJson);
                     }
+                    break;
                 case UPDATE:
                     if (!TextUtils.isEmpty(indexName)
                             && !TextUtils.isEmpty(typeName)
@@ -532,6 +534,7 @@ public class ElasticClient implements ElasticRawClient {
                         bodyBuilder.append(updateActionJson);
                         bodyBuilder.append("{\"doc\":").append(bulkItemEntityJson).append("}").append(lineSeparator);
                     }
+                    break;
                 case INDEX:
                     if (!TextUtils.isEmpty(indexName)
                             && !TextUtils.isEmpty(typeName)
@@ -545,6 +548,7 @@ public class ElasticClient implements ElasticRawClient {
                         bodyBuilder.append(indexActionJson);
                         bodyBuilder.append(bulkItemEntityJson).append(lineSeparator);
                     }
+                    break;
             }
         }
 
