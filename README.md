@@ -8,16 +8,26 @@ It's built upon HttpsURLConnection. [Connector.java](https://github.com/silverfo
 
 The Connector applies a retry pattern, by default it tries three times to get the response from server. 
 
-Current version : 1.0
+Current version : 0.9.0
 
 ## How do I get set up? ##
 
 ### Set up ###
-Currently there is no gradle or maven setup for this repo (I'm working on it, and will be :)) so  currently download this module and add
 
-	compile project(':elasticsearchrawclient')
+##### Gradle build.config #####
 
-to your build.gradle.
+You can find elasticrawclient in jcenter so add the following row to your dependencies in build.gradle (Module):
+
+        dependencies {
+            ...
+            compile 'com.silverforge.elastic:elasticsearchrawclient:0.9.0'
+        }
+
+
+##### Issues/contact #####
+
+Please do not hesitate to raise any issue you find related to ElasticRawClient [here](https://github.com/silverforge/ElasticRawClient/issues)
+
 
 ### Configuration ###
 

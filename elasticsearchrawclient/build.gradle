@@ -4,8 +4,6 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-//apply plugin: 'aar-link-sources'
-
 // This is the library version used when deploying the artifact
 version = "0.9.0"
 
@@ -35,7 +33,7 @@ android {
 
 def siteUrl = 'https://github.com/silverforge/ElasticRawClient'      // Homepage URL of the library
 def gitUrl = 'https://github.com/silverforge/ElasticRawClient.git'   // Git repository URL
-group = "com.silverforge.elastic"                                        // Maven Group ID for the artifact
+group = "com.silverforge.elastic"                                    // Maven Group ID for the artifact
 
 install {
     repositories.mavenInstaller {
@@ -76,7 +74,6 @@ install {
 dependencies {
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile fileTree(include: ['*.jar'], dir: 'libs')
-//    compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'org.projectlombok:lombok:1.16.4'
     compile 'com.github.rholder:guava-retrying:2.0.0'
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.0-rc3'
@@ -96,13 +93,10 @@ task sourcesJar(type: Jar) {
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//    classpath += files(android.plugin.runtimeJarList)
-//    classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
 }
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
-//    options.encoding = 'UTF-8'
 }
 artifacts {
     archives javadocJar
