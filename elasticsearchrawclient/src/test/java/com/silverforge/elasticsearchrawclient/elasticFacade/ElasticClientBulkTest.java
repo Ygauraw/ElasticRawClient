@@ -66,5 +66,11 @@ public class ElasticClientBulkTest extends ElasticClientBaseTest {
         List<BulkActionResult> actionResults = client.bulk(bulkItems);
 
         assertThat(actionResults, not(nullValue()));
+        assertThat(actionResults.size(), is(equalTo(bulkItems.size())));
+
+        for (BulkActionResult actionResult : actionResults) {
+            if (actionResult.getOperation() == OperationType.CREATE)
+                client.removeDocument("cities", "city", actionResult.getId());
+        }
     }
 }

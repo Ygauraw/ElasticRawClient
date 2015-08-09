@@ -456,9 +456,11 @@ public class ElasticClient implements ElasticRawClient {
 		}
 	}
 
-	/**
-	 * In progress
-	 */
+    /**
+     * Bulk processor for create/update/index/delete documents
+     * @param bulkItems the action items for bulk processor
+     * @return the result of every single action compared with the initial bulkitem
+     */
     public List<BulkActionResult> bulk(List<BulkTuple> bulkItems) {
 
         String createTemplate = StreamUtils.getRawContent(context, R.raw.create_action_template);
