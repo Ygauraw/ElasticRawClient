@@ -317,6 +317,9 @@ If you have prepared list of bulk actions (see previous chapter) you just call *
 
 The result of the bulk load is the responses from Elastic server combined with the original *BulkTupleItem*, so you always have the connection between the original action and the result within the *actionResult*.
 
+For example:
+
+![BulkActionResultScreenShot](https://raw.githubusercontent.com/silverforge/ElasticRawClient/master/assets/images/BulkActionResults.png)
 
 
 You can find *bulk* tests on [BulkTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientBulkTest.java)
