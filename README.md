@@ -8,7 +8,7 @@ It's built upon HttpsURLConnection. [Connector.java](https://github.com/silverfo
 
 The Connector applies a retry pattern, by default it tries three times to get the response from server. 
 
-Current version : 0.9.0
+Current version : 1.0.0
 
 ## How do I get set up? ##
 
@@ -20,7 +20,7 @@ You can find elasticrawclient in jcenter so add the following row to your depend
 
         dependencies {
             ...
-            compile 'com.silverforge.elastic:elasticsearchrawclient:0.9.0'
+            compile 'com.silverforge.elastic:elasticsearchrawclient:1.0.0'
         }
 
 
@@ -278,7 +278,49 @@ You can find *removeDocument* tests on [RemoveDocumentTests](https://github.com/
 
 ## Bulk document ##
 
-**Dev in progress**
+The bulk document allows you to send multiple create/update/index/delete operations in a single call making the process cheaper. See [Cheaper in Bulk](https://www.elastic.co/guide/en/elasticsearch/guide/current/bulk.html)
+
+You can use the following method for bulk operation : 
+
+        List<BulkActionResult> bulk(List<BulkTuple> bulkItems);
+
+like this:
+
+###### Preparing operations for bulk load ######
+
+You definitely need a list of *BulkTuple* :
+
+        ArrayList<BulkTuple> bulkItems = new ArrayList<>();
+
+        bulkItems.add(BulkTuple
+                        .builder()
+                        .indexName("cities")
+                        .typeName("city")
+                        .id("szekesfehervar")
+                        .entity(new City("Székesfehérvár"))
+                        .operationType(OperationType.CREATE)
+                        .build()
+
+* The *indexName* is the index where the operation should execute
+* The *typeName* is the Elastic type of the document
+* The *id* is the id of the document. It is not mandatory in case of *CREATE/INDEX*. The *id* of the document will be generated if it's not given
+* The *entity* is the POJO which will be loaded to Elastic
+* The *operationType* identifies the operation, such as *CREATE/UPDATE/INDEX/DELETE* 
+
+You can add as many *BulkTuple* as you want but keep in mind that currently it will be loaded once. Currently no load balance added to the *bulk* method, so in case of huge amount of load the load can be slow. I think in case of ~100 doc it is okay, but currently you have to determine the capacity of the server by practice/experience/measurement.
+
+###### Using the *bulk* and the result ######
+
+If you have prepared list of bulk actions (see previous chapter) you just call *bulk* method:
+
+        List<BulkActionResult> actionResults = client.bulk(bulkItems);
+
+The result of the bulk load is the responses from Elastic server combined with the original *BulkTupleItem*, so you always have the connection between the original action and the result within the *actionResult*.
+
+
+
+You can find *bulk* tests on [BulkTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientBulkTest.java)
+
 
 ## Create index ##
 
