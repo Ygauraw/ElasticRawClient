@@ -27,6 +27,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+
 // TODO : QueryManager should be created to maintain and reuse certain queries by user
 public class ElasticClient implements ElasticRawClient {
     private Context context;
@@ -752,6 +754,85 @@ public class ElasticClient implements ElasticRawClient {
 
 		return retValue;
 	}
+
+    /**
+     * Searches in index based on the query and retrieves with the data sequenc of entities from index defined in ConnectorSettings
+     * @param query the query, e.g.:
+     *<pre>
+     *{@code
+     *{
+     *  "query": {
+     *    "match_all": {}
+     *  }
+     *}
+     *}
+     *</pre>
+     * @param classType the type of the entity will be retrieved for mapping, e.g.: <strong>City.class</strong>
+     * @param <T> the type of the entity
+     * @return List of entity/entities retrieved by query
+     * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
+     * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+     */
+    public <T> Observable<T> searchAsync(String query, Class<T> classType) {
+        Observable<T> observable = Observable.create(subscriber -> {
+
+            try {
+                List<T> searchResult = search(query, classType);
+                Observable
+                    .from(searchResult)
+                    .subscribe(subscriber::onNext);
+
+                subscriber.onCompleted();
+            } catch (Exception e) {
+                subscriber.onError(e);
+            }
+        });
+
+        return observable;
+    }
+
+    /**
+     * Searches in index based on the query and retrieves with the data sequence of entities
+     * @param index the index
+     * @param query the query, e.g.:
+     *<pre>
+     *{@code
+     *{
+     *  "query": {
+     *    "match_all": {}
+     *  }
+     *}
+     *}
+     *</pre>
+     * @param classType the type of the entity will be retrieved for mapping, e.g.: <strong>City.class</strong>
+     * @param <T> the type of the entity
+     * @throws IllegalArgumentException check onError
+     * @return List of entity/entities retrieved by query
+     */
+    public <T> Observable<T> searchAsync(String index, String query, Class<T> classType) {
+        Observable<T> observable = Observable.create(subscriber -> {
+
+            if (TextUtils.isEmpty(index)) {
+                IllegalArgumentException illegalArgumentException = new IllegalArgumentException("index cannot be null or empty");
+                subscriber.onError(illegalArgumentException);
+                subscriber.onCompleted();
+            }
+
+            try {
+                List<T> searchResult = search(query, classType);
+                Observable
+                        .from(searchResult)
+                        .subscribe(subscriber::onNext);
+
+                subscriber.onCompleted();
+            } catch (Exception e) {
+                subscriber.onError(e);
+            }
+        });
+
+        return observable;
+    }
+
 
 	/**
 	 * Proxy method for connector in order to have "raw" access to ElasticSearch

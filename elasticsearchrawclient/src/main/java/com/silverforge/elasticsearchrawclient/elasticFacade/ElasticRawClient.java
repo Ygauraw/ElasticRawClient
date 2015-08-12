@@ -7,6 +7,8 @@ import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullExcepti
 
 import java.util.List;
 
+import rx.Observable;
+
 public interface ElasticRawClient {
 	ElasticClient.Raw executeRawRequest();
 
@@ -64,4 +66,6 @@ public interface ElasticRawClient {
 	<T> List<T> search(String query, Class<T> classType);
 
 	<T> List<T> search(String index, String query, Class<T> classType);
+
+    <T> Observable<T> searchAsync(String query, Class<T> classType);
 }

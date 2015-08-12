@@ -14,7 +14,15 @@ import org.robolectric.annotation.Config;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import rx.Notification;
+import rx.Observable;
+import rx.observers.TestSubscriber;
+
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -90,6 +98,22 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
         }
+    }
+
+    @Test
+    public void searchAsyncTest() {
+        Observable<City> cityObservable
+                = client
+                    .searchAsync("{\"query\":{\"match_all\": {}}}", City.class);
+
+        TestSubscriber<City> testSubscriber = new TestSubscriber<>();
+        cityObservable.subscribe(testSubscriber);
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertUnsubscribed();
+
+        List<City> cityList = testSubscriber.getOnNextEvents();
+        assertThat(cityList, not(nullValue()));
+        assertThat(cityList.size(), greaterThan(0));
     }
 
     // endregion
