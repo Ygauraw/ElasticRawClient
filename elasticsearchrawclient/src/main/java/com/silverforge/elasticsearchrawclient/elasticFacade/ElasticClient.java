@@ -833,7 +833,6 @@ public class ElasticClient implements ElasticRawClient {
         return observable;
     }
 
-
 	/**
 	 * Proxy method for connector in order to have "raw" access to ElasticSearch
 	 */
