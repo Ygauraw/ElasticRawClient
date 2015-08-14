@@ -1,5 +1,30 @@
 # README #
 
+
+Contents
+--------
+
+- [What is this repository for?](#what-is-this-repository-for)
+- [How do I get set up?](#how-do-I-get-set-up)
+  - [Set up](#set-up)
+    - [Gradle build.config](#gradle-build-config)
+    - [Issues/contact](#issues-contact)
+  - [Configuration](#configuration)
+- [Search/Get document(s)](#search-get-documents)
+  - [Search](#search)
+  - [Get](#get)
+- [Add new document](#add-new-document)
+- [Update document](#update-document)
+- [Remove document](#remove-document)
+- [Remove documents query](#remove-documents-query)
+- [Bulk document](#bulk-document)
+- [Create index](#create-index)
+- [Remove index](#remove-index)
+- [Create alias](#create-alias)
+- [Remove alias](#remove-alias)
+- ["Raw" requests](#raw-requests)
+
+
 ## What is this repository for? ##
 
 The ElasticSearchRawClient is a lightweight [Elastic](https://www.elastic.co/blog/no-sql-yes-search) (formerly ElasticSearch) client module for Android devs.
