@@ -21,7 +21,6 @@ import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullExcepti
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -29,11 +28,12 @@ import java.util.List;
 
 import rx.Observable;
 
-// TODO : QueryManager should be created to maintain and reuse certain queries by user
 public class ElasticClient implements ElasticRawClient {
     private Context context;
     private Connectable connector;
 	private Raw raw = new Raw();
+
+    // region Constructors
 
 	/**
 	 * Constructor of ElasticClient
@@ -77,6 +77,17 @@ public class ElasticClient implements ElasticRawClient {
 		connector = new Connector(settings);
         context = ElasticClientApp.getAppContext();
 	}
+
+    // endregion
+
+    /**
+     * Proxy method for connector in order to have "raw" access to ElasticSearch
+     */
+    public Raw executeRawRequest() {
+        return raw;
+    }
+
+    // region Index related methods
 
 	/**
 	 * Creates index based on indexName and the data
@@ -190,6 +201,10 @@ public class ElasticClient implements ElasticRawClient {
 		connector.post("/_aliases", data);
 	}
 
+    // endregion
+
+    // region Add document methods
+
 	/**
 	 * Adds a document to the index defined in ConnectorSettings
 	 * @param entity the entity should be added to index (will be json serialized)
@@ -282,6 +297,10 @@ public class ElasticClient implements ElasticRawClient {
 
 		return retValue;
     }
+
+    // endregion
+
+    // region Remove document methods
 
 	/**
 	 * Removes document from index defined in ConnectorSettings based on the given id
@@ -392,6 +411,10 @@ public class ElasticClient implements ElasticRawClient {
 
 	}
 
+    // endregion
+
+    // region Update document methods
+
 	/**
 	 * Updates document based on the given parameters in index defined in ConnectorSettings
 	 * @param id the id
@@ -457,6 +480,10 @@ public class ElasticClient implements ElasticRawClient {
 			e.printStackTrace();
 		}
 	}
+
+    // endregion
+
+    // region Bulk document method
 
     /**
      * Bulk processor for create/update/index/delete documents
@@ -582,6 +609,10 @@ public class ElasticClient implements ElasticRawClient {
         return retValue;
     }
 
+    // endregion
+
+    // region Get document methods
+
 	/**
 	 * Retrieves with document(s) based on the given parameters
 	 * @param ids the id(s) of the document(s) (Elastic)
@@ -680,6 +711,78 @@ public class ElasticClient implements ElasticRawClient {
 		return retValue;
 	}
 
+    public <T> Observable<T> getDocumentAsync(String[] ids, Class<T> classType) {
+        Observable<T> observable = Observable.create(subscriber -> {
+            try {
+                List<T> documents = getDocument(ids, classType);
+                Observable
+                    .from(documents)
+                    .subscribe(subscriber::onNext);
+            } catch (IndexCannotBeNullException e) {
+                subscriber.onError(e);
+            } finally {
+                subscriber.onCompleted();
+            }
+        });
+
+        return observable;
+    }
+
+    public <T> Observable<T> getDocumentAsync(String type, String[] ids, Class<T> classType) {
+        Observable<T> observable = Observable.create(subscriber -> {
+            try {
+                List<T> documents = getDocument(type, ids, classType);
+                Observable
+                    .from(documents)
+                    .subscribe(subscriber::onNext);
+            } catch (IndexCannotBeNullException e) {
+                subscriber.onError(e);
+            } finally {
+                subscriber.onCompleted();
+            }
+        });
+
+        return observable;
+    }
+
+    public <T> Observable<T> getDocumentAsync(String index, String type, String[] ids, Class<T> classType) {
+        Observable<T> observable = Observable.create(subscriber -> {
+            try {
+                List<T> documents = getDocument(index, type, ids, classType);
+                Observable
+                    .from(documents)
+                    .subscribe(subscriber::onNext);
+            } catch (Exception e) {
+                subscriber.onError(e);
+            } finally {
+                subscriber.onCompleted();
+            }
+        });
+
+        return observable;
+    }
+
+    public <T> Observable<T> getDocumentAsync(String[] indices, String type, String[] ids, Class<T> classType) {
+        Observable<T> observable = Observable.create(subscriber -> {
+            try {
+                List<T> documents = getDocument(indices, type, ids, classType);
+                Observable
+                        .from(documents)
+                        .subscribe(subscriber::onNext);
+            } catch (Exception e) {
+                subscriber.onError(e);
+            } finally {
+                subscriber.onCompleted();
+            }
+        });
+
+        return observable;
+    }
+
+    // endregion
+
+    // region Search methods
+
 	/**
 	 * Searches in index based on the query and retrieves with the list of entities from index defined in ConnectorSettings
 	 * @param query the query, e.g.:
@@ -775,16 +878,15 @@ public class ElasticClient implements ElasticRawClient {
      */
     public <T> Observable<T> searchAsync(String query, Class<T> classType) {
         Observable<T> observable = Observable.create(subscriber -> {
-
             try {
                 List<T> searchResult = search(query, classType);
                 Observable
                     .from(searchResult)
                     .subscribe(subscriber::onNext);
-
-                subscriber.onCompleted();
             } catch (Exception e) {
                 subscriber.onError(e);
+            } finally {
+                subscriber.onCompleted();
             }
         });
 
@@ -811,35 +913,31 @@ public class ElasticClient implements ElasticRawClient {
      */
     public <T> Observable<T> searchAsync(String index, String query, Class<T> classType) {
         Observable<T> observable = Observable.create(subscriber -> {
-
             if (TextUtils.isEmpty(index)) {
                 IllegalArgumentException illegalArgumentException = new IllegalArgumentException("index cannot be null or empty");
                 subscriber.onError(illegalArgumentException);
                 subscriber.onCompleted();
-            }
+            } else {
+                try {
+                    List<T> searchResult = search(query, classType);
+                    Observable
+                            .from(searchResult)
+                            .subscribe(subscriber::onNext);
 
-            try {
-                List<T> searchResult = search(query, classType);
-                Observable
-                        .from(searchResult)
-                        .subscribe(subscriber::onNext);
-
-                subscriber.onCompleted();
-            } catch (Exception e) {
-                subscriber.onError(e);
+                } catch (Exception e) {
+                    subscriber.onError(e);
+                } finally {
+                    subscriber.onCompleted();
+                }
             }
         });
 
         return observable;
     }
 
-	/**
-	 * Proxy method for connector in order to have "raw" access to ElasticSearch
-	 */
-	public Raw executeRawRequest() {
-		return raw;
-	}
+    // endregion
 
+    // region Get operation path methods
 
     /**
      * Retrives with the path of the operation defined in OperationType based on ConnectorSettings
@@ -997,6 +1095,7 @@ public class ElasticClient implements ElasticRawClient {
 		return pathBuilder.toString();
 	}
 
+    // endregion
 
 	/**
 	 * Proxy class for connector in order to have "raw" access to ElasticSearch

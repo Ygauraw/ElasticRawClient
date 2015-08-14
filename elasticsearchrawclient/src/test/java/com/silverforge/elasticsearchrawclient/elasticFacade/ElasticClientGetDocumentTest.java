@@ -16,6 +16,9 @@ import org.robolectric.annotation.Config;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import rx.Observable;
+import rx.observers.TestSubscriber;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
@@ -117,6 +120,99 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         } catch (URISyntaxException | IndexCannotBeNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void getDocumentAsyncTest() {
+        String[] docIds ={
+                "karcag",
+                "customCity"};
+
+        TestSubscriber<City> testSubscriber = new TestSubscriber<>();
+        client
+            .getDocumentAsync(docIds, City.class)
+            .subscribe(testSubscriber);
+
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertUnsubscribed();
+
+        List<City> cities = testSubscriber.getOnNextEvents();
+        assertThat(cities, notNullValue());
+        assertThat(cities.size(), equalTo(1));
+        assertThat(cities.get(0).getName(), is("Karcag"));
+    }
+
+    @Test
+    public void getDocumentAsyncMultipleIndicesTest() {
+        try {
+            String[] docIds ={
+                    "karcag",
+                    "customCity"};
+
+            ConnectorSettings customSettings = ConnectorSettings
+                    .builder()
+                    .baseUrl(ELASTIC_URL)
+                    .indices(new String[] {"cities", "testcities"})
+                    .userName(ELASTIC_APIKEY)
+                    .build();
+
+            ElasticRawClient customClient = new ElasticClient(customSettings);
+
+            TestSubscriber<City> testSubscriber = new TestSubscriber<>();
+
+            customClient
+                    .getDocumentAsync(docIds, City.class)
+                    .subscribe(testSubscriber);
+
+            testSubscriber.assertNoErrors();
+            testSubscriber.assertUnsubscribed();
+
+            List<City> cities = testSubscriber.getOnNextEvents();
+
+            assertThat(cities, is(notNullValue()));
+            assertThat(cities.size(), equalTo(2));
+            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
+            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTesting"))));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void getDocumentAsyncMultipleIndicesWithTypeTest() {
+        try {
+            String[] docIds ={
+                    "karcag",
+                    "customCity"};
+
+            ConnectorSettings customSettings = ConnectorSettings
+                    .builder()
+                    .baseUrl(ELASTIC_URL)
+                    .indices(new String[] {"cities", "testcities"})
+                    .userName(ELASTIC_APIKEY)
+                    .build();
+
+            ElasticRawClient customClient = new ElasticClient(customSettings);
+
+            TestSubscriber<City> testSubscriber = new TestSubscriber<>();
+
+            customClient
+                    .getDocumentAsync("city", docIds, City.class)
+                    .subscribe(testSubscriber);
+
+            testSubscriber.assertNoErrors();
+            testSubscriber.assertUnsubscribed();
+
+            List<City> cities = testSubscriber.getOnNextEvents();
+
+            assertThat(cities, is(notNullValue()));
+            assertThat(cities.size(), equalTo(1));
+            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
             fail(e.getMessage());
         }
     }

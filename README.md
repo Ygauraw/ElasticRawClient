@@ -18,11 +18,12 @@ Current version : 1.0.0
 
 You can find elasticrawclient in jcenter so add the following row to your dependencies in build.gradle (Module):
 
+```groovy
         dependencies {
             ...
             compile 'com.silverforge.elastic:elasticsearchrawclient:1.0.0'
         }
-
+```
 
 ##### Issues/contact #####
 
@@ -34,6 +35,7 @@ Please do not hesitate to raise any issue you find related to ElasticRawClient [
 Currently the ElasticClient **works only with https urls**.
 Instantiate a ConnectorSettings via builder and pass it to the ElasticClient instance.
 
+```java
         private final static String ELASTIC_URL = "https://my.custom.url.to.elastic.search.io";
         private final static String[] ELASTIC_INDICES = new String[] {"myindex", "mysecondindex"};
         private final static String[] ELASTIC_TYPES = new String[] {"mytype", "mysecondtype"};
@@ -54,7 +56,7 @@ Instantiate a ConnectorSettings via builder and pass it to the ElasticClient ins
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
         }
-
+```
 
 Once you have set up the client you can use this **client** instance for operating with Elastic server.
 
@@ -66,7 +68,9 @@ If you have defined index name(s) and/or type name(s) at *ConnectorSettings* bui
 
 You can search documents via *search* method. You have to pass the query string and the type reference for mapping. The result is a List<T> :
 
+```java
         List<City> cities = client.search("{\"query\":{\"match_all\": {}}}", City.class);
+```
 
 You can find further doc about Elastic Query Language here : [Query Language](https://www.elastic.co/guide/en/elasticsearch/reference/current/_introducing_the_query_language.html)
 
@@ -82,29 +86,36 @@ You can receive document(s) from elastic index/indices via *getDocument* method 
 
 If you have index defined in ConnectorSettings passed to ElasticClient, you need only to use either 
 
+```java
         <T> List<T> getDocument(String[] ids, Class<T> classType)
                 throws IndexCannotBeNullException;
+```
 or
 
+```java
         <T> List<T> getDocument(String type, String[] ids, Class<T> classType)
                 throws IndexCannotBeNullException;
+```
 
 methods like this:
 
+```java
         String[] docIds = {
                 "karcag",
                 "customCity"};
 
         List<City> cities = client.getDocument(docIds, City.class);
-
+```
 
 or
 
+```java
         String[] docIds ={
                 "karcag",
                 "customCity"};
 
         List<City> cities = customClient.getDocument("city", docIds, City.class);
+```
 
 The *type* parameter is the document type of elastic document in the index, for example index : *cities*, type : *city*.
 
@@ -113,17 +124,27 @@ The *type* parameter is the document type of elastic document in the index, for 
 
 If you don't have index defined at ConnectorSettings you can use either
 
+```java
         <T> List<T> getDocument(String index, String type, String[] ids, Class<T> classType);
+```
+
 or
 
+```java
         <T> List<T> getDocument(String[] indices, String type, String[] ids, Class<T> classType);
+```
 
 methods like this:
 
+```java
         List<City> cities = client.getDocument("testcities", "testcity", new String[]{cityId}, City.class);
+```
+
 or
 
+```java
         List<City> cities = client.getDocument(new String[] {"cities","testcities"}, "testcity", new String[]{cityId}, City.class);
+```
 
 
 You can find *getDocument* tests on [GetDocumentTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientGetDocumentTest.java)
@@ -137,33 +158,47 @@ The *addDocument* methods retrieve with the id of the document either it's gener
 
 If you have index defined in ConnectorSettings passed to ElasticClient, you can use either
 
+```java
 	<T> String addDocument(T entity)
 		throws IndexCannotBeNullException, IllegalArgumentException, TypeCannotBeNullException;
+```
+
 or
 
+```java
 	<T> String addDocument(String id, T entity)
                 throws IndexCannotBeNullException, IllegalArgumentException, TypeCannotBeNullException;
+```
 
 methods, like this:
 
+```java
         City city = new City(cityname, population, location);
         String id = client.addDocument(city);
+```
+
 or
 
+```java
         City city = new City(cityname, population, location);
         String id = client.addDocument("mySunnyCityTextAsId", city);
+```
 
 
 ### You don't have index defined in ConnectorSettings ###
 
 If you don't have index defined at ConnectorSettings you can use:
 
+```java
         <T> String addDocument(String index, String type, String id, T entity)
                 throws IllegalArgumentException;
+```
 
 method like this:
 
+```java
         client.addDocument("cities", "city", "budapest", new City("Budapest"));
+```
 
 
 You can find *addDocument* tests on [AddDocumentTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientAddDocumentTest.java)
@@ -175,29 +210,36 @@ You can find *addDocument* tests on [AddDocumentTests](https://github.com/silver
 
 If you have index defined at ConnectorSettings you can use:
 
+```java
         <T> void updateDocument(String id, T entity)
                 throws IndexCannotBeNullException, TypeCannotBeNullException;
+```
 
 method like this:
 
+```java
         String cityId = "karcag";
         City city = new City("karcagTest");
         client.updateDocument(cityId, city);
-
+```
 
 
 ### You don't have index defined in ConnectorSettings ###
 
 If you don't have index defined at ConnectorSettings you can use:
 
+```java
         <T> void updateDocument(String index, String type, String id, T entity)
                 throws IllegalArgumentException;
+```
 
 method like this:
 
+```java
         String cityId = "customCity";
         City city = new City("customCityForTestingTest");
         client.updateDocument("testcities", "testcity", cityId, city);
+```
 
 
 You can find *updateDocument* tests on [UpdateDocumentTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientUpdateDocumentTest.java)
@@ -209,26 +251,34 @@ You can find *updateDocument* tests on [UpdateDocumentTests](https://github.com/
 
 If you have index defined at ConnectorSettings you can use:
 
+```java
         void removeDocument(String id)
                 throws IllegalArgumentException, IndexCannotBeNullException, TypeCannotBeNullException;
+```
 
 method like this:
 
+```java
         String docId = "mydeldoc";
         client.removeDocument(docId);
+```
 
 
 ### You don't have index defined in ConnectorSettings ###
 
 If you don't have index defined at ConnectorSettings you can use:
 
+```java
         void removeDocument(String index, String type, String id)
                 throws IllegalArgumentException;
+```
 
 method like this:
 
+```java
         String docId = "mydeldoc";
         client.removeDocument("testcities", "testcity", docId);
+```
 
 
 You can find *removeDocument* tests on [RemoveDocumentTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientRemoveDocumentTest.java)
@@ -240,28 +290,37 @@ You can find *removeDocument* tests on [RemoveDocumentTests](https://github.com/
 
 If you have index defined at ConnectorSettings you can use:
 
+```java
         void removeDocumentsQuery(String query);
+```
 
 method like this:
 
+```java
         client.removeDocumentsQuery(query);
+```
 
 
 ### You don't have index defined in ConnectorSettings ###
 
 If you don't have index defined at ConnectorSettings you can use:
 
+```java
         void removeDocumentsQuery(String[] indices, String[] types, String query);
+```
 
 method like this:
 
+```java
         client.removeDocumentsQuery(new String[] {"testcities"}, new String[] {"testcity"}, query);
+```
 
 
 The above mentioned query string could be any query defined with [Elastic Query Language](https://www.elastic.co/guide/en/elasticsearch/reference/current/_introducing_the_query_language.html)
 
 For example:
 
+```json
         {
           "query": {
             "term": {
@@ -271,6 +330,7 @@ For example:
             }
           }
         }
+```
 
 
 You can find *removeDocument* tests on [RemoveDocumentTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientRemoveDocumentTest.java)
@@ -282,7 +342,9 @@ The bulk document allows you to send multiple create/update/index/delete operati
 
 You can use the following method for bulk operation : 
 
+```java
         List<BulkActionResult> bulk(List<BulkTuple> bulkItems);
+```
 
 like this:
 
@@ -290,6 +352,7 @@ like this:
 
 You definitely need a list of *BulkTuple* :
 
+```java
         ArrayList<BulkTuple> bulkItems = new ArrayList<>();
 
         bulkItems.add(BulkTuple
@@ -300,6 +363,7 @@ You definitely need a list of *BulkTuple* :
                         .entity(new City("Székesfehérvár"))
                         .operationType(OperationType.CREATE)
                         .build()
+```
 
 * The *indexName* is the index where the operation should execute
 * The *typeName* is the Elastic type of the document
@@ -313,7 +377,9 @@ You can add as many *BulkTuple* as you want but keep in mind that currently it w
 
 If you have prepared list of bulk actions (see previous chapter) you just call *bulk* method:
 
+```java
         List<BulkActionResult> actionResults = client.bulk(bulkItems);
+```
 
 The result of the bulk load is the responses from Elastic server combined with the original *BulkTupleItem*, so you always have the connection between the original action and the result within the *actionResult*.
 
@@ -329,17 +395,22 @@ You can find *bulk* tests on [BulkTests](https://github.com/silverforge/ElasticR
 
 For index creation you can use this method: 
 
+```java
         boolean createIndex(String indexName, String data);
+```
 
 like this:
 
+```java
         boolean result = client.createIndex("cities", createCityData);
+```
 
 If the *result* is true the index creation was successfull.
 
 The data can be any json string represents the mapping and/or settings of the index. 
 For example:
 
+```json
         {
           "mappings": {
             "city": {
@@ -361,6 +432,7 @@ For example:
             }
           }
         }
+```
 
 
 For index definition please check the Elastic documentation: [Elastic Create Index](https://www.elastic.co/guide/en/elasticsearch/reference/1.6/indices-create-index.html)
@@ -375,11 +447,15 @@ You can find *createIndex* tests on [CreateIndexTests](https://github.com/silver
 
 If you have index defined at ConnectorSettings you can use:
 
+```java
         void removeIndices();
+```
 
 method like this:
 
+```java
         client.removeIndices();
+```
 
 It will remove all indices defined in ConnectorSettings.
 
@@ -389,11 +465,15 @@ Actually I was wondering the practical usage of this method, but I'd like to let
 
 If you don't have index defined at ConnectorSettings you can use:
 
+```java
         void removeIndices(String[] indexNames);
+```
 
 method like this:
 
+```java
         client.removeIndices(new String[] {"cities", "testcities"});
+```
 
 
 You can find *removeIndices* tests on [CreateIndexTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientCreateIndexTest.java)
@@ -403,23 +483,31 @@ You can find *removeIndices* tests on [CreateIndexTests](https://github.com/silv
 
 You can add alias to an index with this method:
 
+```java
         void addAlias(String indexName, String aliasName);
+```
 
 like this:
 
+```java
         String aliasName = "myFunnyCities";
         String indexName = "cities";
         client.addAlias(indexName, aliasName);
+```
 
 
 You can get all added aliases on index with this method:
 
+```java
         List<String> getAliases(String index);
+```
 
 like this:
 
+```java
         String indexName = "cities";
         List<String> cities = client.getAliases(indexName);
+```
 
 
 You can find *addAlias*, *getAliases* tests on [CreateIndexTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientCreateIndexTest.java)
@@ -429,13 +517,17 @@ You can find *addAlias*, *getAliases* tests on [CreateIndexTests](https://github
 
 You can remove alias from an index with this method:
 
+```java
         void removeAlias(String indexName, String aliasName);
+```
 
 like this:
 
+```java
         String aliasName = "myFunnyCities";
         String indexName = "cities";
         client.removeAlias(indexName, aliasName);
+```
 
 You can find *removeAlias* tests on [CreateIndexTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientCreateIndexTest.java)
 
@@ -445,12 +537,15 @@ You can find *removeAlias* tests on [CreateIndexTests](https://github.com/silver
 
 In that case when you wanted to execute GET/POST/PUT/DELETE/HEAD requests directly against the elastic endpoint, you can use the ElasticClient *executeRawRequest* method in following way:
 
+```java
         myClient.executeRawRequest().post("/cities/city", postData);
 
         InvokeResult head = client.executeRawRequest().head("/thereisnosuchindex");
+```
 
 The result type of the "raw" requests is the *InvokeResult* which has four properties:
 
+```java
         @Getter
         @Setter
         private boolean isSuccess;
@@ -465,6 +560,7 @@ The result type of the "raw" requests is the *InvokeResult* which has four prope
 
         @Getter
         private List<Exception> aggregatedExceptions = new ArrayList<>();
+```
 
 
 * The *isSuccess* is true if the request executed successfully and there is response from server.
