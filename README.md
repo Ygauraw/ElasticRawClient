@@ -15,7 +15,9 @@ Contents
   - [Configuration](#configuration)
 - [Search/Get document(s)](#searchget-documents)
   - [Search](#search)
+  - [Reactive search](#reactive-search)
   - [Get](#get)
+  - [Reactive Get](#reactive-get)
 - [Add new document](#add-new-document)
 - [Update document](#update-document)
 - [Remove document](#remove-document)
@@ -36,7 +38,7 @@ It's built upon HttpsURLConnection. [Connector.java](https://github.com/silverfo
 
 The Connector applies a retry pattern, by default it tries three times to get the response from server. 
 
-Current version : 1.0.0
+Current version : 1.1.0
 
 ## How do I get set up? ##
 
@@ -101,6 +103,32 @@ List<City> cities = client.search("{\"query\":{\"match_all\": {}}}", City.class)
 ```
 
 You can find further doc about Elastic Query Language here : [Query Language](https://www.elastic.co/guide/en/elasticsearch/reference/current/_introducing_the_query_language.html)
+
+
+You can find *search* tests on [SearchTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientSearchTest.java)
+
+
+### Reactive search ###
+
+You can easily apply the reactive way with this method:
+
+```java
+<T> Observable<T> searchAsync(String query, Class<T> classType);
+```
+
+like this one:
+
+```java
+String query = StreamUtils.getRawContent(context, R.raw.city_list_filter);
+
+client
+    .searchAsync(query, City.class)
+    .subscribe(city -> {
+        ...
+    });
+```
+
+where the *query* comes from a raw text file.
 
 
 You can find *search* tests on [SearchTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientSearchTest.java)
@@ -176,6 +204,112 @@ List<City> cities = client.getDocument(new String[] {"cities","testcities"}, "te
 
 
 You can find *getDocument* tests on [GetDocumentTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientGetDocumentTest.java)
+
+
+### Reactive Get ###
+
+You can receive document(s) from elastic index/indices via *getDocumentAsync* method in many ways.
+
+#### You have index defined in ConnectorSettings ####
+
+If you have index defined in ConnectorSettings passed to ElasticClient, you need only to use either 
+
+```java
+<T> Observable<T> getDocumentAsync(String[] ids, Class<T> classType);
+```
+or
+
+```java
+<T> Observable<T> getDocumentAsync(String type, String[] ids, Class<T> classType);
+```
+
+methods like this:
+
+```java
+String[] docIds ={
+        "karcag",
+        "customCity"};
+
+client
+    .getDocumentAsync(docIds, City.class)
+    .subscribe(city -> {
+        ...
+    },
+    throwable -> {
+        ...
+    },
+    () -> {
+        ...
+    });
+```
+
+or
+
+```java
+String[] docIds ={
+        "karcag",
+        "customCity"};
+
+client
+    .getDocumentAsync("city", docIds, City.class)
+    .subscribe(city -> {
+        ...
+    },
+    throwable -> {
+        ...
+    },
+    () -> {
+        ...
+    });
+```
+
+The *type* parameter is the document type of elastic document in the index, for example index : *cities*, type : *city*.
+
+
+#### You don't have index defined in ConnectorSettings ####
+
+If you don't have index defined at ConnectorSettings you can use either
+
+```java
+<T> Observable<T> getDocumentAsync(String index, String type, String[] ids, Class<T> classType);
+```
+
+or
+
+```java
+<T> Observable<T> getDocumentAsync(String[] indices, String type, String[] ids, Class<T> classType);
+```
+
+methods like this:
+
+```java
+String[] docIds ={
+        "karcag",
+        "customCity"};
+
+client
+    .getDocumentAsync("testcities", "testcity", docIds, City.class)
+    .subscribe(city -> {
+        ...
+    });
+```
+
+or
+
+```java
+String[] docIds ={
+        "karcag",
+        "customCity"};
+
+client
+    .getDocumentAsync(new String[] {"cities","testcities"}, "testcity", docIds, City.class)
+    .subscribe(city -> {
+        ...
+    });
+```
+
+You can find *getDocumentAsync* tests on [GetDocumentTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientGetDocumentTest.java)
+
 
 
 ## Add new document ##

@@ -288,6 +288,25 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
             assertThat(cities, notNullValue());
             assertThat(cities.size(), equalTo(0));
+
+
+
+            String[] docIds ={
+                    "karcag",
+                    "customCity"};
+
+            client
+                .getDocumentAsync(docIds, City.class)
+                .subscribe(city -> {
+                    ...
+                },
+                throwable -> {
+                    ...
+                },
+                () -> {
+                    ...
+                });
+
         } catch (IndexCannotBeNullException e) {
             e.printStackTrace();
             fail(e.getMessage());
