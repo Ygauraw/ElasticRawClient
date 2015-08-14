@@ -8,7 +8,7 @@ Contents
 - [How do I get set up?](#how-do-i-get-set-up)
   - [Set up](#set-up)
     - [Gradle build.config](#gradle-buildconfig)
-    - [Issues/contact](#ssuescontact)
+    - [Issues/contact](#issuescontact)
   - [Configuration](#configuration)
 - [Search/Get document(s)](#searchget-documents)
   - [Search](#search)
