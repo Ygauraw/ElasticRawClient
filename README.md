@@ -34,7 +34,7 @@ Contents
 
 The ElasticSearchRawClient is a lightweight [Elastic](https://www.elastic.co/blog/no-sql-yes-search) (formerly ElasticSearch) client module for Android devs.
 
-It's built upon HttpsURLConnection. [Connector.java](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/main/java/com/silverforge/elasticsearchrawclient/connector/Connector.java)
+It's built upon **HttpsURLConnection**. [Connector.java](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/main/java/com/silverforge/elasticsearchrawclient/connector/Connector.java)
 
 The Connector applies a retry pattern, by default it tries three times to get the response from server. 
 
@@ -51,7 +51,7 @@ You can find elasticrawclient in jcenter so add the following row to your depend
 ```groovy
 dependencies {
     ...
-    compile 'com.silverforge.elastic:elasticsearchrawclient:1.0.0'
+    compile 'com.silverforge.elastic:elasticsearchrawclient:1.1.0'
 }
 ```
 
@@ -131,7 +131,7 @@ client
 where the *query* comes from a raw text file.
 
 
-You can find *search* tests on [SearchTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientSearchTest.java)
+You can find *searchAsync* tests on [SearchTests](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/test/java/com/silverforge/elasticsearchrawclient/elasticFacade/ElasticClientSearchTest.java)
 
 
 ### Get ###
