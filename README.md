@@ -1,3 +1,6 @@
+
+[ ![Download](https://api.bintray.com/packages/silverforge/maven/elastic-raw-client/images/download.svg) ](https://bintray.com/silverforge/maven/elastic-raw-client/_latestVersion)
+
 # README #
 
 
