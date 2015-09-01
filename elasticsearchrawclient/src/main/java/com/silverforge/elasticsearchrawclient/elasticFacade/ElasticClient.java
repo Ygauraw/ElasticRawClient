@@ -1,9 +1,7 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
-import android.content.Context;
 import android.text.TextUtils;
 
-import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.connector.Connector;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
@@ -433,7 +431,7 @@ public class ElasticClient implements ElasticRawClient {
 	}
 
     public <T> Observable<T> getDocumentAsync(String[] ids, Class<T> classType) {
-        Observable<T> observable = Observable.create(subscriber -> {
+        return Observable.create(subscriber -> {
             try {
                 List<T> documents = getDocument(ids, classType);
                 Observable
@@ -445,12 +443,10 @@ public class ElasticClient implements ElasticRawClient {
                 subscriber.onCompleted();
             }
         });
-
-        return observable;
     }
 
     public <T> Observable<T> getDocumentAsync(String type, String[] ids, Class<T> classType) {
-        Observable<T> observable = Observable.create(subscriber -> {
+        return Observable.create(subscriber -> {
             try {
                 List<T> documents = getDocument(type, ids, classType);
                 Observable
@@ -462,12 +458,10 @@ public class ElasticClient implements ElasticRawClient {
                 subscriber.onCompleted();
             }
         });
-
-        return observable;
     }
 
     public <T> Observable<T> getDocumentAsync(String index, String type, String[] ids, Class<T> classType) {
-        Observable<T> observable = Observable.create(subscriber -> {
+        return Observable.create(subscriber -> {
             try {
                 List<T> documents = getDocument(index, type, ids, classType);
                 Observable
@@ -479,12 +473,10 @@ public class ElasticClient implements ElasticRawClient {
                 subscriber.onCompleted();
             }
         });
-
-        return observable;
     }
 
     public <T> Observable<T> getDocumentAsync(String[] indices, String type, String[] ids, Class<T> classType) {
-        Observable<T> observable = Observable.create(subscriber -> {
+        return Observable.create(subscriber -> {
             try {
                 List<T> documents = getDocument(indices, type, ids, classType);
                 Observable
@@ -496,8 +488,6 @@ public class ElasticClient implements ElasticRawClient {
                 subscriber.onCompleted();
             }
         });
-
-        return observable;
     }
 
     // endregion
@@ -570,7 +560,7 @@ public class ElasticClient implements ElasticRawClient {
      * @see ElasticClient#ElasticClient(ConnectorSettings settings)
      */
     public <T> Observable<T> searchAsync(String query, Class<T> classType) {
-        Observable<T> observable = Observable.create(subscriber -> {
+        return Observable.create(subscriber -> {
             try {
                 List<T> searchResult = search(query, classType);
                 Observable
@@ -582,8 +572,6 @@ public class ElasticClient implements ElasticRawClient {
                 subscriber.onCompleted();
             }
         });
-
-        return observable;
     }
 
     /**
@@ -605,7 +593,7 @@ public class ElasticClient implements ElasticRawClient {
      * @return List of entity/entities retrieved by query
      */
     public <T> Observable<T> searchAsync(String index, String query, Class<T> classType) {
-        Observable<T> observable = Observable.create(subscriber -> {
+        return Observable.create(subscriber -> {
             if (TextUtils.isEmpty(index)) {
                 IllegalArgumentException illegalArgumentException = new IllegalArgumentException("index cannot be null or empty");
                 subscriber.onError(illegalArgumentException);
@@ -624,8 +612,6 @@ public class ElasticClient implements ElasticRawClient {
                 }
             }
         });
-
-        return observable;
     }
 
     // endregion
