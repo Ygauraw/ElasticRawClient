@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import java.util.UUID;
 
 public class StringUtils {
+    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
     public static String makeCommaSeparatedList(String[] list) {
         if (list == null || list.length == 0)
             return "";

@@ -1,5 +1,9 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
+import android.text.TextUtils;
+
+import com.silverforge.elasticsearchrawclient.utils.StringUtils;
+
 import java.util.HashMap;
 
 /**
@@ -7,13 +11,143 @@ import java.util.HashMap;
  */
 public enum OperationType {
 
-    NONE("NONE"),
-    CREATE("CREATE"),
-    UPDATE("UPDATE"),
-    DELETE("DELETE"),
-    INDEX("INDEX"),
-    QUERY("QUERY"),
-    SEARCH("SEARCH");
+    NONE("NONE") {
+        public void prepareTemplateForAction(String template,
+                                             StringBuilder bodyBuilder,
+                                             String indexName,
+                                             String typeName,
+                                             String documentId,
+                                             String bulkItemEntityJson) {
+            throw new UnsupportedOperationException();
+        }
+    },
+
+    CREATE("CREATE") {
+        public void prepareTemplateForAction(String template,
+                                             StringBuilder bodyBuilder,
+                                             String indexName,
+                                             String typeName,
+                                             String documentId,
+                                             String bulkItemEntityJson) {
+            if (!TextUtils.isEmpty(indexName)
+                    && !TextUtils.isEmpty(typeName)
+                    && !TextUtils.isEmpty(documentId)
+                    && !TextUtils.isEmpty(bulkItemEntityJson)) {
+
+                String createActionJson
+                    = template
+                        .replace("{{INDEX}}", indexName)
+                        .replace("{{TYPE}}", typeName)
+                        .replace("{{ID}}", documentId);
+
+                bodyBuilder
+                    .append(createActionJson)
+                    .append(bulkItemEntityJson)
+                    .append(StringUtils.LINE_SEPARATOR);
+            }
+        }
+    },
+
+    UPDATE("UPDATE") {
+        public void prepareTemplateForAction(String template,
+                                             StringBuilder bodyBuilder,
+                                             String indexName,
+                                             String typeName,
+                                             String documentId,
+                                             String bulkItemEntityJson) {
+
+            if (!TextUtils.isEmpty(indexName)
+                    && !TextUtils.isEmpty(typeName)
+                    && !TextUtils.isEmpty(documentId)
+                    && !TextUtils.isEmpty(bulkItemEntityJson)) {
+
+                String updateActionJson
+                    = template
+                        .replace("{{INDEX}}", indexName)
+                        .replace("{{TYPE}}", typeName)
+                        .replace("{{ID}}", documentId);
+
+                bodyBuilder
+                    .append(updateActionJson)
+                    .append("{\"doc\":")
+                    .append(bulkItemEntityJson)
+                    .append("}")
+                    .append(StringUtils.LINE_SEPARATOR);
+            }
+        }
+    },
+
+    DELETE("DELETE") {
+        public void prepareTemplateForAction(String template,
+                                             StringBuilder bodyBuilder,
+                                             String indexName,
+                                             String typeName,
+                                             String documentId,
+                                             String bulkItemEntityJson) {
+
+            if (!TextUtils.isEmpty(indexName)
+                    && !TextUtils.isEmpty(typeName)
+                    && !TextUtils.isEmpty(documentId)) {
+
+                String deleteActionJson
+                    = template
+                        .replace("{{INDEX}}", indexName)
+                        .replace("{{TYPE}}", typeName)
+                        .replace("{{ID}}", documentId);
+
+                bodyBuilder.append(deleteActionJson);
+            }
+        }
+    },
+
+    INDEX("INDEX") {
+        public void prepareTemplateForAction(String template,
+                                             StringBuilder bodyBuilder,
+                                             String indexName,
+                                             String typeName,
+                                             String documentId,
+                                             String bulkItemEntityJson) {
+
+            if (!TextUtils.isEmpty(indexName)
+                    && !TextUtils.isEmpty(typeName)
+                    && !TextUtils.isEmpty(bulkItemEntityJson)) {
+
+                String indexActionJson
+                    = template
+                        .replace("{{INDEX}}", indexName)
+                        .replace("{{TYPE}}", typeName);
+
+                bodyBuilder
+                    .append(indexActionJson)
+                    .append(bulkItemEntityJson)
+                    .append(StringUtils.LINE_SEPARATOR);
+            }
+        }
+    },
+
+    QUERY("QUERY") {
+        public void prepareTemplateForAction(String template,
+                                             StringBuilder bodyBuilder,
+                                             String indexName,
+                                             String typeName,
+                                             String documentId,
+                                             String bulkItemEntityJson) {
+
+            throw new UnsupportedOperationException();
+        }
+    },
+
+    SEARCH("SEARCH") {
+        public void prepareTemplateForAction(String template,
+                                             StringBuilder bodyBuilder,
+                                             String indexName,
+                                             String typeName,
+                                             String documentId,
+                                             String bulkItemEntityJson) {
+
+            throw new UnsupportedOperationException();
+        }
+    };
 
     private static final HashMap<String, String> operationPathType = new HashMap<>();
     static {
@@ -68,4 +202,11 @@ public enum OperationType {
                 return NONE;
         }
     }
+
+    public abstract void prepareTemplateForAction(String template,
+                                                  StringBuilder bodyBuilder,
+                                                  String indexName,
+                                                  String typeName,
+                                                  String documentId,
+                                                  String bulkItemEntityJson);
 }
