@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 import static org.junit.Assert.fail;

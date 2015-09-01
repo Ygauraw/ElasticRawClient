@@ -1,0 +1,5 @@
+release notes 1.2:
+
+- MalformedUrlException removed from ElasticClient(Connectable connector)
+- ElasticClient became the facade of the operations of elasticclient (The functionalatio is the same from user perspective)
+- 

@@ -61,6 +61,6 @@ dependencies {
     compile 'com.google.guava:guava-collections:r03'
 }
 
-//retrolambda {
-//    jdk "/usr/lib/jvm/java-8-oracle"
-//}
+retrolambda {
+    jdk "/usr/lib/jvm/java-8-oracle"
+}

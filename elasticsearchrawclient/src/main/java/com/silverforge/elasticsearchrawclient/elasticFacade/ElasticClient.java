@@ -4,48 +4,46 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
-import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.connector.Connector;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.AliasParser;
-import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.BulkResultParser;
-import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.AddDocumentResult;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkActionResult;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkResultItem;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkTuple;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
+import com.silverforge.elasticsearchrawclient.elasticFacade.operations.BulkOperations;
+import com.silverforge.elasticsearchrawclient.elasticFacade.operations.DocumentOperations;
+import com.silverforge.elasticsearchrawclient.elasticFacade.operations.IndexOperations;
+import com.silverforge.elasticsearchrawclient.elasticFacade.operations.QueryOperations;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
-import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
-import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
 
 public class ElasticClient implements ElasticRawClient {
-    private Context context;
     private Connectable connector;
 	private Raw raw = new Raw();
+    private IndexOperations indexOperations;
+    private DocumentOperations documentOperations;
+    private BulkOperations bulkOperations;
+    private QueryOperations queryOperations;
 
     // region Constructors
 
 	/**
 	 * Constructor of ElasticClient
 	 * @param connector the Connector instance
-	 * @throws MalformedURLException
 	 * @see com.silverforge.elasticsearchrawclient.connector.Connector
 	 */
-	public ElasticClient(Connectable connector)
-		throws MalformedURLException {
+	public ElasticClient(Connectable connector) {
 		this.connector = connector;
-        context = ElasticClientApp.getAppContext();
-	}
+        indexOperations = new IndexOperations(connector);
+        documentOperations = new DocumentOperations(connector);
+        bulkOperations = new BulkOperations(connector);
+        queryOperations = new QueryOperations(connector);
+    }
 
 	/**
 	 * Constructor of ElasticClient
@@ -73,9 +71,8 @@ public class ElasticClient implements ElasticRawClient {
 	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
 	 */
 	public ElasticClient(ConnectorSettings settings)
-		throws URISyntaxException {
-		connector = new Connector(settings);
-        context = ElasticClientApp.getAppContext();
+            throws URISyntaxException {
+        this(new Connector(settings));
 	}
 
     // endregion
@@ -87,7 +84,7 @@ public class ElasticClient implements ElasticRawClient {
         return raw;
     }
 
-    // region Index related methods
+    // region Index operations
 
 	/**
 	 * Creates index based on indexName and the data
@@ -110,9 +107,7 @@ public class ElasticClient implements ElasticRawClient {
 	 */
 	@Override
 	public boolean createIndex(String indexName, String data) {
-		String path = StringUtils.ensurePath(indexName);
-		InvokeResult result = connector.put(path, data);
-		return result.isSuccess();
+		return indexOperations.createIndex(indexName, data);
 	}
 
 	/**
@@ -122,14 +117,7 @@ public class ElasticClient implements ElasticRawClient {
 	 */
 	@Override
 	public void addAlias(String indexName, String aliasName) {
-		String addAliasTemplate
-			= StreamUtils.getRawContent(context, R.raw.add_alias);
-
-		String data = addAliasTemplate
-				.replace("{{INDEXNAME}}", indexName)
-				.replace("{{ALIASNAME}}", aliasName);
-
-		connector.post("/_aliases", data);
+        indexOperations.addAlias(indexName, aliasName);
 	}
 
 	/**
@@ -148,10 +136,7 @@ public class ElasticClient implements ElasticRawClient {
 	 */
 	@Override
 	public void removeIndices(String[] indexNames) {
-		for (String indexName : indexNames) {
-			String path = StringUtils.ensurePath(indexName);
-			connector.delete(path);
-		}
+        indexOperations.removeIndices(indexNames);
 	}
 
 	/**
@@ -161,9 +146,7 @@ public class ElasticClient implements ElasticRawClient {
 	 */
 	@Override
 	public boolean indexExists(String indexName) {
-		String path = StringUtils.ensurePath(indexName);
-		InvokeResult result = connector.head(path);
-		return result.isSuccess();
+        return indexOperations.indexExists(indexName);
 	}
 
 	/**
@@ -173,15 +156,7 @@ public class ElasticClient implements ElasticRawClient {
 	 */
 	@Override
 	public List<String> getAliases(String index) {
-		ArrayList<String> retValue = new ArrayList<>();
-		String getPath = String.format("/%s/_aliases", index);
-
-		InvokeResult invokeResult = connector.get(getPath);
-		if (invokeResult.isSuccess()) {
-			List<String> aliasesFromJson = AliasParser.getAliasesFromJson(index, invokeResult.getResult());
-			retValue.addAll(aliasesFromJson);
-		}
-		return retValue;
+        return indexOperations.getAliases(index);
 	}
 
 	/**
@@ -191,19 +166,12 @@ public class ElasticClient implements ElasticRawClient {
 	 */
 	@Override
 	public void removeAlias(String indexName, String aliasName) {
-		String addAliasTemplate
-			= StreamUtils.getRawContent(context, R.raw.remove_alias);
-
-		String data = addAliasTemplate
-				.replace("{{INDEXNAME}}", indexName)
-				.replace("{{ALIASNAME}}", aliasName);
-
-		connector.post("/_aliases", data);
+        indexOperations.removeAlias(indexName, aliasName);
 	}
 
     // endregion
 
-    // region Add document methods
+    // region Add document operations
 
 	/**
 	 * Adds a document to the index defined in ConnectorSettings
@@ -239,17 +207,7 @@ public class ElasticClient implements ElasticRawClient {
 	public <T> String addDocument(String id, T entity)
 			throws IndexCannotBeNullException, IllegalArgumentException, TypeCannotBeNullException {
 
-		if (entity == null)
-			throw new IllegalArgumentException("entity cannot be null");
-
-		String entityJson = ElasticClientMapper.mapToJson(entity);
-		String addPath = getOperationPath(id, OperationType.CREATE);
-
-		InvokeResult result = connector.post(addPath, entityJson);
-		AddDocumentResult addDocumentResult
-				= ElasticClientMapper.mapToEntity(result.getResult(), AddDocumentResult.class);
-
-		return addDocumentResult.getId();
+        return documentOperations.addDocument(id, entity);
 	}
 
 	/**
@@ -266,36 +224,7 @@ public class ElasticClient implements ElasticRawClient {
 	public <T> String addDocument(String index, String type, String id, T entity)
 			throws IllegalArgumentException {
 
-		if (entity == null)
-			throw new IllegalArgumentException("entity cannot be null");
-
-		if (TextUtils.isEmpty(index))
-			throw new IllegalArgumentException("index cannot be null or empty");
-
-		if (TextUtils.isEmpty(type))
-			throw new IllegalArgumentException("type cannot be null or empty");
-
-		if (TextUtils.isEmpty(id))
-			throw new IllegalArgumentException("id cannot be null or empty");
-
-		String retValue = "";
-		try {
-			String entityJson = ElasticClientMapper.mapToJson(entity);
-			String addPath = getOperationPath(index, type, id, OperationType.CREATE);
-
-			InvokeResult result = connector.post(addPath, entityJson);
-
-			AddDocumentResult addDocumentResult
-					= ElasticClientMapper.mapToEntity(result.getResult(),
-														AddDocumentResult.class);
-
-			retValue = addDocumentResult.getId();
-
-		} catch	(IndexCannotBeNullException | TypeCannotBeNullException e) {
-			e.printStackTrace();
-		}
-
-		return retValue;
+        return documentOperations.addDocument(index, type, id, entity);
     }
 
     // endregion
@@ -314,12 +243,7 @@ public class ElasticClient implements ElasticRawClient {
 	@Override
 	public void removeDocument(String id)
 			throws IllegalArgumentException, IndexCannotBeNullException, TypeCannotBeNullException {
-
-		if (TextUtils.isEmpty(id))
-			throw new IllegalArgumentException("id cannot be null or empty");
-
-		String deletePath = getOperationPath(id, OperationType.DELETE);
-		connector.delete(deletePath);
+        documentOperations.removeDocument(id);
 	}
 
 	/**
@@ -332,22 +256,7 @@ public class ElasticClient implements ElasticRawClient {
 	@Override
 	public void removeDocument(String index, String type, String id)
 			throws IllegalArgumentException {
-
-		if (TextUtils.isEmpty(index))
-			throw new IllegalArgumentException("index cannot be null or empty");
-
-		if (TextUtils.isEmpty(type))
-			throw new IllegalArgumentException("type cannot be null or empty");
-
-		if (TextUtils.isEmpty(id))
-			throw new IllegalArgumentException("id cannot be null or empty");
-
-		try {
-			String deletePath = getOperationPath(index, type, id, OperationType.DELETE);
-			connector.delete(deletePath);
-		} catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
-			e.printStackTrace();
-		}
+        documentOperations.removeDocument(index, type, id);
 	}
 
 	/**
@@ -371,13 +280,7 @@ public class ElasticClient implements ElasticRawClient {
 	 */
 	@Override
 	public void removeDocumentsQuery(String query) {
-
-		try {
-			String deletePath = getOperationPath(OperationType.QUERY);
-			connector.delete(deletePath, query);
-		} catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
-			e.printStackTrace();
-		}
+        documentOperations.removeDocumentsQuery(query);
 	}
 
 	/**
@@ -401,14 +304,7 @@ public class ElasticClient implements ElasticRawClient {
 	 */
 	@Override
 	public void removeDocumentsQuery(String[] indices, String[] types, String query) {
-
-		try {
-			String deletePath = getOperationPath(indices, types, OperationType.QUERY);
-			connector.delete(deletePath, query);
-		} catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
-			e.printStackTrace();
-		}
-
+        documentOperations.removeDocumentsQuery(indices, types, query);
 	}
 
     // endregion
@@ -428,18 +324,7 @@ public class ElasticClient implements ElasticRawClient {
 	@Override
 	public <T> void updateDocument(String id, T entity)
 			throws IndexCannotBeNullException, TypeCannotBeNullException {
-
-		if (entity == null)
-			throw new IllegalArgumentException("entity cannot be null");
-
-		String entityJson = ElasticClientMapper.mapToJson(entity);
-		String updatePath = getOperationPath(id, OperationType.UPDATE);
-
-		String updateTemplate
-                = StreamUtils.getRawContent(context, R.raw.update_template);
-		String data = updateTemplate.replace("{{ENTITYJSON}}", entityJson);
-
-		connector.post(updatePath, data);
+        documentOperations.updateDocument(id, entity);
 	}
 
 	/**
@@ -454,31 +339,7 @@ public class ElasticClient implements ElasticRawClient {
     @Override
 	public <T> void updateDocument(String index, String type, String id, T entity)
 			throws IllegalArgumentException {
-
-		if (entity == null)
-			throw new IllegalArgumentException("entity cannot be null");
-
-		if (TextUtils.isEmpty(index))
-			throw new IllegalArgumentException("index cannot be null or empty");
-
-		if (TextUtils.isEmpty(type))
-			throw new IllegalArgumentException("type cannot be null or empty");
-
-		if (TextUtils.isEmpty(id))
-			throw new IllegalArgumentException("id cannot be null or empty");
-
-		try {
-			String entityJson = ElasticClientMapper.mapToJson(entity);
-			String updatePath = getOperationPath(index, type, id, OperationType.UPDATE);
-
-			String updateTemplate
-					= StreamUtils.getRawContent(context, R.raw.update_template);
-			String data = updateTemplate.replace("{{ENTITYJSON}}", entityJson);
-
-			connector.post(updatePath, data);
-		} catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
-			e.printStackTrace();
-		}
+        documentOperations.updateDocument(index, type, id, entity);
 	}
 
     // endregion
@@ -491,122 +352,7 @@ public class ElasticClient implements ElasticRawClient {
      * @return the result of every single action compared with the initial bulkitem
      */
     public List<BulkActionResult> bulk(List<BulkTuple> bulkItems) {
-
-        String createTemplate = StreamUtils.getRawContent(context, R.raw.create_action_template);
-        String indexTemplate = StreamUtils.getRawContent(context, R.raw.index_action_template);
-        String updateTemplate = StreamUtils.getRawContent(context, R.raw.update_action_template);
-        String deleteTemplate = StreamUtils.getRawContent(context, R.raw.delete_action_template);
-
-        StringBuilder bodyBuilder = new StringBuilder();
-        String lineSeparator = System.getProperty("line.separator");
-
-        for (BulkTuple bulkItem : bulkItems) {
-            OperationType operationType = bulkItem.getOperationType();
-
-            String indexName = bulkItem.getIndexName();
-            if (TextUtils.isEmpty(indexName)) {
-                String[] indices = connector.getSettings().getIndices();
-                if (indices != null && indices.length > 0)
-                    indexName = indices[0];
-            }
-
-            String typeName = bulkItem.getTypeName();
-            if (TextUtils.isEmpty(typeName)) {
-                String[] types = connector.getSettings().getTypes();
-                if (types != null && types.length > 0)
-                    typeName = types[0];
-            }
-
-            String documentId = bulkItem.getId();
-
-            String bulkItemEntityJson = "";
-            if (operationType != OperationType.DELETE)
-                bulkItemEntityJson = ElasticClientMapper.mapToJson(bulkItem.getEntity());
-
-            switch (operationType) {
-                case CREATE:
-                    if (!TextUtils.isEmpty(indexName)
-                            && !TextUtils.isEmpty(typeName)
-                            && !TextUtils.isEmpty(documentId)
-                            && !TextUtils.isEmpty(bulkItemEntityJson)) {
-
-                        String createActionJson
-                            = createTemplate
-                                .replace("{{INDEX}}", indexName)
-                                .replace("{{TYPE}}", typeName)
-                                .replace("{{ID}}", documentId);
-
-                        bodyBuilder.append(createActionJson);
-                        bodyBuilder.append(bulkItemEntityJson).append(lineSeparator);
-                    }
-                    break;
-                case DELETE:
-                    if (!TextUtils.isEmpty(indexName)
-                            && !TextUtils.isEmpty(typeName)
-                            && !TextUtils.isEmpty(documentId)) {
-
-                        String deleteActionJson
-                            = deleteTemplate
-                                .replace("{{INDEX}}", indexName)
-                                .replace("{{TYPE}}", typeName)
-                                .replace("{{ID}}", documentId);
-
-                        bodyBuilder.append(deleteActionJson);
-                    }
-                    break;
-                case UPDATE:
-                    if (!TextUtils.isEmpty(indexName)
-                            && !TextUtils.isEmpty(typeName)
-                            && !TextUtils.isEmpty(documentId)
-                            && !TextUtils.isEmpty(bulkItemEntityJson)) {
-
-                        String updateActionJson
-                            = updateTemplate
-                                .replace("{{INDEX}}", indexName)
-                                .replace("{{TYPE}}", typeName)
-                                .replace("{{ID}}", documentId);
-
-                        bodyBuilder.append(updateActionJson);
-                        bodyBuilder.append("{\"doc\":").append(bulkItemEntityJson).append("}").append(lineSeparator);
-                    }
-                    break;
-                case INDEX:
-                    if (!TextUtils.isEmpty(indexName)
-                            && !TextUtils.isEmpty(typeName)
-                            && !TextUtils.isEmpty(bulkItemEntityJson)) {
-
-                        String indexActionJson
-                            = indexTemplate
-                                .replace("{{INDEX}}", indexName)
-                                .replace("{{TYPE}}", typeName);
-
-                        bodyBuilder.append(indexActionJson);
-                        bodyBuilder.append(bulkItemEntityJson).append(lineSeparator);
-                    }
-                    break;
-            }
-        }
-
-        String bulkRequestBody = bodyBuilder.append(lineSeparator).toString();
-        InvokeResult bulkResult = connector.post("/_bulk", bulkRequestBody);
-
-        List<BulkResultItem> bulkResultItemList = BulkResultParser.getResults(bulkResult.getResult());
-        ArrayList<BulkActionResult> retValue = new ArrayList<>();
-        for (int i = 0; i < bulkItems.size(); i++) {
-            BulkTuple tuple = bulkItems.get(i);
-            BulkResultItem resultItem = bulkResultItemList.get(i);
-            BulkActionResult bulkActionResult
-                = new BulkActionResult(resultItem.getOperation(),
-                                        resultItem.getIndexName(),
-                                        resultItem.getTypeName(),
-                                        resultItem.getId(),
-                                        resultItem.getVersion(),
-                                        resultItem.getStatus(),
-                                        resultItem.getFound(), tuple);
-
-            retValue.add(bulkActionResult);
-        }
-        return retValue;
+        return bulkOperations.bulk(bulkItems);
     }
 
     // endregion
@@ -629,7 +375,7 @@ public class ElasticClient implements ElasticRawClient {
 		if (indices == null || indices.length == 0)
 			throw new IndexCannotBeNullException();
 
-		return getDocument(indices, null, ids, classType);
+		return queryOperations.getDocument(indices, null, ids, classType);
 	}
 
 	/**
@@ -649,7 +395,7 @@ public class ElasticClient implements ElasticRawClient {
 		if (indices == null || indices.length == 0)
 			throw new IndexCannotBeNullException();
 
-		return getDocument(indices, type, ids, classType);
+		return queryOperations.getDocument(indices, type, ids, classType);
 	}
 
     /**
@@ -669,7 +415,7 @@ public class ElasticClient implements ElasticRawClient {
 		if (!TextUtils.isEmpty(index))
 			indexParam = new String[] {index};
 
-		return getDocument(indexParam, type, ids, classType);
+		return queryOperations.getDocument(indexParam, type, ids, classType);
 	}
 
 	/**
@@ -683,32 +429,7 @@ public class ElasticClient implements ElasticRawClient {
 	 */
 	@Override
 	public <T> List<T> getDocument(String[] indices, String type, String[] ids, Class<T> classType) {
-
-		List<T> retValue = new ArrayList<>();
-		try {
-			String queryTemplate;
-			String queryIds = StringUtils.makeCommaSeparatedListWithQuotationMark(ids);
-			String query;
-			String queryPath;
-			if (TextUtils.isEmpty(type)) {
-				queryTemplate = StreamUtils.getRawContent(context, R.raw.search_by_ids);
-				query = queryTemplate.replace("{{IDS}}", queryIds);
-			} else {
-				queryTemplate = StreamUtils.getRawContent(context, R.raw.search_by_ids_and_type);
-				query = queryTemplate
-						.replace("{{IDS}}", queryIds)
-						.replace("{{TYPE}}", type);
-			}
-
-			queryPath = getOperationPath(indices, null, OperationType.SEARCH);
-
-			String documents = connector.post(queryPath, query).getResult();
-			retValue = ElasticClientMapper.mapToHitList(documents, classType);
-		} catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
-			e.printStackTrace();
-		}
-
-		return retValue;
+        return queryOperations.getDocument(indices, type, ids, classType);
 	}
 
     public <T> Observable<T> getDocumentAsync(String[] ids, Class<T> classType) {
@@ -803,19 +524,7 @@ public class ElasticClient implements ElasticRawClient {
 	 */
 	@Override
 	public <T> List<T> search(String query, Class<T> classType) {
-
-		List<T> retValue = new ArrayList<>();
-
-		try {
-			String queryPath = getOperationPath(OperationType.SEARCH);
-			String documents = connector.post(queryPath, query).getResult();
-
-			retValue = ElasticClientMapper.mapToHitList(documents, classType);
-		} catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
-			e.printStackTrace();
-		}
-
-		return retValue;
+        return queryOperations.search(query, classType);
 	}
 
 	/**
@@ -839,23 +548,7 @@ public class ElasticClient implements ElasticRawClient {
 	@Override
 	public <T> List<T> search(String index, String query, Class<T> classType)
             throws IllegalArgumentException{
-
-		if (TextUtils.isEmpty(index))
-			throw new IllegalArgumentException("index cannot be null or empty");
-
-		List<T> retValue = new ArrayList<>();
-
-		try	{
-
-			String queryPath = getOperationPath(index, null, OperationType.SEARCH);
-			String documents = connector.post(queryPath, query).getResult();
-
-			retValue = ElasticClientMapper.mapToHitList(documents, classType);
-		} catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
-			e.printStackTrace();
-		}
-
-		return retValue;
+        return queryOperations.search(index, query, classType);
 	}
 
     /**
@@ -919,7 +612,7 @@ public class ElasticClient implements ElasticRawClient {
                 subscriber.onCompleted();
             } else {
                 try {
-                    List<T> searchResult = search(query, classType);
+                    List<T> searchResult = search(index, query, classType);
                     Observable
                             .from(searchResult)
                             .subscribe(subscriber::onNext);
@@ -934,166 +627,6 @@ public class ElasticClient implements ElasticRawClient {
 
         return observable;
     }
-
-    // endregion
-
-    // region Get operation path methods
-
-    /**
-     * Retrives with the path of the operation defined in OperationType based on ConnectorSettings
-     * @param operationType the type of the operation
-     * @return the path, e.g.: /myindex,yourindex/mytype,yourtype/2
-     * @throws IndexCannotBeNullException
-     * @throws TypeCannotBeNullException
-     * @see com.silverforge.elasticsearchrawclient.elasticFacade.OperationType
-     * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-     * @see ElasticClient#ElasticClient(ConnectorSettings settings)
-     */
-	protected String getOperationPath(OperationType operationType)
-			throws IndexCannotBeNullException, TypeCannotBeNullException {
-		return getOperationPath(null, operationType);
-	}
-
-	/**
-	 * Retrives with the path of the operation defined in OperationType based on ConnectorSettings
-	 * @param id the id of the document. could be <strong>null</strong>
-	 * @param operationType the type of the operation
-	 * @return the path, e.g.: /myindex,yourindex/mytype,yourtype/2
-	 * @throws IndexCannotBeNullException
-	 * @see com.silverforge.elasticsearchrawclient.elasticFacade.OperationType
-	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
-	 */
-	protected String getOperationPath(String id, OperationType operationType)
-			throws IndexCannotBeNullException, TypeCannotBeNullException {
-
-		return getOperationPath(connector.getSettings().getIndices(), connector.getSettings().getTypes(), id, operationType);
-	}
-
-    /**
-     * Retrives with the path of the operation defined in OperationType based on ConnectorSettings
-     * @param index the index name (Elastic)
-     * @param type the type name (Elastic)
-     * @param operationType the type of the operation
-     * @return the path, e.g.: /myindex,yourindex/mytype,yourtype/2
-     * @throws IndexCannotBeNullException
-     * @throws TypeCannotBeNullException
-     */
-	protected String getOperationPath(String index, String type, OperationType operationType)
-			throws IndexCannotBeNullException, TypeCannotBeNullException {
-
-		String[] indexParam = null;
-		String[] typeParam = null;
-
-		if (!TextUtils.isEmpty(index))
-			indexParam = new String[] {index};
-
-		if (!TextUtils.isEmpty(type))
-			typeParam = new String[] {type};
-
-		return getOperationPath(indexParam, typeParam, null, operationType);
-	}
-
-    /**
-     * Retrives with the path of the operation defined in OperationType based on ConnectorSettings
-     * @param index the index name (Elastic)
-     * @param type the type name (Elastic)
-     * @param id the id of the document (Elastic)
-     * @param operationType the type of the operation
-     * @return the path, e.g.: /myindex,yourindex/mytype,yourtype/2
-     * @throws IndexCannotBeNullException
-     * @throws TypeCannotBeNullException
-     */
-	protected String getOperationPath(String index, String type, String id,OperationType operationType)
-			throws IndexCannotBeNullException, TypeCannotBeNullException {
-
-		String[] indexParam = null;
-		String[] typeParam = null;
-
-		if (!TextUtils.isEmpty(index))
-			indexParam = new String[] {index};
-
-		if (!TextUtils.isEmpty(type))
-			typeParam = new String[] {type};
-
-		return getOperationPath(indexParam, typeParam, id, operationType);
-	}
-
-    /**
-     * Retrives with the path of the operation defined in OperationType based on ConnectorSettings
-     * @param indices list of indices (Elastic)
-     * @param types list of types (Elastic)
-     * @param operationType the type of the operation
-     * @return the path, e.g.: /myindex,yourindex/mytype,yourtype/2
-     * @throws IndexCannotBeNullException
-     * @throws TypeCannotBeNullException
-     */
-	protected String getOperationPath(String[] indices, String[] types, OperationType operationType)
-			throws IndexCannotBeNullException, TypeCannotBeNullException {
-
-		return getOperationPath(indices, types, null, operationType);
-	}
-
-    /**
-     * Retrives with the path of the operation defined in OperationType based on ConnectorSettings
-     * @param indices list of indices (Elastic)
-     * @param types list of types (Elastic)
-     * @param id the id of the document (Elastic)
-     * @param operationType the type of the operation
-     * @return the path, e.g.: /myindex,yourindex/mytype,yourtype/2
-     * @throws IndexCannotBeNullException
-     * @throws TypeCannotBeNullException
-     */
-	protected String getOperationPath(String[] indices, String[] types, String id, OperationType operationType)
-			throws IndexCannotBeNullException, TypeCannotBeNullException {
-
-		StringBuilder pathBuilder = new StringBuilder();
-		pathBuilder.append("/");
-		switch (operationType) {
-			case CREATE:
-			case DELETE:
-			case UPDATE:
-
-				if (indices == null || indices.length == 0)
-					throw new IndexCannotBeNullException();
-
-				String index = indices[0];
-				pathBuilder.append(index).append("/");
-
-				if (types == null || types.length == 0)
-					throw new TypeCannotBeNullException();
-
-				String type = types[0];
-				pathBuilder.append(type);
-
-				if (!TextUtils.isEmpty(id))	{
-					pathBuilder.append("/").append(id);
-
-					String operationPath = operationType.getOperationTypePath();
-					if (!TextUtils.isEmpty(operationPath))
-                        pathBuilder.append("/").append(operationPath);
-				}
-
-				break;
-			case QUERY:
-			case SEARCH:
-				if (indices == null || indices.length == 0)
-					pathBuilder.append("_all/");
-				else
-					pathBuilder.append(StringUtils.makeCommaSeparatedList(indices)).append("/");
-
-				if (types != null && types.length > 0)
-					pathBuilder.append(StringUtils.makeCommaSeparatedList(types));
-
-				String operationPath = operationType.getOperationTypePath();
-                if (!TextUtils.isEmpty(operationPath))
-					pathBuilder.append("/").append(operationPath);
-
-				break;
-		}
-
-		return pathBuilder.toString();
-	}
 
     // endregion
 
