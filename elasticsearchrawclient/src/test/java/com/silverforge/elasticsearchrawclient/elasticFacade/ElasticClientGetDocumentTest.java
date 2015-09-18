@@ -16,7 +16,6 @@ import org.robolectric.annotation.Config;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import rx.Observable;
 import rx.observers.TestSubscriber;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -259,6 +258,32 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
             List<City> cities = customClient.getDocument("city", docIds, City.class);
 
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void getDocumentWithDashDTypeTest() throws IndexCannotBeNullException {
+        String[] docIds ={
+                "karcag",
+                "customCity"};
+
+        ConnectorSettings customSettings = ConnectorSettings
+                .builder()
+                .baseUrl(ELASTIC_URL)
+                .indices(new String[] { "cities" })
+                .userName(ELASTIC_APIKEY)
+                .build();
+        try {
+            ElasticRawClient customClient = new ElasticClient(customSettings);
+
+            List<City> cities = customClient.getDocument(" -d", docIds, City.class);
+
+            assertThat(cities, notNullValue());
+            assertThat(cities.size(), equalTo(0));
         } catch (URISyntaxException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
