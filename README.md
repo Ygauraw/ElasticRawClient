@@ -38,7 +38,7 @@ It's built upon **HttpsURLConnection**. [Connector.java](https://github.com/silv
 
 The Connector applies a retry pattern, by default it tries three times to get the response from server. 
 
-Current version : 1.1.0
+Current version : 1.1.1
 
 ## How do I get set up? ##
 
@@ -51,7 +51,7 @@ You can find elasticrawclient in jcenter so add the following row to your depend
 ```groovy
 dependencies {
     ...
-    compile 'com.silverforge.elastic:elasticsearchrawclient:1.1.0'
+    compile 'com.silverforge.elastic:elasticsearchrawclient:1.1.1'
 }
 ```
 
