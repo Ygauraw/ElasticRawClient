@@ -1,11 +1,13 @@
-package com.silverforge.elasticsearchrawclient.queryDSL.queries;
+package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
-import android.text.TextUtils;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.InnerQuery;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MatchQuery extends QueryBase {
+public class MatchQuery
+        implements InnerQuery {
+
     private final String fieldName;
     private final String value;
 
@@ -20,14 +22,8 @@ public class MatchQuery extends QueryBase {
 
     public String getQueryString() {
         String queryString = "{\"match\" : {\"{{FIELDNAME}}\" : \"{{VALUE}}\"}}";
-        if (TextUtils.isEmpty(fieldName))
-            queryString = queryString.replace("{{FIELDNAME}}", "_all");
-        else
-            queryString = queryString.replace("{{FIELDNAME}}", fieldName);
-
+        queryString = queryString.replace("{{FIELDNAME}}", fieldName);
         queryString = queryString.replace("{{VALUE}}", this.value);
-
-        queryString = queryEnvelope.replace("{{BUILTQUERYSTRING}}", queryString);
 
         return queryString;
     }
@@ -40,6 +36,11 @@ public class MatchQuery extends QueryBase {
 
         public MatchQueryBuilder fieldName(String fieldName) {
             this.fieldName = fieldName;
+            return this;
+        }
+
+        public MatchQueryBuilder allFields() {
+            this.fieldName = "_all";
             return this;
         }
 
