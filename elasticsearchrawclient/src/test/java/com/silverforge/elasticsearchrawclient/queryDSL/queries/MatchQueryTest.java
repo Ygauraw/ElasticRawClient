@@ -1,7 +1,10 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.MatchQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.PhraseTypeOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.MatchQuery;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +21,7 @@ public class MatchQueryTest {
     // region Happy path
 
     @Test
-    public void defaultMatchBuilderTest() {
+    public void when_String_value_added_with_field_name_then_query_generated_well() {
         MatchQuery matchQuery =
             MatchQuery
                 .builder()
@@ -34,7 +37,7 @@ public class MatchQueryTest {
     }
 
     @Test
-    public void allFieldsMatchBuilderTest() {
+    public void when_String_value_added_with_all_field_name_then_query_generated_well() {
         MatchQuery matchQuery =
             MatchQuery
                 .builder()
@@ -49,6 +52,98 @@ public class MatchQueryTest {
         assertThat(queryString, is("{\"match\":{\"_all\":\"Karcag\"}}"));
     }
 
+    @Test
+    public void when_all_query_parameters_added_then_query_generated_well() {
+        MatchQuery matchQuery = MatchQuery
+            .builder()
+            .fieldName("name")
+            .query("Karcag Budapest")
+            .analyzer("standard")
+            .fuzziness(FuzzinessOperator._0)
+            .lenient(false)
+            .operator(LogicOperator.AND)
+            .maxExpansions(2)
+            .prefixLength(1)
+            .type(PhraseTypeOperator.PHRASE)
+            .build();
+
+        String queryString = matchQuery.getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString.indexOf("{\"match\":{\"name\":{"), is(0));
+        assertThat(queryString.indexOf("\"query\":\"Karcag Budapest\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"analyzer\":\"standard\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"fuzziness\":\"0\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"lenient\":\"false\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"operator\":\"and\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"max_expansions\":\"2\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"prefix_length\":\"1\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"type\":\"phrase\""), greaterThan(0));
+
+        assertThat(queryString.indexOf("\",\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"\""), is(-1));
+        assertThat(queryString.indexOf("}}}"), greaterThan(0));
+    }
+
+    @Test
+    public void when_fuzziness_defined_manually_then_query_generated_well() {
+        MatchQuery matchQuery = MatchQuery
+            .builder()
+            .fieldName("name")
+            .query("Kar")
+            .fuzziness("5")
+            .type(PhraseTypeOperator.PHRASE_PREFIX)
+            .build();
+
+        String queryString = matchQuery.getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString.indexOf("{\"match\":{\"name\":{"), is(0));
+        assertThat(queryString.indexOf("\"query\":\"Kar\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"fuzziness\":\"5\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"type\":\"phrase_prefix\""), greaterThan(0));
+
+        assertThat(queryString.indexOf("\",\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"\""), is(-1));
+        assertThat(queryString.indexOf("}}}"), greaterThan(0));
+    }
+
     // endregion
 
+    // region Sad path
+
+    @Test
+    public void when_no_fields_defined_then_query_generated_well() {
+        MatchQuery matchQuery =
+            MatchQuery
+                .builder()
+                .value("Karcag")
+                .build();
+
+        String queryString = matchQuery.getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+        assertThat(queryString, is("{\"match\":{\"_all\":\"Karcag\"}}"));
+    }
+
+    @Test
+    public void when_nothing_is_defined_then_most_generic_query_generated() {
+        MatchQuery matchQuery =
+            MatchQuery
+                .builder()
+                .build();
+
+        String queryString = matchQuery.getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+        assertThat(queryString, is("{\"match\":{\"_all\":\"\"}}"));
+    }
+
+    // endregion
 }

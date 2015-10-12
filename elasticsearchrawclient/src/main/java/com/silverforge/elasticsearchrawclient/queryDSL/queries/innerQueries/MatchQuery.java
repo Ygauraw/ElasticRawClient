@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
+package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
