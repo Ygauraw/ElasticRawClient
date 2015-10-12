@@ -30,7 +30,7 @@ public class MatchQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
-        assertThat(queryString, is("{\"match\" : {\"name\" : \"Karcag\"}}"));
+        assertThat(queryString, is("{\"match\":{\"name\":\"Karcag\"}}"));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class MatchQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
-        assertThat(queryString, is("{\"match\" : {\"_all\" : \"Karcag\"}}"));
+        assertThat(queryString, is("{\"match\":{\"_all\":\"Karcag\"}}"));
     }
 
     // endregion

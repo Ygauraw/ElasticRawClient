@@ -21,10 +21,10 @@ public final class Query
         queryStringBuilder.append("{");
         if (size != null && size > 0)
             queryStringBuilder
-                .append("\"size\" : ")
-                .append("\"").append(size).append("\", ");
+                .append("\"size\":")
+                .append("\"").append(size).append("\",");
 
-        queryStringBuilder.append("\"query\" : ").append(innerQueryString).append("}");
+        queryStringBuilder.append("\"query\":").append(innerQueryString).append("}");
         return queryStringBuilder.toString();
     }
 

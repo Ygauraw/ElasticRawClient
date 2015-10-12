@@ -34,7 +34,7 @@ public class QueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
-        assertThat(queryString, is("{\"query\" : {\"match\" : {\"name\" : \"Budapest\"}}}"));
+        assertThat(queryString, is("{\"query\":{\"match\":{\"name\":\"Budapest\"}}}"));
     }
 
     @Test
@@ -55,7 +55,7 @@ public class QueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
-        assertThat(queryString, is("{\"size\" : \"1\", \"query\" : {\"match\" : {\"name\" : \"Budapest\"}}}"));
+        assertThat(queryString, is("{\"size\":\"1\",\"query\":{\"match\":{\"name\":\"Budapest\"}}}"));
     }
 
 
