@@ -1,14 +1,14 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries;
 
+import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
+
 public final class Query
         implements InnerQuery {
 
-    private final Integer size;
-    private final String innerQueryString;
+    private final QueryTypeArrayList<QueryTypeItem> queryTypeBag;
 
-    Query(Integer size, String innerQueryString) {
-        this.size = size;
-        this.innerQueryString = innerQueryString;
+    Query(QueryBuilder queryBuilder) {
+        queryTypeBag = queryBuilder.queryTypeBag;
     }
 
     public static QueryBuilder builder() {
@@ -17,36 +17,60 @@ public final class Query
 
     @Override
     public String getQueryString() {
-        StringBuilder queryStringBuilder = new StringBuilder();
-        queryStringBuilder.append("{");
-        if (size != null && size > 0)
-            queryStringBuilder
-                .append("\"size\":")
-                .append("\"").append(size).append("\",");
+        StringBuilder queryString = new StringBuilder();
 
-        queryStringBuilder.append("\"query\":").append(innerQueryString).append("}");
-        return queryStringBuilder.toString();
+        queryString.append("{");
+        for (int i = 0; i < queryTypeBag.size(); i++) {
+            if (i > 0)
+                queryString.append(",");
+
+            QueryTypeItem item = queryTypeBag.get(i);
+            if (item.getName().equals(QueryBuilder.INNER_QUERY)) {
+                queryString.append("\"query\":").append(item.getValue());
+            } else {
+                queryString
+                    .append("\"")
+                    .append(item.getName())
+                    .append("\":\"")
+                    .append(item.getValue())
+                    .append("\"");
+            }
+        }
+        queryString.append("}");
+
+        return queryString.toString();
     }
 
     public static class QueryBuilder {
-        private Integer size;
-        private String innerQueryString;
+        private final static String FROM = "from";
+        private final static String SIZE = "size";
+        private final static String INNER_QUERY = "INNER_QUERY";
+
+        private final QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
 
         QueryBuilder() {}
 
+        public QueryBuilder from(Integer from) {
+            if (!queryTypeBag.containsKey(FROM))
+                queryTypeBag.add(QueryTypeItem.builder().name(FROM).value(from.toString()).build());
+            return this;
+        }
+
         public QueryBuilder size(Integer size) {
-            this.size = size;
+            if (!queryTypeBag.containsKey(SIZE))
+                queryTypeBag.add(QueryTypeItem.builder().name(SIZE).value(size.toString()).build());
             return this;
         }
 
         public QueryBuilder innerQuery(InnerQuery query) {
             String queryString = query.getQueryString();
-            innerQueryString = queryString;
+            if (!queryTypeBag.containsKey(INNER_QUERY))
+                queryTypeBag.add(QueryTypeItem.builder().name(INNER_QUERY).value(queryString).build());
             return this;
         }
 
         public Query build() {
-            return new Query(size, innerQueryString);
+            return new Query(this);
         }
     }
 }

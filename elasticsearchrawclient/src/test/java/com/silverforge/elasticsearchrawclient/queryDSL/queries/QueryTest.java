@@ -18,7 +18,7 @@ public class QueryTest {
     // region Happy path
 
     @Test
-    public void defaultQueryTest() {
+    public void when_inner_query_added_then_query_generated_well() {
         MatchQuery matchQuery = MatchQuery
             .builder()
             .fieldName("name")
@@ -38,7 +38,7 @@ public class QueryTest {
     }
 
     @Test
-    public void sizeQueryTest() {
+    public void when_inner_query_and_size_added_then_query_generated_well() {
         Query query = Query
             .builder()
             .size(1)
@@ -54,6 +54,26 @@ public class QueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
         assertThat(queryString, is("{\"size\":\"1\",\"query\":{\"match\":{\"name\":\"Budapest\"}}}"));
+    }
+
+    @Test
+    public void when_inner_query_and_from_and_size_added_then_query_generated_well() {
+        Query query = Query
+            .builder()
+            .from(20)
+            .size(100)
+            .innerQuery(MatchQuery
+                .builder()
+                .fieldName("name")
+                .value("Budapest")
+                .build())
+            .build();
+
+        String queryString = query.getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+        assertThat(queryString, is("{\"from\":\"20\",\"size\":\"100\",\"query\":{\"match\":{\"name\":\"Budapest\"}}}"));
     }
 
 
