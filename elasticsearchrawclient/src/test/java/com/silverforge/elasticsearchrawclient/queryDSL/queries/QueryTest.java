@@ -39,16 +39,14 @@ public class QueryTest {
 
     @Test
     public void sizeQueryTest() {
-        MatchQuery matchQuery = MatchQuery
-            .builder()
-            .fieldName("name")
-            .value("Budapest")
-            .build();
-
         Query query = Query
             .builder()
             .size(1)
-            .innerQuery(matchQuery)
+            .innerQuery(MatchQuery
+                .builder()
+                .fieldName("name")
+                .value("Budapest")
+                .build())
             .build();
 
         String queryString = query.getQueryString();
