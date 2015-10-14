@@ -1,8 +1,10 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzyRewriteOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.PhraseTypeOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroTermsQueryOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
@@ -76,12 +78,14 @@ public class MatchQuery
         private final static String VALUE = "value";
         private final static String ANALYZER = "analyzer";
         private final static String FUZZINESS = "fuzziness";
+        private final static String FUZZY_REWRITE = "fuzzy_rewrite";
         private final static String MAX_EXPANSIONS = "max_expansions";
         private final static String LENIENT = "lenient";
         private final static String OPERATOR = "operator";
         private final static String PREFIX_LENGTH = "prefix_length";
         private final static String QUERY = "query";
         private final static String TYPE = "type";
+        private final static String ZERO_TERMS_QUERY = "zero_terms_query";
 
         private final QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
 
@@ -185,6 +189,22 @@ public class MatchQuery
             return this;
         }
 
+        public MatchQueryBuilder fuzzyRewrite(FuzzyRewriteOperator fuzzyRewriteOperator) {
+            return fuzzyRewrite(fuzzyRewriteOperator, (byte)1);
+        }
+
+        public MatchQueryBuilder fuzzyRewrite(FuzzyRewriteOperator fuzzyRewriteOperator, byte topN) {
+            if (!queryTypeBag.containsKey(FUZZY_REWRITE)) {
+                if (fuzzyRewriteOperator == FuzzyRewriteOperator.TOP_TERMS_N || fuzzyRewriteOperator == FuzzyRewriteOperator.TOP_TERMS_BOOST_N) {
+                    String fuzzyRewriteTop = fuzzyRewriteOperator.toString().replace("_N", "_" + topN);
+                    queryTypeBag.add(QueryTypeItem.builder().name(FUZZY_REWRITE).value(fuzzyRewriteTop).build());
+                } else {
+                    queryTypeBag.add(QueryTypeItem.builder().name(FUZZY_REWRITE).value(fuzzyRewriteOperator.toString()).build());
+                }
+            }
+            return this;
+        }
+
         public MatchQueryBuilder lenient(Boolean lenient) {
             if (!queryTypeBag.containsKey(LENIENT))
                 queryTypeBag.add(QueryTypeItem.builder().name(LENIENT).value(BooleanUtils.booleanValue(lenient)).build());
@@ -218,6 +238,12 @@ public class MatchQuery
         public MatchQueryBuilder type(PhraseTypeOperator phraseTypeOperator) {
             if (!queryTypeBag.containsKey(TYPE))
                 queryTypeBag.add(QueryTypeItem.builder().name(TYPE).value(phraseTypeOperator.toString()).build());
+            return this;
+        }
+
+        public MatchQueryBuilder zeroTermsQuery(ZeroTermsQueryOperator zeroTermsQueryOperator) {
+            if (!queryTypeBag.containsKey(ZERO_TERMS_QUERY))
+                queryTypeBag.add(QueryTypeItem.builder().name(ZERO_TERMS_QUERY).value(zeroTermsQueryOperator.toString()).build());
             return this;
         }
 

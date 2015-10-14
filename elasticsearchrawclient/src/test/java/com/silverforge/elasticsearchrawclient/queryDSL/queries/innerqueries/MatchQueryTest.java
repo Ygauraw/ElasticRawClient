@@ -2,8 +2,10 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzyRewriteOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.PhraseTypeOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroTermsQueryOperator;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,11 +64,13 @@ public class MatchQueryTest {
             .query("Karcag Budapest")
             .analyzer("standard")
             .fuzziness(FuzzinessOperator._0)
+            .fuzzyRewrite(FuzzyRewriteOperator.TOP_TERMS_BOOST_N, (byte)3)
             .lenient(false)
             .operator(LogicOperator.AND)
             .maxExpansions(2)
             .prefixLength(1)
             .type(PhraseTypeOperator.PHRASE)
+            .zeroTermsQuery(ZeroTermsQueryOperator.NONE)
             .build();
 
         String queryString = matchQuery.getQueryString();
@@ -78,11 +82,13 @@ public class MatchQueryTest {
         assertThat(queryString.indexOf("\"query\":\"Karcag Budapest\""), greaterThan(0));
         assertThat(queryString.indexOf("\"analyzer\":\"standard\""), greaterThan(0));
         assertThat(queryString.indexOf("\"fuzziness\":\"0\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"fuzzy_rewrite\":\"top_terms_boost_3\""), greaterThan(0));
         assertThat(queryString.indexOf("\"lenient\":\"false\""), greaterThan(0));
         assertThat(queryString.indexOf("\"operator\":\"and\""), greaterThan(0));
         assertThat(queryString.indexOf("\"max_expansions\":\"2\""), greaterThan(0));
         assertThat(queryString.indexOf("\"prefix_length\":\"1\""), greaterThan(0));
         assertThat(queryString.indexOf("\"type\":\"phrase\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"zero_terms_query\":\"none\""), greaterThan(0));
 
         assertThat(queryString.indexOf("\",\""), greaterThan(0));
         assertThat(queryString.indexOf("\"\""), is(-1));
