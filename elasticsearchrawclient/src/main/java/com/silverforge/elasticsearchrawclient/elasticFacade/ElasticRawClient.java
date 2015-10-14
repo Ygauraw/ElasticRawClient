@@ -4,6 +4,7 @@ import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkActionResu
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkTuple;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 
 import java.util.List;
 
@@ -55,4 +56,10 @@ public interface ElasticRawClient {
 	<T> List<T> search(String query, Class<T> classType);
 	<T> List<T> search(String index, String query, Class<T> classType);
     <T> Observable<T> searchAsync(String query, Class<T> classType);
+    <T> Observable<T> searchAsync(String index, String query, Class<T> classType);
+
+	<T> List<T> search(Queryable query, Class<T> classType);
+	<T> List<T> search(String index, Queryable query, Class<T> classType);
+    <T> Observable<T> searchAsync(Queryable query, Class<T> classType);
+    <T> Observable<T> searchAsync(String index, Queryable query, Class<T> classType);
 }

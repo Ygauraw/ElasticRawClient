@@ -18,6 +18,7 @@ import org.robolectric.annotation.Config;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -125,7 +126,9 @@ public class ElasticClientRemoveDocumentTest extends ElasticClientBaseTest {
             List<City> initialSearch = client.search("testcities", query, City.class);
             assertThat(initialSearch.size(), equalTo(2));
 
-            client.removeDocumentsQuery(new String[] {"testcities"}, new String[] {"testcity"}, query);
+            client.removeDocumentsQuery(new String[]{"testcities"}, new String[]{"testcity"}, query);
+
+            Thread.sleep(1000);
 
             List<City> search = client.search("testcities", query, City.class);
             assertThat(search.size(), equalTo(0));

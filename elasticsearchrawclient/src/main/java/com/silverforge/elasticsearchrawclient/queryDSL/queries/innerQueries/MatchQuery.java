@@ -3,7 +3,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.PhraseTypeOperator;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.InnerQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 public class MatchQuery
-        implements InnerQuery {
+        implements Queryable {
 
     private final QueryTypeArrayList<QueryTypeItem> queryTypeBag;
 

@@ -1,5 +1,5 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries;
 
-public interface InnerQuery {
+public interface Queryable {
     String getQueryString();
 }

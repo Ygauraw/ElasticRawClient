@@ -3,7 +3,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public final class Query
-        implements InnerQuery {
+        implements Queryable {
 
     private final QueryTypeArrayList<QueryTypeItem> queryTypeBag;
 
@@ -62,7 +62,7 @@ public final class Query
             return this;
         }
 
-        public QueryBuilder innerQuery(InnerQuery query) {
+        public QueryBuilder innerQuery(Queryable query) {
             String queryString = query.getQueryString();
             if (!queryTypeBag.containsKey(INNER_QUERY))
                 queryTypeBag.add(QueryTypeItem.builder().name(INNER_QUERY).value(queryString).build());

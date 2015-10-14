@@ -4,6 +4,10 @@ import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.Query;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.MatchQuery;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 
 import org.junit.Test;
@@ -14,16 +18,11 @@ import org.robolectric.annotation.Config;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import rx.Notification;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -116,6 +115,48 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
         assertThat(cityList.size(), greaterThan(0));
     }
 
+    @Test
+    public void when_query_builder_used_then_proper_data_retrieved() {
+
+        Query query = Query
+            .builder()
+            .from(0)
+            .size(10)
+            .innerQuery(MatchQuery
+                .builder()
+                .fieldName("name")
+                .value("Karcag")
+                .build())
+            .build();
+
+        List<City> cities = client.search(query, City.class);
+
+        assertThat(cities, notNullValue());
+        assertThat(cities.size(), is(1));
+        assertThat(cities.get(0).getName(), is("Karcag"));
+    }
+
+    @Test
+    public void when_query_builder_used_with_multiple_args_then_proper_data_retrieved() {
+
+        Query query = Query
+            .builder()
+            .from(0)
+            .size(10)
+            .innerQuery(MatchQuery
+                .builder()
+                .fieldName("name")
+                .query("Karcag Budapest")
+                .operator(LogicOperator.OR)
+                .build())
+            .build();
+
+        List<City> cities = client.search(query, City.class);
+
+        assertThat(cities, notNullValue());
+        assertThat(cities.size(), is(2));
+    }
+
     // endregion
 
     // region Sad path
@@ -129,7 +170,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
 
     @Test
     public void searchNullTest() {
-        List<City> cities = client.search(null, City.class);
+        List<City> cities = client.search((String)null, City.class);
 
         assertNotNull(cities);
     }

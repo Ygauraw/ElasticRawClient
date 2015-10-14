@@ -1,9 +1,9 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.InnerQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 
 public class MoreLikeThisQuery
-    implements InnerQuery {
+    implements Queryable {
 
     @Override
     public String getQueryString() {

@@ -14,6 +14,7 @@ import com.silverforge.elasticsearchrawclient.elasticFacade.operations.IndexOper
 import com.silverforge.elasticsearchrawclient.elasticFacade.operations.QueryOperations;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -511,6 +512,10 @@ public class ElasticClient implements ElasticRawClient {
 	 * @return List of entity/entities retrieved by query
 	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
 	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+	 * @return List of entity/entities retrieved by query
+	 *
+	 * @deprecated in v2.0
+	 * @see #search(Queryable, Class <T>)
 	 */
 	@Override
 	public <T> List<T> search(String query, Class<T> classType) {
@@ -534,6 +539,9 @@ public class ElasticClient implements ElasticRawClient {
 	 * @param <T> the type of the entity
      * @throws IllegalArgumentException
 	 * @return List of entity/entities retrieved by query
+	 *
+	 * @deprecated in v2.0
+	 * @see #search(String, Queryable, Class <T>)
 	 */
 	@Override
 	public <T> List<T> search(String index, String query, Class<T> classType)
@@ -558,6 +566,10 @@ public class ElasticClient implements ElasticRawClient {
      * @return List of entity/entities retrieved by query
      * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
      * @see ElasticClient#ElasticClient(ConnectorSettings settings)
+	 * @return List of entity/entities retrieved by query
+	 *
+	 * @deprecated in v2.0
+	 * @see #searchAsync(Queryable, Class <T>)
      */
     public <T> Observable<T> searchAsync(String query, Class<T> classType) {
         return Observable.create(subscriber -> {
@@ -574,7 +586,7 @@ public class ElasticClient implements ElasticRawClient {
         });
     }
 
-    /**
+	/**
      * Searches in index based on the query and retrieves with the data sequence of entities
      * @param index the index
      * @param query the query, e.g.:
@@ -591,30 +603,79 @@ public class ElasticClient implements ElasticRawClient {
      * @param <T> the type of the entity
      * @throws IllegalArgumentException check onError
      * @return List of entity/entities retrieved by query
+	 *
+	 * @deprecated in v2.0
+	 * @see #searchAsync(String, Queryable, Class <T>)
      */
     public <T> Observable<T> searchAsync(String index, String query, Class<T> classType) {
         return Observable.create(subscriber -> {
-            if (TextUtils.isEmpty(index)) {
-                IllegalArgumentException illegalArgumentException = new IllegalArgumentException("index cannot be null or empty");
-                subscriber.onError(illegalArgumentException);
-                subscriber.onCompleted();
-            } else {
-                try {
-                    List<T> searchResult = search(index, query, classType);
-                    Observable
-                            .from(searchResult)
-                            .subscribe(subscriber::onNext);
+			if (TextUtils.isEmpty(index)) {
+				IllegalArgumentException illegalArgumentException = new IllegalArgumentException("index cannot be null or empty");
+				subscriber.onError(illegalArgumentException);
+				subscriber.onCompleted();
+			} else {
+				try {
+					List<T> searchResult = search(index, query, classType);
+					Observable
+						.from(searchResult)
+						.subscribe(subscriber::onNext);
 
-                } catch (Exception e) {
-                    subscriber.onError(e);
-                } finally {
-                    subscriber.onCompleted();
-                }
-            }
-        });
+				} catch (Exception e) {
+					subscriber.onError(e);
+				} finally {
+					subscriber.onCompleted();
+				}
+			}
+		});
     }
 
-    // endregion
+
+	public <T> List<T> search(Queryable query, Class<T> classType) {
+		return queryOperations.search(query, classType);
+	}
+
+	public <T> List<T> search(String index, Queryable query, Class<T> classType) {
+		return queryOperations.search(index, query, classType);
+	}
+
+	public <T> Observable<T> searchAsync(Queryable query, Class<T> classType) {
+		return Observable.create(subscriber -> {
+			try {
+				List<T> searchResult = queryOperations.search(query, classType);
+				Observable
+					.from(searchResult)
+					.subscribe(subscriber::onNext);
+			} catch (Exception e) {
+				subscriber.onError(e);
+			} finally {
+				subscriber.onCompleted();
+			}
+		});
+	}
+
+	public <T> Observable<T> searchAsync(String index, Queryable query, Class<T> classType) {
+		return Observable.create(subscriber -> {
+			if (TextUtils.isEmpty(index)) {
+				IllegalArgumentException illegalArgumentException = new IllegalArgumentException("index cannot be null or empty");
+				subscriber.onError(illegalArgumentException);
+				subscriber.onCompleted();
+			} else {
+				try {
+					List<T> searchResult = queryOperations.search(index, query, classType);
+					Observable
+						.from(searchResult)
+						.subscribe(subscriber::onNext);
+
+				} catch (Exception e) {
+					subscriber.onError(e);
+				} finally {
+					subscriber.onCompleted();
+				}
+			}
+		});
+	}
+
+	// endregion
 
 	/**
 	 * Proxy class for connector in order to have "raw" access to ElasticSearch
