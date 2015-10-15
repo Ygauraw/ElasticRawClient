@@ -26,6 +26,7 @@ public class MatchQueryTest {
 
     @Test
     public void when_String_value_added_with_field_name_then_query_generated_well() {
+
         MatchQuery matchQuery =
             MatchQuery
                 .builder()
@@ -67,6 +68,7 @@ public class MatchQueryTest {
             .fuzzyRewrite(FuzzyRewriteOperator.TOP_TERMS_BOOST_N, (byte)3)
             .lenient(false)
             .operator(LogicOperator.AND)
+            .minimumShouldMatchPercentage(12)
             .maxExpansions(2)
             .prefixLength(1)
             .type(PhraseTypeOperator.PHRASE)
@@ -85,6 +87,7 @@ public class MatchQueryTest {
         assertThat(queryString.indexOf("\"fuzzy_rewrite\":\"top_terms_boost_3\""), greaterThan(0));
         assertThat(queryString.indexOf("\"lenient\":\"false\""), greaterThan(0));
         assertThat(queryString.indexOf("\"operator\":\"and\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"minimum_should_match\":\"12%\""), greaterThan(0));
         assertThat(queryString.indexOf("\"max_expansions\":\"2\""), greaterThan(0));
         assertThat(queryString.indexOf("\"prefix_length\":\"1\""), greaterThan(0));
         assertThat(queryString.indexOf("\"type\":\"phrase\""), greaterThan(0));
@@ -126,6 +129,7 @@ public class MatchQueryTest {
 
     @Test
     public void when_no_fields_defined_then_query_generated_well() {
+
         MatchQuery matchQuery =
             MatchQuery
                 .builder()

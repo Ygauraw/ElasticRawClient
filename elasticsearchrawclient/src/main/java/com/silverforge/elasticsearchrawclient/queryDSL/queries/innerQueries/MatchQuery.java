@@ -17,14 +17,10 @@ import java.util.List;
 public class MatchQuery
         implements Queryable {
 
-    private final QueryTypeArrayList<QueryTypeItem> queryTypeBag;
+    protected final QueryTypeArrayList<QueryTypeItem> queryTypeBag;
 
-    MatchQuery(MatchQueryBuilder matchQueryBuilder) {
-        queryTypeBag = matchQueryBuilder.queryTypeBag;
-    }
-
-    public static MatchQueryBuilder builder() {
-         return new MatchQueryBuilder();
+    MatchQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
+        this.queryTypeBag = queryTypeBag;
     }
 
     public String getQueryString() {
@@ -45,7 +41,7 @@ public class MatchQuery
             queryString.append("\"\"");
         } else if (nonParentItems.size() == 1) {
             QueryTypeItem item = nonParentItems.get(0);
-            if (item.getName().toLowerCase().equals(MatchQueryBuilder.VALUE)) {
+            if (item.getName().toLowerCase().equals(Init.VALUE)) {
                 queryString.append("\"").append(item.getValue()).append("\"");
             } else {
                 queryString.append("\"\"");
@@ -73,12 +69,24 @@ public class MatchQuery
         return queryString.toString();
     }
 
-    public static class MatchQueryBuilder {
+    public static Init<?> builder() {
+         return new MatchQueryBuilder();
+    }
+
+    public static class MatchQueryBuilder extends Init<MatchQueryBuilder> {
+        @Override
+        protected MatchQueryBuilder self() {
+            return this;
+        }
+    }
+
+    public static abstract class Init<T extends Init<T>> {
         private final static String FIELD_NAME = "FIELDNAME";
         private final static String VALUE = "value";
         private final static String ANALYZER = "analyzer";
         private final static String FUZZINESS = "fuzziness";
         private final static String FUZZY_REWRITE = "fuzzy_rewrite";
+        private final static String MINIMUM_SHOULD_MATCH = "minimum_should_match";
         private final static String MAX_EXPANSIONS = "max_expansions";
         private final static String LENIENT = "lenient";
         private final static String OPERATOR = "operator";
@@ -89,111 +97,111 @@ public class MatchQuery
 
         private final QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
 
-        MatchQueryBuilder() {}
+        protected abstract T self();
 
-        public MatchQueryBuilder fieldName(String fieldName) {
+        public T fieldName(String fieldName) {
             if (!queryTypeBag.containsKey(FIELD_NAME))
                 queryTypeBag.add(QueryTypeItem.builder().name(FIELD_NAME).value(fieldName).isParent(true).build());
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder allFields() {
+        public T allFields() {
             if (!queryTypeBag.containsKey(FIELD_NAME))
                 queryTypeBag.add(QueryTypeItem.builder().name(FIELD_NAME).value("_all").isParent(true).build());
-            return this;
+            return self();
         }
 
         // region value operators
 
-        public MatchQueryBuilder value(String value) {
+        public T value(String value) {
             if (!queryTypeBag.containsKey(VALUE))
                 queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value).build());
-            return this;
+            return self();
         }
 
         // region integer numbers
 
-        public MatchQueryBuilder value(Byte value) {
+        public T value(Byte value) {
             if (!queryTypeBag.containsKey(VALUE))
                 queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value.toString()).build());
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder value(Short value) {
+        public T value(Short value) {
             if (!queryTypeBag.containsKey(VALUE))
                 queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value.toString()).build());
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder value(Integer value) {
+        public T value(Integer value) {
             if (!queryTypeBag.containsKey(VALUE))
                 queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value.toString()).build());
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder value(Long value) {
+        public T value(Long value) {
             if (!queryTypeBag.containsKey(VALUE))
                 queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value.toString()).build());
-            return this;
+            return self();
         }
 
         // endregion
 
         // region float numbers
 
-        public MatchQueryBuilder value(Float value) {
+        public T value(Float value) {
             if (!queryTypeBag.containsKey(VALUE))
                 queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value.toString()).build());
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder value(Double value) {
+        public T value(Double value) {
             if (!queryTypeBag.containsKey(VALUE))
                 queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value.toString()).build());
-            return this;
+            return self();
         }
 
         // endregion
 
-        public MatchQueryBuilder value(Date value, String format) {
+        public T value(Date value, String format) {
             if (!queryTypeBag.containsKey(VALUE)) {
                 SimpleDateFormat formatter = new SimpleDateFormat(format);
                 queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(formatter.format(value)).build());
             }
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder value(Boolean value) {
+        public T value(Boolean value) {
             if (!queryTypeBag.containsKey(VALUE))
                 queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(BooleanUtils.booleanValue(value)).build());
-            return this;
+            return self();
         }
 
         // endregion
 
-        public MatchQueryBuilder analyzer(String analyzer) {
+        public T analyzer(String analyzer) {
             if (!queryTypeBag.containsKey(ANALYZER))
                 queryTypeBag.add(QueryTypeItem.builder().name(ANALYZER).value(analyzer).build());
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder fuzziness(FuzzinessOperator fuzzinessOperator) {
+        public T fuzziness(FuzzinessOperator fuzzinessOperator) {
             if (!queryTypeBag.containsKey(FUZZINESS))
                 queryTypeBag.add(QueryTypeItem.builder().name(FUZZINESS).value(fuzzinessOperator.toString()).build());
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder fuzziness(String fuzzinessOperator) {
+        public T fuzziness(String fuzzinessOperator) {
             if (!queryTypeBag.containsKey(FUZZINESS))
                 queryTypeBag.add(QueryTypeItem.builder().name(FUZZINESS).value(fuzzinessOperator).build());
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder fuzzyRewrite(FuzzyRewriteOperator fuzzyRewriteOperator) {
+        public T fuzzyRewrite(FuzzyRewriteOperator fuzzyRewriteOperator) {
             return fuzzyRewrite(fuzzyRewriteOperator, (byte)1);
         }
 
-        public MatchQueryBuilder fuzzyRewrite(FuzzyRewriteOperator fuzzyRewriteOperator, byte topN) {
+        public T fuzzyRewrite(FuzzyRewriteOperator fuzzyRewriteOperator, byte topN) {
             if (!queryTypeBag.containsKey(FUZZY_REWRITE)) {
                 if (fuzzyRewriteOperator == FuzzyRewriteOperator.TOP_TERMS_N || fuzzyRewriteOperator == FuzzyRewriteOperator.TOP_TERMS_BOOST_N) {
                     String fuzzyRewriteTop = fuzzyRewriteOperator.toString().replace("_N", "_" + topN);
@@ -202,53 +210,79 @@ public class MatchQuery
                     queryTypeBag.add(QueryTypeItem.builder().name(FUZZY_REWRITE).value(fuzzyRewriteOperator.toString()).build());
                 }
             }
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder lenient(Boolean lenient) {
+        public T lenient(boolean lenient) {
             if (!queryTypeBag.containsKey(LENIENT))
                 queryTypeBag.add(QueryTypeItem.builder().name(LENIENT).value(BooleanUtils.booleanValue(lenient)).build());
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder maxExpansions(Integer maxExpansions) {
+        public T minimumShouldMatch(int value) {
+            if (!queryTypeBag.containsKey(MINIMUM_SHOULD_MATCH))
+                queryTypeBag.add(QueryTypeItem.builder().name(MINIMUM_SHOULD_MATCH).value(Integer.toString(value)).build());
+            return self();
+        }
+
+        public T minimumShouldMatchPercentage(int value) {
+            if (!queryTypeBag.containsKey(MINIMUM_SHOULD_MATCH))
+                queryTypeBag.add(QueryTypeItem.builder().name(MINIMUM_SHOULD_MATCH).value(value + "%").build());
+            return self();
+        }
+
+        public T minimumShouldMatchPercentage(float value) {
+            if (!queryTypeBag.containsKey(MINIMUM_SHOULD_MATCH)) {
+                String percentage = (value * 100) + "%";
+                queryTypeBag.add(QueryTypeItem.builder().name(MINIMUM_SHOULD_MATCH).value(percentage).build());
+            }
+            return self();
+        }
+
+        public T minimumShouldMatchCombination(String expression) {
+            if (!queryTypeBag.containsKey(MINIMUM_SHOULD_MATCH))
+                queryTypeBag.add(QueryTypeItem.builder().name(MINIMUM_SHOULD_MATCH).value(expression).build());
+            return self();
+        }
+
+        public T maxExpansions(int maxExpansions) {
             if (!queryTypeBag.containsKey(MAX_EXPANSIONS))
-                queryTypeBag.add(QueryTypeItem.builder().name(MAX_EXPANSIONS).value(maxExpansions.toString()).build());
-            return this;
+                queryTypeBag.add(QueryTypeItem.builder().name(MAX_EXPANSIONS).value(Integer.toString(maxExpansions)).build());
+            return self();
         }
 
-        public MatchQueryBuilder operator(LogicOperator queryOperator) {
+        public T operator(LogicOperator queryOperator) {
             if (!queryTypeBag.containsKey(OPERATOR))
                 queryTypeBag.add(QueryTypeItem.builder().name(OPERATOR).value(queryOperator.toString()).build());
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder prefixLength(Integer prefixLength) {
+        public T prefixLength(int prefixLength) {
             if (!queryTypeBag.containsKey(PREFIX_LENGTH))
-                queryTypeBag.add(QueryTypeItem.builder().name(PREFIX_LENGTH).value(prefixLength.toString()).build());
-            return this;
+                queryTypeBag.add(QueryTypeItem.builder().name(PREFIX_LENGTH).value(Integer.toString(prefixLength)).build());
+            return self();
         }
 
-        public MatchQueryBuilder query(String queryExpression) {
+        public T query(String queryExpression) {
             if (!queryTypeBag.containsKey(QUERY))
                 queryTypeBag.add(QueryTypeItem.builder().name(QUERY).value(queryExpression).build());
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder type(PhraseTypeOperator phraseTypeOperator) {
+        public T type(PhraseTypeOperator phraseTypeOperator) {
             if (!queryTypeBag.containsKey(TYPE))
                 queryTypeBag.add(QueryTypeItem.builder().name(TYPE).value(phraseTypeOperator.toString()).build());
-            return this;
+            return self();
         }
 
-        public MatchQueryBuilder zeroTermsQuery(ZeroTermsQueryOperator zeroTermsQueryOperator) {
+        public T zeroTermsQuery(ZeroTermsQueryOperator zeroTermsQueryOperator) {
             if (!queryTypeBag.containsKey(ZERO_TERMS_QUERY))
                 queryTypeBag.add(QueryTypeItem.builder().name(ZERO_TERMS_QUERY).value(zeroTermsQueryOperator.toString()).build());
-            return this;
+            return self();
         }
 
         public MatchQuery build() {
-            return new MatchQuery(this);
+            return new MatchQuery(queryTypeBag);
         }
     }
 }
