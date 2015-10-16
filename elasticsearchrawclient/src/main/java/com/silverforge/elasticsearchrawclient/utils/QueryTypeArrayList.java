@@ -3,8 +3,10 @@ package com.silverforge.elasticsearchrawclient.utils;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class QueryTypeArrayList<T extends QueryTypeItem> extends ArrayList<T> {
 
@@ -55,5 +57,29 @@ public class QueryTypeArrayList<T extends QueryTypeItem> extends ArrayList<T> {
         }
 
         return retValue;
+    }
+
+    public boolean hasKeys(String... keys) {
+        boolean hasValues = false;
+        HashMap<String, Boolean> wordCheckTable = new HashMap<>();
+        for (String word : keys) {
+            wordCheckTable.put(word, false);
+        }
+
+        Iterator<T> iterator = iterator();
+
+        if (size() > 0) {
+            while (iterator.hasNext()) {
+                T item = iterator.next();
+
+                for (Map.Entry<String, Boolean> entry : wordCheckTable.entrySet()) {
+                    if (item.equals(entry.getKey()))
+                        entry.setValue(true);
+                }
+            }
+
+            hasValues = !wordCheckTable.containsValue(false);
+        }
+        return hasValues;
     }
 }
