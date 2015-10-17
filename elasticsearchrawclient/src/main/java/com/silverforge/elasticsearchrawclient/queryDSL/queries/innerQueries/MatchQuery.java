@@ -9,6 +9,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.operators.PhraseTypeOpera
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroTermsQueryOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.commonquerytemplates.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
@@ -17,12 +18,10 @@ import java.util.Date;
 import java.util.List;
 
 public class MatchQuery
-        implements Queryable {
-
-    protected final QueryTypeArrayList<QueryTypeItem> queryTypeBag;
+        extends MinimumShouldMatchQuery {
 
     MatchQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-        this.queryTypeBag = queryTypeBag;
+        super(queryTypeBag);
     }
 
     public String getQueryString() {
@@ -87,13 +86,12 @@ public class MatchQuery
         }
     }
 
-    public static abstract class Init<T extends Init<T>> {
+    public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.Init<T> {
         private final static String FIELD_NAME = "FIELDNAME";
         private final static String VALUE = "value";
         private final static String ANALYZER = "analyzer";
         private final static String FUZZINESS = "fuzziness";
         private final static String FUZZY_REWRITE = "fuzzy_rewrite";
-        private final static String MINIMUM_SHOULD_MATCH = "minimum_should_match";
         private final static String MAX_EXPANSIONS = "max_expansions";
         private final static String LENIENT = "lenient";
         private final static String OPERATOR = "operator";
@@ -101,8 +99,6 @@ public class MatchQuery
         private final static String QUERY = "query";
         private final static String TYPE = "type";
         private final static String ZERO_TERMS_QUERY = "zero_terms_query";
-
-        protected final QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
 
         protected abstract T self();
 
@@ -257,48 +253,6 @@ public class MatchQuery
                                     .builder()
                                     .name(LENIENT)
                                     .value(BooleanUtils.booleanValue(lenient))
-                                    .build());
-            return self();
-        }
-
-        public T minimumShouldMatch(int value) {
-            if (!queryTypeBag.containsKey(MINIMUM_SHOULD_MATCH))
-                queryTypeBag.add(QueryTypeItem
-                                    .builder()
-                                    .name(MINIMUM_SHOULD_MATCH)
-                                    .value(Integer.toString(value))
-                                    .build());
-            return self();
-        }
-
-        public T minimumShouldMatchPercentage(int value) {
-            if (!queryTypeBag.containsKey(MINIMUM_SHOULD_MATCH))
-                queryTypeBag.add(QueryTypeItem
-                                    .builder()
-                                    .name(MINIMUM_SHOULD_MATCH)
-                                    .value(value + "%")
-                                    .build());
-            return self();
-        }
-
-        public T minimumShouldMatchPercentage(float value) {
-            if (!queryTypeBag.containsKey(MINIMUM_SHOULD_MATCH)) {
-                String percentage = (value * 100) + "%";
-                queryTypeBag.add(QueryTypeItem
-                                    .builder()
-                                    .name(MINIMUM_SHOULD_MATCH)
-                                    .value(percentage)
-                                    .build());
-            }
-            return self();
-        }
-
-        public T minimumShouldMatchCombination(String expression) {
-            if (!queryTypeBag.containsKey(MINIMUM_SHOULD_MATCH))
-                queryTypeBag.add(QueryTypeItem
-                                    .builder()
-                                    .name(MINIMUM_SHOULD_MATCH)
-                                    .value(expression)
                                     .build());
             return self();
         }

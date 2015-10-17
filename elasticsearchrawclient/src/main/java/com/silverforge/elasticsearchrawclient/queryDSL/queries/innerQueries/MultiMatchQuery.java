@@ -1,10 +1,8 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
-import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.MultiMatchTypeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.TieBreakerOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
@@ -12,8 +10,7 @@ import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 import java.util.Date;
 
 public class MultiMatchQuery
-    extends MatchQuery
-    implements Queryable {
+    extends MatchQuery {
 
     MultiMatchQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
         super(queryTypeBag);
