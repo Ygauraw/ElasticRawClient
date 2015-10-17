@@ -1,5 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
+import android.text.TextUtils;
+
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzyRewriteOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
@@ -43,7 +45,10 @@ public class MatchQuery
         } else if (nonParentItems.size() == 1) {
             QueryTypeItem item = nonParentItems.get(0);
             if (item.getName().toLowerCase().equals(Init.VALUE)) {
-                queryString.append("\"").append(item.getValue()).append("\"");
+                String value = item.getValue();
+                if (value == null)
+                    value = "";
+                queryString.append("\"").append(value).append("\"");
             } else {
                 queryString.append("\"\"");
             }
@@ -102,6 +107,9 @@ public class MatchQuery
         protected abstract T self();
 
         public T fieldName(String fieldName) {
+            if (TextUtils.isEmpty(fieldName))
+                return allFields();
+
             if (!queryTypeBag.containsKey(FIELD_NAME))
                 queryTypeBag.add(QueryTypeItem
                                     .builder()
@@ -133,27 +141,27 @@ public class MatchQuery
 
         // region integer numbers
 
-        public T value(Byte value) {
+        public T value(byte value) {
             if (!queryTypeBag.containsKey(VALUE))
-                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value.toString()).build());
+                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(Byte.toString(value)).build());
             return self();
         }
 
-        public T value(Short value) {
+        public T value(short value) {
             if (!queryTypeBag.containsKey(VALUE))
-                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value.toString()).build());
+                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(Short.toString(value)).build());
             return self();
         }
 
-        public T value(Integer value) {
+        public T value(int value) {
             if (!queryTypeBag.containsKey(VALUE))
-                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value.toString()).build());
+                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(Integer.toString(value)).build());
             return self();
         }
 
-        public T value(Long value) {
+        public T value(long value) {
             if (!queryTypeBag.containsKey(VALUE))
-                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value.toString()).build());
+                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(Long.toString(value)).build());
             return self();
         }
 
@@ -161,15 +169,15 @@ public class MatchQuery
 
         // region float numbers
 
-        public T value(Float value) {
+        public T value(float value) {
             if (!queryTypeBag.containsKey(VALUE))
-                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value.toString()).build());
+                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(Float.toString(value)).build());
             return self();
         }
 
-        public T value(Double value) {
+        public T value(double value) {
             if (!queryTypeBag.containsKey(VALUE))
-                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value.toString()).build());
+                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(Double.toString(value)).build());
             return self();
         }
 
@@ -183,7 +191,7 @@ public class MatchQuery
             return self();
         }
 
-        public T value(Boolean value) {
+        public T value(boolean value) {
             if (!queryTypeBag.containsKey(VALUE))
                 queryTypeBag.add(QueryTypeItem
                                     .builder()

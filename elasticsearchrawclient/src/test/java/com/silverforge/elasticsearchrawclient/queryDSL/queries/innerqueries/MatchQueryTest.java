@@ -157,5 +157,20 @@ public class MatchQueryTest {
         assertThat(queryString, is("{\"match\":{\"_all\":\"\"}}"));
     }
 
+    @Test
+    public void when_null_parameters_set_then_most_generic_query_generated() {
+        MatchQuery matchQuery = MatchQuery
+            .builder()
+            .fieldName(null)
+            .value(null)
+            .build();
+
+        String queryString = matchQuery.getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+        assertThat(queryString, is("{\"match\":{\"_all\":\"\"}}"));
+    }
+
     // endregion
 }

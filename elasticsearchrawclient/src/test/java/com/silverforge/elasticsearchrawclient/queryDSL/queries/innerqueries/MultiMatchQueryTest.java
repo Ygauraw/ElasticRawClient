@@ -68,5 +68,19 @@ public class MultiMatchQueryTest {
 
     // region Sad path
 
+    @Test
+    public void when_no_parameters_defined_then_query_is_empty() {
+        MultiMatchQuery query = MultiMatchQuery
+            .builder()
+            .build();
+
+        String queryString = query.getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString, is("{\"multi_match\":{}}"));
+    }
+
     //
 }
