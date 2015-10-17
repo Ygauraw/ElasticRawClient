@@ -2,61 +2,98 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.commonquerytemplates.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public class BoolQuery
-    implements Queryable {
-
-    private QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
+    extends MinimumShouldMatchQuery {
 
     public BoolQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-
+        super(queryTypeBag);
     }
 
-    public static BoolQueryBuilder builder() {
+    public static Init<?> builder() {
         return new BoolQueryBuilder();
     }
 
     @Override
     public String getQueryString() {
-        return null;
+
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("{\"bool\":{");
+
+        for (int i = 0; i < queryTypeBag.size(); i++) {
+            if (i > 0)
+                queryString.append(",");
+
+            QueryTypeItem item = queryTypeBag.get(i);
+            queryString.append("\"").append(item.getName()).append("\":");
+            String value = item.getValue();
+            if (value.startsWith("{") || value.startsWith("[")) {
+                queryString.append(value);
+            } else {
+                queryString.append("\"").append(value).append("\"");
+            }
+        }
+
+        queryString.append("}}");
+        return queryString.toString();
     }
 
-    public static class BoolQueryBuilder {
+    public static class BoolQueryBuilder extends Init<BoolQueryBuilder> {
+        @Override
+        protected BoolQueryBuilder self() {
+            return this;
+        }
+    }
+
+    public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.Init<T> {
         private static final String MUST = "must";
         private static final String MUST_NOT = "must_not";
         private static final String SHOULD = "should";
         private static final String DISABLE_COORD = "disable_coord";
-        private static final String MINIMUM_SHOULD_MATCH = "minimum_should_match";
+        private static final String BOOST = "boost";
 
-        private QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
+        protected abstract T self();
 
-        public BoolQueryBuilder must(Queryable... queries) {
+        public T must(Queryable... queries) {
             String mustQuery = queryableBuilder(queries);
             if (!queryTypeBag.containsKey(MUST))
                 queryTypeBag.add(QueryTypeItem.builder().name(MUST).value(mustQuery).build());
-            return this;
+            return self();
         }
 
-        public BoolQueryBuilder mustNot(Queryable... queries) {
+        public T mustNot(Queryable... queries) {
             String mustNotQuery = queryableBuilder(queries);
             if (!queryTypeBag.containsKey(MUST_NOT))
                 queryTypeBag.add(QueryTypeItem.builder().name(MUST_NOT).value(mustNotQuery).build());
-            return this;
+            return self();
         }
 
-        public BoolQueryBuilder should(Queryable... queries) {
+        public T should(Queryable... queries) {
             String shouldQuery = queryableBuilder(queries);
             if (!queryTypeBag.containsKey(SHOULD))
                 queryTypeBag.add(QueryTypeItem.builder().name(SHOULD).value(shouldQuery).build());
-            return this;
+            return self();
         }
 
-        public BoolQueryBuilder disableCoord(boolean value) {
+        public T disableCoord(boolean value) {
             if(!queryTypeBag.containsKey(DISABLE_COORD))
                 queryTypeBag.add(QueryTypeItem.builder().name(DISABLE_COORD).value(BooleanUtils.booleanValue(value)).build());
-            return this;
+            return self();
+        }
+
+        public T boost(int boost) {
+            if (!queryTypeBag.containsKey(BOOST))
+                queryTypeBag.add(QueryTypeItem.builder().name(BOOST).value(Integer.toString(boost)).build());
+            return self();
+        }
+
+        public T boost(float boost) {
+            if (!queryTypeBag.containsKey(BOOST))
+                queryTypeBag.add(QueryTypeItem.builder().name(BOOST).value(Float.toString(boost)).build());
+            return self();
         }
 
         public BoolQuery build() {

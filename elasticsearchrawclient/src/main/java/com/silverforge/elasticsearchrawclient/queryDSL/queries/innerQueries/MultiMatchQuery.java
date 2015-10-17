@@ -70,7 +70,7 @@ public class MultiMatchQuery
 
         protected abstract T self();
 
-        public T fields(String[] fields) {
+        public T fields(String... fields) {
             return fields(fields, false);
         }
 

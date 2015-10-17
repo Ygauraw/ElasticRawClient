@@ -222,7 +222,7 @@ public class MatchQuery
         }
 
         public T fuzzyRewrite(FuzzyRewriteOperator fuzzyRewriteOperator) {
-            return fuzzyRewrite(fuzzyRewriteOperator, (byte)1);
+            return fuzzyRewrite(fuzzyRewriteOperator, (byte) 1);
         }
 
         public T fuzzyRewrite(FuzzyRewriteOperator fuzzyRewriteOperator, byte topN) {
