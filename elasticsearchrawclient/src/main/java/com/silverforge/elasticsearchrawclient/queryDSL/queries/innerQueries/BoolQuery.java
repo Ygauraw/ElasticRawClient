@@ -5,6 +5,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.commonquerytemplates.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
+import com.silverforge.elasticsearchrawclient.utils.QueryUtils;
 
 public class BoolQuery
     extends MinimumShouldMatchQuery {
@@ -58,21 +59,21 @@ public class BoolQuery
         protected abstract T self();
 
         public T must(Queryable... queries) {
-            String mustQuery = queryableBuilder(queries);
+            String mustQuery = QueryUtils.queryableBuilder(queries);
             if (!queryTypeBag.containsKey(MUST))
                 queryTypeBag.add(QueryTypeItem.builder().name(MUST).value(mustQuery).build());
             return self();
         }
 
         public T mustNot(Queryable... queries) {
-            String mustNotQuery = queryableBuilder(queries);
+            String mustNotQuery = QueryUtils.queryableBuilder(queries);
             if (!queryTypeBag.containsKey(MUST_NOT))
                 queryTypeBag.add(QueryTypeItem.builder().name(MUST_NOT).value(mustNotQuery).build());
             return self();
         }
 
         public T should(Queryable... queries) {
-            String shouldQuery = queryableBuilder(queries);
+            String shouldQuery = QueryUtils.queryableBuilder(queries);
             if (!queryTypeBag.containsKey(SHOULD))
                 queryTypeBag.add(QueryTypeItem.builder().name(SHOULD).value(shouldQuery).build());
             return self();
@@ -98,21 +99,6 @@ public class BoolQuery
 
         public BoolQuery build() {
             return new BoolQuery(queryTypeBag);
-        }
-
-        private String queryableBuilder(Queryable[] queryables) {
-            StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.append("[");
-
-            for (int i = 0; i < queryables.length; i++) {
-                if (i > 0)
-                    queryBuilder.append(",");
-
-                queryBuilder.append(queryables[i].getQueryString());
-            }
-
-            queryBuilder.append("]");
-            return queryBuilder.toString();
         }
     }
 }
