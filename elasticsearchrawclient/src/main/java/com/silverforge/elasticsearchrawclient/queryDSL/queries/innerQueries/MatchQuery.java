@@ -2,6 +2,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import android.text.TextUtils;
 
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.AnalyzerOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzyRewriteOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
@@ -202,6 +203,12 @@ public class MatchQuery
         public T analyzer(String analyzer) {
             if (!queryTypeBag.containsKey(ANALYZER))
                 queryTypeBag.add(QueryTypeItem.builder().name(ANALYZER).value(analyzer).build());
+            return self();
+        }
+
+        public T analyzer(AnalyzerOperator analyzer) {
+            if (!queryTypeBag.containsKey(ANALYZER))
+                queryTypeBag.add(QueryTypeItem.builder().name(ANALYZER).value(analyzer.toString()).build());
             return self();
         }
 
