@@ -3,22 +3,23 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.TieBreakerOperator;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
 public class BoolQueryTest {
 
+    // region Happy path
+
     @Test
-    public void when_must_defined_then_query_generated_with_must() {
+    public void when_query_fully_defined_then_query_generated_with_must_should_must_not() {
         BoolQuery query = BoolQuery
             .builder()
             .must(
@@ -61,5 +62,36 @@ public class BoolQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"bool\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
+        assertThat(queryString.indexOf("\"must\":["), greaterThan(0));
+        assertThat(queryString.indexOf("\"must_not\":["), greaterThan(0));
+        assertThat(queryString.indexOf("\"should\":["), greaterThan(0));
+
+        assertThat(queryString.indexOf("\"minimum_should_match\":\"23\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"disable_coord\":\"false\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"boost\":\"1.0\""), greaterThan(0));
     }
+
+    // endregion
+
+    // region Sad path
+
+    @Test
+    public void when_no_parameters_defined_then_empty_query_string_is_generated() {
+        BoolQuery query = BoolQuery
+            .builder()
+            .build();
+
+        String queryString = query.getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString, is("{\"bool\":{}}"));
+    }
+
+    // endregion
 }
