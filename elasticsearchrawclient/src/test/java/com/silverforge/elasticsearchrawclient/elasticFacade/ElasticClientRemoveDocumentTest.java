@@ -10,6 +10,7 @@ import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullExcepti
 import com.silverforge.elasticsearchrawclient.testModel.City;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -76,6 +77,7 @@ public class ElasticClientRemoveDocumentTest extends ElasticClientBaseTest {
     }
 
     @Test
+    @Ignore
     public void removeDocumentsQueryTest() {
         try {
             String cityName = "city";
@@ -108,6 +110,7 @@ public class ElasticClientRemoveDocumentTest extends ElasticClientBaseTest {
     }
 
     @Test
+    @Ignore
     public void removeDocumentsQueryIndexTest() {
         try {
             String cityName = "city";
