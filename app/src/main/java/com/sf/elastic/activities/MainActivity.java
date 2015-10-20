@@ -8,6 +8,8 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.jakewharton.rxbinding.widget.RxAdapter;
+import com.jakewharton.rxbinding.widget.RxTextView;
 import com.sf.elastic.R;
 import com.sf.elastic.adapters.CityAdapter;
 import com.sf.elastic.repositories.CityRepository;
@@ -22,7 +24,6 @@ import org.androidannotations.annotations.ViewById;
 import java.util.concurrent.TimeUnit;
 
 import rx.android.schedulers.AndroidSchedulers;
-import rx.android.widget.WidgetObservable;
 import rx.schedulers.Schedulers;
 
 @EActivity(R.layout.activity_main2)
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
 //		executePosts();
 
-		WidgetObservable.text(cityName, false)
+		RxTextView.textChangeEvents(cityName)
 			.sample(TimeUnit.SECONDS.toSeconds(2), TimeUnit.SECONDS)
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(textChangeEvent -> {

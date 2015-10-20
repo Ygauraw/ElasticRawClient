@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
-def AAVersion = '3.2'
+def AAVersion = '3.3.2'
 def AppID = 'com.sf.elastic'
 
 
@@ -47,23 +47,28 @@ dependencies {
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'org.projectlombok:lombok:1.16.4'
-    apt "org.androidannotations:androidannotations:$AAVersion"
+
+	provided "org.projectlombok:lombok:1.16.4"
+	apt "org.projectlombok:lombok:1.16.4"
+
+	apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
+
     compile 'com.android.support:design:23.0.1'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:cardview-v7:23.0.1'
     compile 'com.android.support:recyclerview-v7:23.0.1'
+
     compile 'com.github.bumptech.glide:glide:3.6.0'
     compile 'de.hdodenhof:circleimageview:1.3.0'
-    compile 'io.reactivex:rxandroid:0.24.0'
+
+	compile 'io.reactivex:rxandroid:1.0.1'
+	compile 'io.reactivex:rxjava:1.0.14'
+	compile 'com.jakewharton.rxbinding:rxbinding:0.2.0'
+	compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.2.0'
+
     compile project(':elasticsearchrawclient')
+
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.0-rc3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0-rc3'
-    compile 'jp.wasabeef:recyclerview-animators:1.2.0@aar'
-//    compile 'com.google.guava:guava-collections:r03'
 }
-
-//retrolambda {
-//    jdk "/usr/lib/jvm/java-8-oracle"
-//}

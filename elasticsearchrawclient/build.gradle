@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 
+apply plugin: 'android-apt'
+
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
@@ -82,12 +84,21 @@ install {
 dependencies {
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'org.projectlombok:lombok:1.16.4'
-    compile 'com.github.rholder:guava-retrying:2.0.0'
+
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.0-rc3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0-rc3'
-    compile 'org.projectlombok:lombok:1.16.4'
-    compile 'io.reactivex:rxandroid:0.24.0'
+
+    compile "com.github.rholder:guava-retrying:2.0.0"
+
+    compile 'io.reactivex:rxandroid:1.0.1'
+    compile 'io.reactivex:rxjava:1.0.14'
+
+    provided "org.projectlombok:lombok:1.16.4"
+    apt "org.projectlombok:lombok:1.16.4"
+
+    compile('com.silverforge.net:webconnector:1.0.0') {
+        exclude group: 'org.androidannotations', module : 'androidannotations'
+    }
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.9.5'
