@@ -7,6 +7,11 @@ apply plugin: 'com.jfrog.bintray'
 // This is the library version used when deploying the artifact
 version = "1.1.1"
 
+
+boolean isReleaseBuild = gradle.startParameter.taskNames.contains('bintrayUpload')
+version = isReleaseBuild ? version : "$version-SNAPSHOT"
+logger.info("elasticsearchrawclient is using version=$project.version")
+
 android {
     compileSdkVersion 23
     buildToolsVersion "22.0.1"
@@ -92,28 +97,19 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-//task javadoc(type: Javadoc) {
-//    source = android.sourceSets.main.java.srcDirs
-//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//}
-//
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
-
 artifacts {
-//    archives javadocJar
     archives sourcesJar
 }
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+if (isReleaseBuild) {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    bintray.user = properties.getProperty("bintray.user")
+    bintray.key = properties.getProperty("bintray.apikey")
+}
 
 bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
     configurations = ['archives']
     pkg {
         repo = "maven"

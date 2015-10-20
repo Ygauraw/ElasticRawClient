@@ -68,8 +68,6 @@ public class MultiMatchQuery
         private final static String TIE_BREAKER = "tie_breaker";
         private final static String TYPE = "type";
 
-        protected abstract T self();
-
         public T fields(String... fields) {
             return fields(fields, false);
         }

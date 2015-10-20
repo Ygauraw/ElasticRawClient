@@ -101,8 +101,6 @@ public class MatchQuery
         private final static String TYPE = "type";
         private final static String ZERO_TERMS_QUERY = "zero_terms_query";
 
-        protected abstract T self();
-
         public T fieldName(String fieldName) {
             if (TextUtils.isEmpty(fieldName))
                 return allFields();
