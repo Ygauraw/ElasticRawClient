@@ -14,8 +14,11 @@ logger.info("elasticsearchrawclient is using version=$project.version")
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "22.0.1"
+    buildToolsVersion "23.0.1"
 
+    lintOptions {
+        abortOnError false
+    }
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 23
