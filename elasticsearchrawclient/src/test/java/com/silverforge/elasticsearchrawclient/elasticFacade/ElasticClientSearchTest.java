@@ -3,12 +3,13 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
-import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Query;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.MatchQuery;
 import com.silverforge.elasticsearchrawclient.testModel.City;
+import com.silverforge.webconnector.exceptions.SettingsIsNullException;
+import com.silverforge.webconnector.model.ConnectorSettings;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +51,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
             List<City> cities = testClient.search("{\"query\":{\"match_all\": {}}}", City.class);
 
             assertNotNull(cities);
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -62,16 +63,20 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
         ConnectorSettings settings = ConnectorSettings
                 .builder()
                 .baseUrl(ELASTIC_URL)
-                .types(new String[]{"city", "testcity"})
                 .userName(ELASTIC_APIKEY)
                 .build();
 
+        ElasticSettings elasticSettings = ElasticSettings
+            .builder()
+            .types(new String[]{"city", "testcity"})
+            .build();
+
         try {
-            ElasticRawClient testClient = new ElasticClient(settings);
+            ElasticRawClient testClient = new ElasticClient(settings, elasticSettings);
             List<City> cities = testClient.search("{\"query\":{\"match_all\": {}}}", City.class);
 
             assertNotNull(cities);
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -83,16 +88,20 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
         ConnectorSettings settings = ConnectorSettings
                 .builder()
                 .baseUrl(ELASTIC_URL)
-                .indices(new String[]{"cities", "testcities"})
                 .userName(ELASTIC_APIKEY)
                 .build();
 
+        ElasticSettings elasticSettings = ElasticSettings
+            .builder()
+            .indices(new String[]{"cities", "testcities"})
+            .build();
+
         try {
-            ElasticRawClient testClient = new ElasticClient(settings);
+            ElasticRawClient testClient = new ElasticClient(settings, elasticSettings);
             List<City> cities = testClient.search("{\"query\":{\"match_all\": {}}}", City.class);
 
             assertNotNull(cities);
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());

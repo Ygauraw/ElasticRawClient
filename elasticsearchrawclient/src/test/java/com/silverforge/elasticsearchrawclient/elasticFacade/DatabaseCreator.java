@@ -5,9 +5,10 @@ import android.util.Log;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
-import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
+import com.silverforge.webconnector.exceptions.SettingsIsNullException;
+import com.silverforge.webconnector.model.ConnectorSettings;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public final class DatabaseCreator {
 
         try {
             client = new ElasticClient(settings);
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());

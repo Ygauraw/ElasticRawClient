@@ -3,18 +3,19 @@ package com.silverforge.elasticsearchrawclient.elasticFacade.operations;
 import android.text.TextUtils;
 
 import com.silverforge.elasticsearchrawclient.R;
-import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.elasticFacade.OperationType;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.AddDocumentResult;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
+import com.silverforge.webconnector.definitions.Connectable;
+import com.silverforge.webconnector.model.InvokeStringResult;
 
 public class DocumentOperations extends Operations {
-    public DocumentOperations(Connectable connector) {
-        super(connector);
+    public DocumentOperations(Connectable connector, ElasticSettings elasticSettings) {
+        super(connector, elasticSettings);
     }
 
     public <T> String addDocument(String id, T entity)
@@ -26,7 +27,7 @@ public class DocumentOperations extends Operations {
         String entityJson = ElasticClientMapper.mapToJson(entity);
         String addPath = getOperationPath(id, OperationType.CREATE);
 
-        InvokeResult result = connector.post(addPath, entityJson);
+        InvokeStringResult result = connector.post(addPath, entityJson);
         AddDocumentResult addDocumentResult
                 = ElasticClientMapper.mapToEntity(result.getResult(), AddDocumentResult.class);
 
@@ -53,7 +54,7 @@ public class DocumentOperations extends Operations {
             String entityJson = ElasticClientMapper.mapToJson(entity);
             String addPath = getOperationPath(index, type, id, OperationType.CREATE);
 
-            InvokeResult result = connector.post(addPath, entityJson);
+            InvokeStringResult result = connector.post(addPath, entityJson);
 
             AddDocumentResult addDocumentResult
                     = ElasticClientMapper.mapToEntity(result.getResult(),

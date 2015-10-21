@@ -4,19 +4,21 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
-import com.silverforge.elasticsearchrawclient.connector.Connectable;
-import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.OperationType;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
+import com.silverforge.webconnector.definitions.Connectable;
 
 public abstract class Operations {
     protected Context context;
     protected Connectable connector;
+    protected ElasticSettings elasticSettings;
 
-    public Operations(Connectable connector) {
+    public Operations(Connectable connector, ElasticSettings elasticSettings) {
         this.connector = connector;
+        this.elasticSettings = elasticSettings;
         context = ElasticClientApp.getAppContext();
     }
 
@@ -27,8 +29,6 @@ public abstract class Operations {
      * @throws IndexCannotBeNullException
      * @throws TypeCannotBeNullException
      * @see com.silverforge.elasticsearchrawclient.elasticFacade.OperationType
-     * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-     * @see ElasticClient#ElasticClient(ConnectorSettings settings)
      */
     protected String getOperationPath(OperationType operationType)
             throws IndexCannotBeNullException, TypeCannotBeNullException {
@@ -42,13 +42,11 @@ public abstract class Operations {
      * @return the path, e.g.: /myindex,yourindex/mytype,yourtype/2
      * @throws IndexCannotBeNullException
      * @see com.silverforge.elasticsearchrawclient.elasticFacade.OperationType
-     * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-     * @see ElasticClient#ElasticClient(ConnectorSettings settings)
      */
     protected String getOperationPath(String id, OperationType operationType)
             throws IndexCannotBeNullException, TypeCannotBeNullException {
 
-        return getOperationPath(connector.getSettings().getIndices(), connector.getSettings().getTypes(), id, operationType);
+        return getOperationPath(elasticSettings.getIndices(), elasticSettings.getTypes(), id, operationType);
     }
 
     /**

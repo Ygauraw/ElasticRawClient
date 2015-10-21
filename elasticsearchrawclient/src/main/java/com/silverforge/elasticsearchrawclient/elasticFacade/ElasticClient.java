@@ -2,12 +2,9 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 
 import android.text.TextUtils;
 
-import com.silverforge.elasticsearchrawclient.connector.Connectable;
-import com.silverforge.elasticsearchrawclient.connector.Connector;
-import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkActionResult;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkTuple;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.operations.BulkOperations;
 import com.silverforge.elasticsearchrawclient.elasticFacade.operations.DocumentOperations;
 import com.silverforge.elasticsearchrawclient.elasticFacade.operations.IndexOperations;
@@ -15,15 +12,23 @@ import com.silverforge.elasticsearchrawclient.elasticFacade.operations.QueryOper
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
+import com.silverforge.webconnector.EndpointConnector;
+import com.silverforge.webconnector.definitions.Connectable;
+import com.silverforge.webconnector.exceptions.SettingsIsNullException;
+import com.silverforge.webconnector.model.ConnectorSettings;
+import com.silverforge.webconnector.model.InvokeStringResult;
 
 import java.net.URISyntaxException;
 import java.util.List;
 
 import rx.Observable;
 
-public class ElasticClient implements ElasticRawClient {
+public class ElasticClient
+		implements ElasticRawClient {
+
     private Connectable connector;
 	private Raw raw = new Raw();
+	private ElasticSettings elasticSettings;
     private IndexOperations indexOperations;
     private DocumentOperations documentOperations;
     private BulkOperations bulkOperations;
@@ -34,14 +39,14 @@ public class ElasticClient implements ElasticRawClient {
 	/**
 	 * Constructor of ElasticClient
 	 * @param connector the Connector instance
-	 * @see com.silverforge.elasticsearchrawclient.connector.Connector
 	 */
-	public ElasticClient(Connectable connector) {
+	public ElasticClient(Connectable connector, ElasticSettings elasticSettings) {
 		this.connector = connector;
-        indexOperations = new IndexOperations(connector);
-        documentOperations = new DocumentOperations(connector);
-        bulkOperations = new BulkOperations(connector);
-        queryOperations = new QueryOperations(connector);
+		this.elasticSettings = elasticSettings;
+		indexOperations = new IndexOperations(connector, elasticSettings);
+        documentOperations = new DocumentOperations(connector, elasticSettings);
+        bulkOperations = new BulkOperations(connector, elasticSettings);
+        queryOperations = new QueryOperations(connector, elasticSettings);
     }
 
 	/**
@@ -51,7 +56,39 @@ public class ElasticClient implements ElasticRawClient {
 	 *ConnectorSettings settings = ConnectorSettings
 	 *    .builder()
 	 *    .baseUrl(ELASTIC_URL)
+	 *    .types(ELASTIC_TYPES)
+	 *    .userName(ELASTIC_APIKEY)
+	 *    .build();
+	 *
+	 *ElasticSettings elasticSettings = ElasticSettings
+	 *    .builder()
 	 *    .indices(ELASTIC_INDICES)
+	 *    .build();
+	 *
+	 *    try {
+	 *        client = new ElasticClient(settings);
+	 *    } catch (URISyntaxException e) {
+	 *        e.printStackTrace();
+	 *        Log.e(TAG, e.getMessage());
+	 *        fail(e.getMessage());
+	 *    }
+     *</code>
+	 *</pre>
+	 * @param settings the settings of the ElasticClient
+	 * @throws URISyntaxException
+	 */
+	public ElasticClient(ConnectorSettings settings, ElasticSettings elasticSettings)
+			throws SettingsIsNullException, URISyntaxException {
+        this(new EndpointConnector(settings), elasticSettings);
+	}
+
+	/**
+	 * Constructor of ElasticClient
+	 *<pre>
+     *<code>
+	 *ConnectorSettings settings = ConnectorSettings
+	 *    .builder()
+	 *    .baseUrl(ELASTIC_URL)
 	 *    .types(ELASTIC_TYPES)
 	 *    .userName(ELASTIC_APIKEY)
 	 *    .build();
@@ -67,11 +104,10 @@ public class ElasticClient implements ElasticRawClient {
 	 *</pre>
 	 * @param settings the settings of the ElasticClient
 	 * @throws URISyntaxException
-	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
 	 */
 	public ElasticClient(ConnectorSettings settings)
-            throws URISyntaxException {
-        this(new Connector(settings));
+			throws SettingsIsNullException, URISyntaxException {
+        this(new EndpointConnector(settings), ElasticSettings.builder().build());
 	}
 
     // endregion
@@ -121,12 +157,10 @@ public class ElasticClient implements ElasticRawClient {
 
 	/**
 	 * Removes all the indices defined in the ConnectorSettings
-	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
 	 */
 	@Override
 	public void removeIndices() {
-		removeIndices(connector.getSettings().getIndices());
+		removeIndices(elasticSettings.getIndices());
 	}
 
 	/**
@@ -180,8 +214,6 @@ public class ElasticClient implements ElasticRawClient {
 	 * @throws IndexCannotBeNullException
 	 * @throws IllegalArgumentException
 	 * @throws TypeCannotBeNullException
-	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
 	 */
 	@Override
 	public <T> String addDocument(T entity)
@@ -199,8 +231,6 @@ public class ElasticClient implements ElasticRawClient {
 	 * @throws IndexCannotBeNullException
 	 * @throws IllegalArgumentException
 	 * @throws TypeCannotBeNullException
-	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
 	 */
 	@Override
 	public <T> String addDocument(String id, T entity)
@@ -236,8 +266,6 @@ public class ElasticClient implements ElasticRawClient {
 	 * @throws IllegalArgumentException
 	 * @throws IndexCannotBeNullException
 	 * @throws TypeCannotBeNullException
-	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
 	 */
 	@Override
 	public void removeDocument(String id)
@@ -274,8 +302,6 @@ public class ElasticClient implements ElasticRawClient {
 	 *}
      *}
 	 *</pre>
-	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
 	 */
 	@Override
 	public void removeDocumentsQuery(String query) {
@@ -317,8 +343,6 @@ public class ElasticClient implements ElasticRawClient {
 	 * @param <T> the type of the entity
 	 * @throws IndexCannotBeNullException
 	 * @throws TypeCannotBeNullException
-	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
 	 */
 	@Override
 	public <T> void updateDocument(String id, T entity)
@@ -370,7 +394,7 @@ public class ElasticClient implements ElasticRawClient {
 	public <T> List<T> getDocument(String[] ids, Class<T> classType)
 			throws IndexCannotBeNullException {
 
-		String[] indices = connector.getSettings().getIndices();
+		String[] indices = elasticSettings.getIndices();
 		if (indices == null || indices.length == 0)
 			throw new IndexCannotBeNullException();
 
@@ -390,7 +414,7 @@ public class ElasticClient implements ElasticRawClient {
 	public <T> List<T> getDocument(String type, String[] ids, Class<T> classType)
 			throws IndexCannotBeNullException {
 
-		String[] indices = connector.getSettings().getIndices();
+		String[] indices = elasticSettings.getIndices();
 		if (indices == null || indices.length == 0)
 			throw new IndexCannotBeNullException();
 
@@ -510,8 +534,6 @@ public class ElasticClient implements ElasticRawClient {
 	 * @param classType the type of the entity will be retrieved for mapping, e.g.: <strong>City.class</strong>
 	 * @param <T> the type of the entity
 	 * @return List of entity/entities retrieved by query
-	 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-	 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
 	 * @return List of entity/entities retrieved by query
 	 *
 	 * @deprecated in v2.0
@@ -564,8 +586,6 @@ public class ElasticClient implements ElasticRawClient {
      * @param classType the type of the entity will be retrieved for mapping, e.g.: <strong>City.class</strong>
      * @param <T> the type of the entity
      * @return List of entity/entities retrieved by query
-     * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-     * @see ElasticClient#ElasticClient(ConnectorSettings settings)
 	 * @return List of entity/entities retrieved by query
 	 *
 	 * @deprecated in v2.0
@@ -688,11 +708,8 @@ public class ElasticClient implements ElasticRawClient {
 		 * HTTP method HEAD on given path. The url is defined in ConnectorSettings
 		 * @param path the path, e.g.: /apple/pear/1
 		 * @return the result of the invoke
-		 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-		 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
-		 * @see com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult
 		 */
-		public InvokeResult head(String path) {
+		public InvokeStringResult head(String path) {
 			return connector.head(path);
 		}
 
@@ -700,11 +717,8 @@ public class ElasticClient implements ElasticRawClient {
 		 * HTTP method GET on given path. The url is defined in ConnectorSettings
 		 * @param path the path, e.g.: /apple/pear/1
 		 * @return the result of the invoke
-		 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-		 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
-		 * @see com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult
 		 */
-		public InvokeResult get(String path) {
+		public InvokeStringResult get(String path) {
 			return connector.get(path);
 		}
 
@@ -713,11 +727,8 @@ public class ElasticClient implements ElasticRawClient {
 		 * @param path the path, e.g.: /apple/pear/1
 		 * @param data the request data
 		 * @return the result of the invoke
-		 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-		 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
-		 * @see com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult
 		 */
-		public InvokeResult post(String path, String data) {
+		public InvokeStringResult post(String path, String data) {
 			return connector.post(path, data);
 		}
 
@@ -726,11 +737,8 @@ public class ElasticClient implements ElasticRawClient {
 		 * @param path the path, e.g.: /apple/pear/1
 		 * @param data the request data
 		 * @return the result of the invoke
-		 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-		 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
-		 * @see com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult
 		 */
-		public InvokeResult put(String path, String data) {
+		public InvokeStringResult put(String path, String data) {
 			return connector.put(path, data);
 		}
 
@@ -739,11 +747,8 @@ public class ElasticClient implements ElasticRawClient {
 		 * @param path the path, e.g.: /apple/pear/1
 		 * @param data the request data
 		 * @return the result of the invoke
-		 * @see com.silverforge.elasticsearchrawclient.connector.ConnectorSettings
-		 * @see ElasticClient#ElasticClient(ConnectorSettings settings)
-		 * @see com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult
 		 */
-		public InvokeResult delete(String path, String data) {
+		public InvokeStringResult delete(String path, String data) {
 			return connector.delete(path, data);
 		}
 	}

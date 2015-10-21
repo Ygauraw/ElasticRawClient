@@ -3,9 +3,11 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
-import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
+import com.silverforge.webconnector.exceptions.SettingsIsNullException;
+import com.silverforge.webconnector.model.ConnectorSettings;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -77,11 +79,16 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         ConnectorSettings customSettings = ConnectorSettings
                 .builder()
                 .baseUrl(ELASTIC_URL)
-                .indices(new String[] {"cities", "testcities"})
                 .userName(ELASTIC_APIKEY)
                 .build();
+
+        ElasticSettings elasticSettings = ElasticSettings
+            .builder()
+            .indices(new String[]{"cities", "testcities"})
+            .build();
+
         try {
-            ElasticRawClient customClient = new ElasticClient(customSettings);
+            ElasticRawClient customClient = new ElasticClient(customSettings, elasticSettings);
 
             List<City> cities = customClient.getDocument(docIds, City.class);
 
@@ -89,7 +96,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             assertThat(cities.size(), equalTo(2));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTesting"))));
-        } catch (URISyntaxException | IndexCannotBeNullException e) {
+        } catch (URISyntaxException | IndexCannotBeNullException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -105,18 +112,23 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         ConnectorSettings customSettings = ConnectorSettings
                 .builder()
                 .baseUrl(ELASTIC_URL)
-                .indices(new String[]{"cities", "testcities"})
                 .userName(ELASTIC_APIKEY)
                 .build();
+
+        ElasticSettings elasticSettings = ElasticSettings
+            .builder()
+            .indices(new String[]{"cities", "testcities"})
+            .build();
+
         try {
-            ElasticRawClient customClient = new ElasticClient(customSettings);
+            ElasticRawClient customClient = new ElasticClient(customSettings, elasticSettings);
 
             List<City> cities = customClient.getDocument("city", docIds, City.class);
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(1));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
-        } catch (URISyntaxException | IndexCannotBeNullException e) {
+        } catch (URISyntaxException | IndexCannotBeNullException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -153,11 +165,15 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             ConnectorSettings customSettings = ConnectorSettings
                     .builder()
                     .baseUrl(ELASTIC_URL)
-                    .indices(new String[] {"cities", "testcities"})
                     .userName(ELASTIC_APIKEY)
                     .build();
 
-            ElasticRawClient customClient = new ElasticClient(customSettings);
+            ElasticSettings elasticSettings = ElasticSettings
+                .builder()
+                .indices(new String[]{"cities", "testcities"})
+                .build();
+
+            ElasticRawClient customClient = new ElasticClient(customSettings, elasticSettings);
 
             TestSubscriber<City> testSubscriber = new TestSubscriber<>();
 
@@ -174,7 +190,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             assertThat(cities.size(), equalTo(2));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTesting"))));
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             fail(e.getMessage());
         }
@@ -190,11 +206,15 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             ConnectorSettings customSettings = ConnectorSettings
                     .builder()
                     .baseUrl(ELASTIC_URL)
-                    .indices(new String[] {"cities", "testcities"})
                     .userName(ELASTIC_APIKEY)
                     .build();
 
-            ElasticRawClient customClient = new ElasticClient(customSettings);
+            ElasticSettings elasticSettings = ElasticSettings
+                .builder()
+                .indices(new String[]{"cities", "testcities"})
+                .build();
+
+            ElasticRawClient customClient = new ElasticClient(customSettings, elasticSettings);
 
             TestSubscriber<City> testSubscriber = new TestSubscriber<>();
 
@@ -210,7 +230,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(1));
             assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             fail(e.getMessage());
         }
@@ -235,7 +255,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
             ElasticRawClient customClient = new ElasticClient(customSettings);
 
             customClient.getDocument(docIds, City.class);
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -258,7 +278,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
             List<City> cities = customClient.getDocument("city", docIds, City.class);
 
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -274,17 +294,22 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         ConnectorSettings customSettings = ConnectorSettings
                 .builder()
                 .baseUrl(ELASTIC_URL)
-                .indices(new String[] { "cities" })
                 .userName(ELASTIC_APIKEY)
                 .build();
+
+        ElasticSettings elasticSettings = ElasticSettings
+            .builder()
+            .indices(new String[]{"cities"})
+            .build();
+
         try {
-            ElasticRawClient customClient = new ElasticClient(customSettings);
+            ElasticRawClient customClient = new ElasticClient(customSettings, elasticSettings);
 
             List<City> cities = customClient.getDocument(" -d", docIds, City.class);
 
             assertThat(cities, notNullValue());
             assertThat(cities.size(), equalTo(0));
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());

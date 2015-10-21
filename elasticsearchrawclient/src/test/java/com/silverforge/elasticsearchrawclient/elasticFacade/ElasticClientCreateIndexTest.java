@@ -5,12 +5,13 @@ import android.util.Log;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
-import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
-import com.silverforge.elasticsearchrawclient.exceptions.ServerIsNotAvailableException;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
+import com.silverforge.webconnector.exceptions.ServerIsNotAvailableException;
+import com.silverforge.webconnector.exceptions.SettingsIsNullException;
+import com.silverforge.webconnector.model.ConnectorSettings;
+import com.silverforge.webconnector.model.InvokeStringResult;
 
-import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -42,13 +43,17 @@ public class ElasticClientCreateIndexTest {
         ConnectorSettings settings = ConnectorSettings
                 .builder()
                 .baseUrl(ELASTIC_URL)
-                .indices(predefinedIndicesForRemove)
                 .userName(ELASTIC_APIKEY)
                 .build();
 
+        ElasticSettings elasticSettings = ElasticSettings
+            .builder()
+            .indices(predefinedIndicesForRemove)
+            .build();
+
         try {
-            client = new ElasticClient(settings);
-        } catch (URISyntaxException e) {
+            client = new ElasticClient(settings, elasticSettings);
+        } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
@@ -122,7 +127,7 @@ public class ElasticClientCreateIndexTest {
         expectedException.expect(ServerIsNotAvailableException.class);
         expectedException.expectMessage("Server response code : 404");
 
-        InvokeResult head = client.executeRawRequest().head("/thereisnosuchindex");
+        InvokeStringResult head = client.executeRawRequest().head("/thereisnosuchindex");
         assertThat(head.getAggregatedExceptions().size(), greaterThan(0));
 
         for (Exception exception : head.getAggregatedExceptions()) {

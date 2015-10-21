@@ -3,10 +3,11 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
-import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
+import com.silverforge.webconnector.exceptions.SettingsIsNullException;
+import com.silverforge.webconnector.model.ConnectorSettings;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -118,7 +119,7 @@ public class ElasticClientAddDocumentTest extends ElasticClientBaseTest {
             String cityName = generateUUID();
             City city = new City(cityName);
             testClient.addDocument(city);
-        } catch (URISyntaxException | TypeCannotBeNullException e) {
+        } catch (URISyntaxException | TypeCannotBeNullException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());

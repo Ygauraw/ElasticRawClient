@@ -3,23 +3,24 @@ package com.silverforge.elasticsearchrawclient.elasticFacade.operations;
 import android.text.TextUtils;
 
 import com.silverforge.elasticsearchrawclient.R;
-import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.elasticFacade.OperationType;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.BulkResultParser;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkActionResult;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkResultItem;
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkTuple;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
+import com.silverforge.webconnector.definitions.Connectable;
+import com.silverforge.webconnector.model.InvokeStringResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BulkOperations extends Operations {
-    public BulkOperations(Connectable connector) {
-        super(connector);
+    public BulkOperations(Connectable connector, ElasticSettings elasticSettings) {
+        super(connector, elasticSettings);
     }
 
     public List<BulkActionResult> bulk(List<BulkTuple> bulkItems) {
@@ -36,12 +37,12 @@ public class BulkOperations extends Operations {
 
         // Execute bulk actions
         String bulkRequestBody = bodyBuilder.append(StringUtils.LINE_SEPARATOR).toString();
-        InvokeResult bulkResult = connector.post("/_bulk", bulkRequestBody);
+        InvokeStringResult bulkResult = connector.post("/_bulk", bulkRequestBody);
 
         return prepareBulkActionResults(bulkItems, bulkResult);
     }
 
-    private ArrayList<BulkActionResult> prepareBulkActionResults(List<BulkTuple> bulkItems, InvokeResult bulkResult) {
+    private ArrayList<BulkActionResult> prepareBulkActionResults(List<BulkTuple> bulkItems, InvokeStringResult bulkResult) {
         List<BulkResultItem> bulkResultItemList = BulkResultParser.getResults(bulkResult.getResult());
         ArrayList<BulkActionResult> retValue = new ArrayList<>();
         for (int i = 0; i < bulkItems.size(); i++) {
@@ -90,7 +91,7 @@ public class BulkOperations extends Operations {
     private String ensureTypeName(BulkTuple bulkItem) {
         String typeName = bulkItem.getTypeName();
         if (TextUtils.isEmpty(typeName)) {
-            String[] types = connector.getSettings().getTypes();
+            String[] types = elasticSettings.getTypes();
             if (types != null && types.length > 0)
                 typeName = types[0];
         }
@@ -100,7 +101,7 @@ public class BulkOperations extends Operations {
     private String ensureIndexName(BulkTuple bulkItem) {
         String indexName = bulkItem.getIndexName();
         if (TextUtils.isEmpty(indexName)) {
-            String[] indices = connector.getSettings().getIndices();
+            String[] indices = elasticSettings.getIndices();
             if (indices != null && indices.length > 0)
                 indexName = indices[0];
         }

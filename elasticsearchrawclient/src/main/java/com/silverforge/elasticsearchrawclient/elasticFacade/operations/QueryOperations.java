@@ -3,21 +3,22 @@ package com.silverforge.elasticsearchrawclient.elasticFacade.operations;
 import android.text.TextUtils;
 
 import com.silverforge.elasticsearchrawclient.R;
-import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.elasticFacade.OperationType;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClientMapper;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
+import com.silverforge.webconnector.definitions.Connectable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class QueryOperations extends Operations {
-    public QueryOperations(Connectable connector) {
-        super(connector);
+    public QueryOperations(Connectable connector, ElasticSettings elasticSettings) {
+        super(connector, elasticSettings);
     }
 
     public <T> List<T> getDocument(String[] indices, String type, String[] ids, Class<T> classType) {

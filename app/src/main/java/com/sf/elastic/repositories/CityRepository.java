@@ -5,10 +5,12 @@ import android.util.Log;
 
 import com.sf.elastic.R;
 import com.sf.elastic.models.City;
-import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.ElasticClient;
 import com.silverforge.elasticsearchrawclient.elasticFacade.ElasticRawClient;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
+import com.silverforge.webconnector.exceptions.SettingsIsNullException;
+import com.silverforge.webconnector.model.ConnectorSettings;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
@@ -37,16 +39,20 @@ public class CityRepository implements Repository<City> {
 	public Context context;
 
 	public CityRepository() {
-		ConnectorSettings settings = ConnectorSettings
+		ConnectorSettings connectorSettings = ConnectorSettings
 			.builder()
 			.baseUrl(ELASTIC_URL)
-			.indices(ELASTIC_INDICES)
 			.userName(ELASTIC_APIKEY)
 			.build();
 
+		ElasticSettings elasticSettings = ElasticSettings
+			.builder()
+			.indices(ELASTIC_INDICES)
+			.build();
+
 		try {
-			client = new ElasticClient(settings);
-		} catch (URISyntaxException e) {
+			client = new ElasticClient(connectorSettings, elasticSettings);
+		} catch (URISyntaxException | SettingsIsNullException e) {
 			e.printStackTrace();
 			Log.e(TAG, e.getMessage());
 		}
@@ -103,14 +109,7 @@ public class CityRepository implements Repository<City> {
 				.openRawResource(R.raw.city_list);
 
 			List<String> cities = convertStreamToList(cityIS);
-
 			String queryText = StreamUtils.getRawContent(context, R.raw.city_add);
-
-
-
-
-
-
 
 			Observable
 				.from(cities)
@@ -121,7 +120,7 @@ public class CityRepository implements Repository<City> {
 
 //					myClient.executeRawRequest().post("/cities/city", postData);
 				});
-		} catch (URISyntaxException e) {
+		} catch (URISyntaxException | SettingsIsNullException e) {
 			e.printStackTrace();
 			Log.e(TAG, e.getMessage());
 		}

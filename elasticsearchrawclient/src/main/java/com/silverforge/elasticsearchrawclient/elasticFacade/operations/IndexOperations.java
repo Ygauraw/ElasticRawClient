@@ -1,29 +1,30 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade.operations;
 
 import com.silverforge.elasticsearchrawclient.R;
-import com.silverforge.elasticsearchrawclient.connector.Connectable;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.AliasParser;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.InvokeResult;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
+import com.silverforge.webconnector.definitions.Connectable;
+import com.silverforge.webconnector.model.InvokeStringResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class IndexOperations extends Operations {
-    public IndexOperations(Connectable connector) {
-        super(connector);
+    public IndexOperations(Connectable connector, ElasticSettings elasticSettings) {
+        super(connector, elasticSettings);
     }
 
     public boolean createIndex(String indexName, String data) {
         String path = StringUtils.ensurePath(indexName);
-        InvokeResult result = connector.put(path, data);
+        InvokeStringResult result = connector.put(path, data);
         return result.isSuccess();
     }
 
     public boolean indexExists(String indexName) {
         String path = StringUtils.ensurePath(indexName);
-        InvokeResult result = connector.head(path);
+        InvokeStringResult result = connector.head(path);
         return result.isSuccess();
     }
 
@@ -49,7 +50,7 @@ public class IndexOperations extends Operations {
         ArrayList<String> retValue = new ArrayList<>();
         String getPath = String.format("/%s/_aliases", index);
 
-        InvokeResult invokeResult = connector.get(getPath);
+        InvokeStringResult invokeResult = connector.get(getPath);
         if (invokeResult.isSuccess()) {
             List<String> aliasesFromJson = AliasParser.getAliasesFromJson(index, invokeResult.getResult());
             retValue.addAll(aliasesFromJson);

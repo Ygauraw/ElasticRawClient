@@ -2,9 +2,10 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 
 import android.util.Log;
 
-import com.silverforge.elasticsearchrawclient.connector.ConnectorSettings;
+import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
+import com.silverforge.webconnector.exceptions.SettingsIsNullException;
+import com.silverforge.webconnector.model.ConnectorSettings;
 
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 import static org.junit.Assert.fail;
@@ -21,14 +22,18 @@ public class ElasticClientBaseTest {
         ConnectorSettings settings = ConnectorSettings
                 .builder()
                 .baseUrl(ELASTIC_URL)
-                .indices(ELASTIC_INDICES)
-                .types(ELASTIC_TYPES)
                 .userName(ELASTIC_APIKEY)
                 .build();
 
+        ElasticSettings elasticSettings = ElasticSettings
+            .builder()
+            .indices(ELASTIC_INDICES)
+            .types(ELASTIC_TYPES)
+            .build();
+
         try {
-            client = new ElasticClient(settings);
-        } catch (URISyntaxException e) {
+            client = new ElasticClient(settings, elasticSettings);
+        } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
             fail(e.getMessage());
