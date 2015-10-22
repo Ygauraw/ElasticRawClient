@@ -1,6 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.operators;
 
-public enum TieBreakerOperator {
+public enum ZeroToOneRangeOperator {
 
     _0_0("0.0"),
     _0_1("0.1"),
@@ -16,7 +16,7 @@ public enum TieBreakerOperator {
 
     private String value;
 
-    TieBreakerOperator(String value) {
+    ZeroToOneRangeOperator(String value) {
         this.value = value;
     }
 

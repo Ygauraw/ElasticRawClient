@@ -1,6 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
-import com.silverforge.elasticsearchrawclient.queryDSL.operators.NegativeBoostOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
@@ -51,7 +51,7 @@ public class BoostingQuery
             return this;
         }
 
-        public BoostingQueryBuilder negativeBoost(NegativeBoostOperator negativeBoostOperator) {
+        public BoostingQueryBuilder negativeBoost(ZeroToOneRangeOperator negativeBoostOperator) {
             if (!queryTypeBag.containsKey(NEGATIVE_BOOST))
                 queryTypeBag.add(
                     QueryTypeItem

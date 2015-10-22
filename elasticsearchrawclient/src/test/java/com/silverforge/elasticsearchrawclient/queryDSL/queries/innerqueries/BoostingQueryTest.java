@@ -1,7 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
-import com.silverforge.elasticsearchrawclient.queryDSL.operators.NegativeBoostOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +38,7 @@ public class BoostingQueryTest {
                 MatchQuery
                     .builder()
                     .build())
-            .negativeBoost(NegativeBoostOperator._0_6)
+            .negativeBoost(ZeroToOneRangeOperator._0_6)
             .build();
 
         String queryString = query.getQueryString();

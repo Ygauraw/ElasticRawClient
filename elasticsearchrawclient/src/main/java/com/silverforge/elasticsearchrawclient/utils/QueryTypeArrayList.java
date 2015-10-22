@@ -27,6 +27,23 @@ public class QueryTypeArrayList<T extends QueryTypeItem> extends ArrayList<T> {
         return retValue;
     }
 
+    public T getByKey(String fieldName) {
+        T retValue = null;
+        Iterator<T> iterator = iterator();
+
+        if (size() > 0) {
+            while (iterator.hasNext()) {
+                T item = iterator.next();
+                if (item.getName().toLowerCase().equals(fieldName.toLowerCase())) {
+                    retValue = item;
+                    break;
+                }
+            }
+        }
+
+        return retValue;
+    }
+
     public List<T> getParentItems () {
         List<T> retValue = new ArrayList<>();
         Iterator<T> iterator = iterator();
@@ -73,12 +90,36 @@ public class QueryTypeArrayList<T extends QueryTypeItem> extends ArrayList<T> {
                 T item = iterator.next();
 
                 for (Map.Entry<String, Boolean> entry : wordCheckTable.entrySet()) {
-                    if (item.equals(entry.getKey()))
+                    if (item.getName().equals(entry.getKey()))
                         entry.setValue(true);
                 }
             }
 
             hasValues = !wordCheckTable.containsValue(false);
+        }
+        return hasValues;
+    }
+
+    public boolean hasAtLeastOneKey(String... keys) {
+        boolean hasValues = false;
+        HashMap<String, Boolean> wordCheckTable = new HashMap<>();
+        for (String word : keys) {
+            wordCheckTable.put(word, false);
+        }
+
+        Iterator<T> iterator = iterator();
+
+        if (size() > 0) {
+            while (iterator.hasNext()) {
+                T item = iterator.next();
+
+                for (Map.Entry<String, Boolean> entry : wordCheckTable.entrySet()) {
+                    if (item.getName().equals(entry.getKey()))
+                        entry.setValue(true);
+                }
+            }
+
+            hasValues = wordCheckTable.containsValue(true);
         }
         return hasValues;
     }

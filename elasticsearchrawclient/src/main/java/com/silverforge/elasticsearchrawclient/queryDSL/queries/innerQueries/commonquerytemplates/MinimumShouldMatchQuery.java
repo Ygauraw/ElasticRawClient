@@ -5,7 +5,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public class MinimumShouldMatchQuery
-    implements Queryable{
+    implements Queryable {
 
     protected final QueryTypeArrayList<QueryTypeItem> queryTypeBag;
 
@@ -26,12 +26,11 @@ public class MinimumShouldMatchQuery
     }
 
     public static abstract class Init<T extends Init<T>> {
-        private final static String MINIMUM_SHOULD_MATCH = "minimum_should_match";
+        protected final static String MINIMUM_SHOULD_MATCH = "minimum_should_match";
 
         protected final QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
 
         protected abstract T self();
-
 
         public T minimumShouldMatch(int value) {
             if (!queryTypeBag.containsKey(MINIMUM_SHOULD_MATCH))

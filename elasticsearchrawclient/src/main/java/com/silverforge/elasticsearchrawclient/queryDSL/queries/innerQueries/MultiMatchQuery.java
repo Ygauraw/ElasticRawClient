@@ -1,7 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.MultiMatchTypeOperator;
-import com.silverforge.elasticsearchrawclient.queryDSL.operators.TieBreakerOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
@@ -98,7 +98,7 @@ public class MultiMatchQuery
             return self();
         }
 
-        public T tieBreaker(TieBreakerOperator tieBreakerOperator) {
+        public T tieBreaker(ZeroToOneRangeOperator tieBreakerOperator) {
             if (!queryTypeBag.containsKey(TIE_BREAKER))
                 queryTypeBag.add(QueryTypeItem
                                     .builder()

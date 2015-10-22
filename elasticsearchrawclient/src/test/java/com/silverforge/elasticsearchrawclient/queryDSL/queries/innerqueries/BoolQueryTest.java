@@ -2,15 +2,18 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
-import com.silverforge.elasticsearchrawclient.queryDSL.operators.TieBreakerOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -36,7 +39,7 @@ public class BoolQueryTest {
                 MultiMatchQuery
                     .builder()
                     .fields("name", "population")
-                    .tieBreaker(TieBreakerOperator._0_4)
+                    .tieBreaker(ZeroToOneRangeOperator._0_4)
                     .query("Karcag Budapest")
                     .useDisMax(false)
                     .analyzer("standard")
