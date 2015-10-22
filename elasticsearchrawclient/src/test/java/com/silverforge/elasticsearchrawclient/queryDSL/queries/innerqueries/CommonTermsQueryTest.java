@@ -24,9 +24,25 @@ public class CommonTermsQueryTest {
             .builder()
             .field("oregapam")
             .query("alma barack citrom")
+            .build();
+
+        String queryString = query.getQueryString();
+        System.out.println(queryString);
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+        assertThat(queryString, is("{\"common\":{\"oregapam\":{\"query\":\"alma barack citrom\"}}}"));
+    }
+
+    @Test
+    public void when_minimumShouldMatch_defined_then_lowFreq_and_highFreq_parameters_are_ignored() {
+        CommonTermsQuery query = CommonTermsQuery
+            .builder()
+            .field("oregapam")
+            .query("alma barack citrom")
             .lowFreq(3)
             .highFreq(5)
-//            .minimumShouldMatch(4)
+            .minimumShouldMatch(4)
             .lowFreq(3)
             .highFreq(6)
             .cutoffFrequency(ZeroToOneRangeOperator._0_0)
@@ -35,10 +51,12 @@ public class CommonTermsQueryTest {
             .build();
 
         String queryString = query.getQueryString();
+        System.out.println(queryString);
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
     }
+
 
     // endregion
 
