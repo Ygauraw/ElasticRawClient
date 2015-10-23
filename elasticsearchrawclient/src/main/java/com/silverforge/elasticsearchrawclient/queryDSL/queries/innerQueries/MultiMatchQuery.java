@@ -83,7 +83,11 @@ public class MultiMatchQuery
                 String fieldList = String.format(format,
                     StringUtils.makeCommaSeparatedListWithQuotationMark(fields));
 
-                queryTypeBag.add(QueryTypeItem.builder().name(FIELDS).value(fieldList).build());
+                queryTypeBag.add(QueryTypeItem
+                    .builder()
+                    .name(FIELDS)
+                    .value(fieldList)
+                    .build());
             }
             return self();
         }

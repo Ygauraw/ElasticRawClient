@@ -13,6 +13,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.commonquerytemplates.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
+import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -130,7 +131,11 @@ public class MatchQuery
 
         public T value(String value) {
             if (!queryTypeBag.containsKey(VALUE))
-                queryTypeBag.add(QueryTypeItem.builder().name(VALUE).value(value).build());
+                queryTypeBag.add(QueryTypeItem
+                    .builder()
+                    .name(VALUE)
+                    .value(StringUtils.ensureNotNull(value))
+                    .build());
             return self();
         }
 
@@ -200,7 +205,11 @@ public class MatchQuery
 
         public T analyzer(String analyzer) {
             if (!queryTypeBag.containsKey(ANALYZER))
-                queryTypeBag.add(QueryTypeItem.builder().name(ANALYZER).value(analyzer).build());
+                queryTypeBag.add(QueryTypeItem
+                    .builder()
+                    .name(ANALYZER)
+                    .value(StringUtils.ensureNotNull(analyzer))
+                    .build());
             return self();
         }
 
@@ -222,7 +231,11 @@ public class MatchQuery
 
         public T fuzziness(String fuzzinessOperator) {
             if (!queryTypeBag.containsKey(FUZZINESS))
-                queryTypeBag.add(QueryTypeItem.builder().name(FUZZINESS).value(fuzzinessOperator).build());
+                queryTypeBag.add(QueryTypeItem
+                    .builder()
+                    .name(FUZZINESS)
+                    .value(StringUtils.ensureNotNull(fuzzinessOperator))
+                    .build());
             return self();
         }
 

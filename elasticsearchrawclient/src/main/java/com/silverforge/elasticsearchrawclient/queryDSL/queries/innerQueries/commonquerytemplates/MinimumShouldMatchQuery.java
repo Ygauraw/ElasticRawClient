@@ -3,6 +3,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.com
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
+import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
 public class MinimumShouldMatchQuery
     implements Queryable {
@@ -69,7 +70,7 @@ public class MinimumShouldMatchQuery
                 queryTypeBag.add(QueryTypeItem
                     .builder()
                     .name(MINIMUM_SHOULD_MATCH)
-                    .value(expression)
+                    .value(StringUtils.ensureNotNull(expression))
                     .build());
             return self();
         }

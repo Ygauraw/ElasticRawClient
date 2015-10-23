@@ -42,4 +42,11 @@ public class StringUtils {
 
         return String.format("/%s", path);
     }
+
+    public static String ensureNotNull(String value) {
+        if (value == null)
+            return "";
+
+        return value;
+    }
 }

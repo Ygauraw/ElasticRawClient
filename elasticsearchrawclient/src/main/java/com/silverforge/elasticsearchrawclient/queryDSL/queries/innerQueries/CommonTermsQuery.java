@@ -5,6 +5,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeO
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.commonquerytemplates.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
+import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
 import java.util.List;
 import static br.com.zbra.androidlinq.Linq.*;
@@ -81,7 +82,11 @@ public class CommonTermsQuery
 
         public T query(String query) {
             if (!queryTypeBag.containsKey(QUERY))
-                queryTypeBag.add(QueryTypeItem.builder().name(QUERY).value(query).build());
+                queryTypeBag.add(QueryTypeItem
+                    .builder()
+                    .name(QUERY)
+                    .value(StringUtils.ensureNotNull(query))
+                    .build());
             return self();
         }
 
@@ -130,7 +135,7 @@ public class CommonTermsQuery
                 queryTypeBag.add(QueryTypeItem
                     .builder()
                     .name(LOW_FREQ)
-                    .value(expression)
+                    .value(StringUtils.ensureNotNull(expression))
                     .build());
             return self();
         }
@@ -176,7 +181,7 @@ public class CommonTermsQuery
                 queryTypeBag.add(QueryTypeItem
                     .builder()
                     .name(HIGH_FREQ)
-                    .value(expression)
+                    .value(StringUtils.ensureNotNull(expression))
                     .build());
             return self();
         }

@@ -40,14 +40,9 @@ public class CommonTermsQueryTest {
             .builder()
             .field("oregapam")
             .query("alma barack citrom")
-            .lowFreq(3)
-            .highFreq(5)
             .minimumShouldMatch(4)
             .lowFreq(3)
             .highFreq(6)
-            .cutoffFrequency(ZeroToOneRangeOperator._0_0)
-            .lowFreqOperator(LogicOperator.OR)
-            .highFreqOperator(LogicOperator.AND)
             .build();
 
         String queryString = query.getQueryString();
@@ -55,12 +50,126 @@ public class CommonTermsQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"common\":{\"oregapam\":{"), is(true));
+        assertThat(queryString.endsWith("}}}"), is(true));
+
+        assertThat(queryString.indexOf("\"query\":\"alma barack citrom\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"minimum_should_match\":\"4\""), greaterThan(0));
+
+        assertThat(queryString.indexOf("\"low_freq\""), is(-1));
+        assertThat(queryString.indexOf("\"high_freq\""), is(-1));
+    }
+
+    @Test
+    public void when_low_freq_and_high_freq_defined_then_minimum_should_match_is_the_group() {
+        CommonTermsQuery query = CommonTermsQuery
+            .builder()
+            .field("oregapam")
+            .query("alma barack citrom")
+            .lowFreq(3)
+            .highFreq(6)
+            .build();
+
+        String queryString = query.getQueryString();
+        System.out.println(queryString);
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"common\":{\"oregapam\":{"), is(true));
+        assertThat(queryString.endsWith("}}}"), is(true));
+
+        assertThat(queryString.indexOf("\"query\":\"alma barack citrom\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"minimum_should_match\":{"), greaterThan(0));
+
+        assertThat(queryString.indexOf("\"low_freq\":\"3\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"high_freq\":\"6\""), greaterThan(0));
+    }
+
+    @Test
+    public void when_only_low_freq_is_defined_then_minimum_should_match_is_the_group() {
+        CommonTermsQuery query = CommonTermsQuery
+            .builder()
+            .field("oregapam")
+            .query("alma barack citrom")
+            .lowFreq(3)
+            .build();
+
+        String queryString = query.getQueryString();
+        System.out.println(queryString);
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"common\":{\"oregapam\":{"), is(true));
+        assertThat(queryString.endsWith("}}}"), is(true));
+
+        assertThat(queryString.indexOf("\"query\":\"alma barack citrom\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"minimum_should_match\":{\"low_freq\":\"3\""), greaterThan(0));
+    }
+
+    @Test
+    public void when_only_high_freq_is_defined_then_minimum_should_match_is_the_group() {
+        CommonTermsQuery query = CommonTermsQuery
+            .builder()
+            .field("oregapam")
+            .query("alma barack citrom")
+            .highFreq(23)
+            .build();
+
+        String queryString = query.getQueryString();
+        System.out.println(queryString);
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"common\":{\"oregapam\":{"), is(true));
+        assertThat(queryString.endsWith("}}}"), is(true));
+
+        assertThat(queryString.indexOf("\"query\":\"alma barack citrom\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"minimum_should_match\":{\"high_freq\":\"23\""), greaterThan(0));
     }
 
 
     // endregion
 
     //region Sad path
+
+    @Test
+    public void when_field_is_not_defined_then_all_fields_generated() {
+        CommonTermsQuery query = CommonTermsQuery
+            .builder()
+            .build();
+
+        String queryString = query.getQueryString();
+        System.out.println(queryString);
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"common\":{\"_all\":{"), is(true));
+        assertThat(queryString.endsWith("}}}"), is(true));
+    }
+
+    @Test
+    public void when_query_is_not_defined_then_all_fields_generated() {
+        CommonTermsQuery query = CommonTermsQuery
+            .builder()
+            .query(null)
+            .build();
+
+        String queryString = query.getQueryString();
+        System.out.println(queryString);
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"common\":{\"_all\":{"), is(true));
+        assertThat(queryString.endsWith("}}}"), is(true));
+
+        assertThat(queryString.indexOf("\"query\":\"\""), greaterThan(0));
+    }
 
     // endregion
 }
