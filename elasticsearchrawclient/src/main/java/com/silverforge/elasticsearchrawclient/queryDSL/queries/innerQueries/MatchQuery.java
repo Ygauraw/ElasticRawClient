@@ -8,7 +8,6 @@ import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzyRewriteOpe
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.PhraseTypeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroTermsQueryOperator;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.commonquerytemplates.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
@@ -19,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static br.com.zbra.androidlinq.Linq.*;
+
 public class MatchQuery
         extends MinimumShouldMatchQuery {
 
@@ -27,50 +28,18 @@ public class MatchQuery
     }
 
     public String getQueryString() {
-        List<QueryTypeItem> parentItems = queryTypeBag.getParentItems();
-        List<QueryTypeItem> nonParentItems = queryTypeBag.getNonParentItems();
+        List<QueryTypeItem> parentItems = stream(queryTypeBag)
+            .where(i -> i.isParent())
+            .toList();
+        List<QueryTypeItem> nonParentItems = stream(queryTypeBag)
+            .where(i -> !i.isParent())
+            .toList();
 
         StringBuilder queryString = new StringBuilder();
         queryString.append("{\"match\":{\"");
 
-        if (parentItems.size() == 0)
-            queryString.append("_all");
-        else {
-            String value = parentItems.get(0).getValue();
-            queryString.append(value);
-        }
-        queryString.append("\":");
-
-        if (nonParentItems.size() == 0) {
-            queryString.append("\"\"");
-        } else if (nonParentItems.size() == 1) {
-            QueryTypeItem item = nonParentItems.get(0);
-            if (item.getName().toLowerCase().equals(Init.VALUE)) {
-                String value = item.getValue();
-                if (value == null)
-                    value = "";
-                queryString.append("\"").append(value).append("\"");
-            } else {
-                queryString.append("\"\"");
-            }
-        } else {
-            queryString.append("{");
-
-            for (int i = 0; i < nonParentItems.size(); i++) {
-                if (i > 0)
-                    queryString.append(",");
-
-                QueryTypeItem item = nonParentItems.get(i);
-                queryString
-                    .append("\"")
-                    .append(item.getName())
-                    .append("\":\"")
-                    .append(item.getValue())
-                    .append("\"");
-            }
-
-            queryString.append("}");
-        }
+        prepareParentItem(parentItems, queryString);
+        prepareNonParentItems(nonParentItems, queryString);
 
         queryString.append("}}");
 
@@ -334,5 +303,48 @@ public class MatchQuery
         public MatchQuery build() {
             return new MatchQuery(queryTypeBag);
         }
+    }
+
+    private void prepareNonParentItems(List<QueryTypeItem> nonParentItems, StringBuilder queryString) {
+        if (nonParentItems.size() == 0) {
+            queryString.append("\"\"");
+        } else if (nonParentItems.size() == 1) {
+            QueryTypeItem item = nonParentItems.get(0);
+            if (item.getName().toLowerCase().equals(Init.VALUE)) {
+                String value = item.getValue();
+                if (value == null)
+                    value = "";
+                queryString.append("\"").append(value).append("\"");
+            } else {
+                queryString.append("\"\"");
+            }
+        } else {
+            queryString.append("{");
+
+            for (int i = 0; i < nonParentItems.size(); i++) {
+                if (i > 0)
+                    queryString.append(",");
+
+                QueryTypeItem item = nonParentItems.get(i);
+                queryString
+                    .append("\"")
+                    .append(item.getName())
+                    .append("\":\"")
+                    .append(item.getValue())
+                    .append("\"");
+            }
+
+            queryString.append("}");
+        }
+    }
+
+    private void prepareParentItem(List<QueryTypeItem> parentItems, StringBuilder queryString) {
+        if (parentItems.size() == 0)
+            queryString.append("_all");
+        else {
+            String value = parentItems.get(0).getValue();
+            queryString.append(value);
+        }
+        queryString.append("\":");
     }
 }
