@@ -47,7 +47,7 @@ public class CommonTermsQuery
         return queryString.toString();
     }
 
-    public static CommonTermsQueryBuilder builder() {
+    public static Init<?> builder() {
         return new CommonTermsQueryBuilder();
     }
 
