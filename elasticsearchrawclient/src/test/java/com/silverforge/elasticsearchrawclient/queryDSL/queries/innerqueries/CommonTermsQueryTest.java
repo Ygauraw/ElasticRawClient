@@ -131,6 +131,39 @@ public class CommonTermsQueryTest {
         assertThat(queryString.indexOf("\"minimum_should_match\":{\"high_freq\":\"23\""), greaterThan(0));
     }
 
+    @Test
+    public void when_all_param_is_defined_then_query_generated_well() {
+        CommonTermsQuery query = CommonTermsQuery
+            .builder()
+            .field("oregapam")
+            .query("alma barack citrom")
+            .highFreqCombination("3<50%")
+            .lowFreq(72)
+            .highFreqOperator(LogicOperator.OR)
+            .lowFreqOperator(LogicOperator.AND)
+            .cutoffFrequency(ZeroToOneRangeOperator._0_2)
+            .build();
+
+        String queryString = query.getQueryString();
+        System.out.println(queryString);
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"common\":{\"oregapam\":{"), is(true));
+        assertThat(queryString.endsWith("}}}"), is(true));
+
+        assertThat(queryString.indexOf("\"query\":\"alma barack citrom\""), greaterThan(0));
+
+        assertThat(queryString.indexOf("\"minimum_should_match\":{"), greaterThan(0));
+        assertThat(queryString.indexOf("\"high_freq\":\"3<50%\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"low_freq\":\"72\""), greaterThan(0));
+
+        assertThat(queryString.indexOf("\"low_freq_operator\":\"and\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"high_freq_operator\":\"or\""), greaterThan(0));
+
+        assertThat(queryString.indexOf("\"cutoff_frequency\":\"0.2\""), greaterThan(0));
+    }
 
     // endregion
 
