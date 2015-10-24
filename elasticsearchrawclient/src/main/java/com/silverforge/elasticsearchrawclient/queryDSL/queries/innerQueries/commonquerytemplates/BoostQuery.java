@@ -2,7 +2,6 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.com
 
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.BoostingQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public class BoostQuery
@@ -31,6 +30,12 @@ public class BoostQuery
 
         protected QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
         protected abstract T self();
+
+        public T boost(int boost) {
+            if (!queryTypeBag.containsKey(BOOST))
+                queryTypeBag.add(QueryTypeItem.builder().name(BOOST).value(Integer.toString(boost)).build());
+            return self();
+        }
 
         public T boost(float boost) {
             if (!queryTypeBag.containsKey(BOOST))
