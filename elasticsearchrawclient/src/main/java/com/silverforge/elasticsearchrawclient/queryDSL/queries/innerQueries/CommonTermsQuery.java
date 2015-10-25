@@ -3,7 +3,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.commonQueryTemplates.MinimumShouldMatchQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
@@ -14,9 +14,10 @@ public class CommonTermsQuery
         extends MinimumShouldMatchQuery {
 
     private final static String MINIMUM_SHOULD_MATCH = "minimum_should_match";
+    private QueryTypeArrayList<QueryTypeItem> queryTypeBag;
 
     protected CommonTermsQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-        super(queryTypeBag);
+        this.queryTypeBag = queryTypeBag;
     }
 
     @Override
@@ -58,7 +59,7 @@ public class CommonTermsQuery
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.Init<T> {
+    public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.MinimumShouldMatchInit<T> {
         private final static String FIELD_NAME = "FIELDNAME";
         private final static String QUERY = "query";
         private final static String CUTOFF_FREQUENCY = "cutoff_frequency";
@@ -70,73 +71,44 @@ public class CommonTermsQuery
         private final static String HIGH_FREQ_OPERATOR = "high_freq_operator";
 
         public T field(String fieldName) {
-            if (!queryTypeBag.containsKey(FIELD_NAME))
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(FIELD_NAME)
-                    .value(fieldName)
-                    .isParent(true)
-                    .build());
+            queryTypeBag.addParentItem(FIELD_NAME, fieldName);
             return self();
         }
 
         public T query(String query) {
-            if (!queryTypeBag.containsKey(QUERY))
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(QUERY)
-                    .value(StringUtils.ensureNotNull(query))
-                    .build());
+            queryTypeBag.addItem(QUERY, query);
             return self();
         }
 
         public T cutoffFrequency(ZeroToOneRangeOperator cutOffFrequencyOperator) {
             if (!queryTypeBag.containsKey(CUTOFF_FREQUENCY))
-                queryTypeBag.add(QueryTypeItem.builder().name(CUTOFF_FREQUENCY).value(cutOffFrequencyOperator.toString()).build());
+                queryTypeBag.add(QueryTypeItem
+                    .builder()
+                    .name(CUTOFF_FREQUENCY)
+                    .value(cutOffFrequencyOperator.toString())
+                    .build());
             return self();
         }
 
         // region Low Freq
 
         public T lowFreq(int value) {
-            if (!queryTypeBag.containsKey(LOW_FREQ))
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(LOW_FREQ)
-                    .value(Integer.toString(value))
-                    .build());
+            queryTypeBag.addItem(LOW_FREQ, value);
             return self();
         }
 
         public T lowFreqPercentage(int value) {
-            if (!queryTypeBag.containsKey(LOW_FREQ))
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(LOW_FREQ)
-                    .value(value + "%")
-                    .build());
+            queryTypeBag.addPercentageItem(LOW_FREQ, value);
             return self();
         }
 
         public T lowFreqPercentage(float value) {
-            if (!queryTypeBag.containsKey(LOW_FREQ)) {
-                String percentage = (value * 100) + "%";
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(LOW_FREQ)
-                    .value(percentage)
-                    .build());
-            }
+            queryTypeBag.addPercentageItem(LOW_FREQ, value);
             return self();
         }
 
         public T lowFreqCombination(String expression) {
-            if (!queryTypeBag.containsKey(LOW_FREQ))
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(LOW_FREQ)
-                    .value(StringUtils.ensureNotNull(expression))
-                    .build());
+            queryTypeBag.addItem(LOW_FREQ, expression);
             return self();
         }
 
@@ -145,44 +117,22 @@ public class CommonTermsQuery
         // region High Freq
 
         public T highFreq(int value) {
-            if (!queryTypeBag.containsKey(HIGH_FREQ))
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(HIGH_FREQ)
-                    .value(Integer.toString(value))
-                    .build());
+            queryTypeBag.addItem(HIGH_FREQ, value);
             return self();
         }
 
         public T highFreqPercentage(int value) {
-            if (!queryTypeBag.containsKey(HIGH_FREQ))
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(HIGH_FREQ)
-                    .value(value + "%")
-                    .build());
+            queryTypeBag.addPercentageItem(HIGH_FREQ, value);
             return self();
         }
 
         public T highFreqPercentage(float value) {
-            if (!queryTypeBag.containsKey(HIGH_FREQ)) {
-                String percentage = (value * 100) + "%";
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(LOW_FREQ)
-                    .value(percentage)
-                    .build());
-            }
+            queryTypeBag.addPercentageItem(HIGH_FREQ, value);
             return self();
         }
 
         public T highFreqCombination(String expression) {
-            if (!queryTypeBag.containsKey(HIGH_FREQ))
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(HIGH_FREQ)
-                    .value(StringUtils.ensureNotNull(expression))
-                    .build());
+            queryTypeBag.addItem(HIGH_FREQ, expression);
             return self();
         }
 

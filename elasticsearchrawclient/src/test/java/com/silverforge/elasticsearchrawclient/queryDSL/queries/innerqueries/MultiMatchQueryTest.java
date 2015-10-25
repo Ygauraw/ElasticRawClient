@@ -64,7 +64,6 @@ public class MultiMatchQueryTest {
         assertThat(queryString.indexOf("\",\""), greaterThan(0));
         assertThat(queryString.indexOf("\"\""), is(-1));
         assertThat(queryString.indexOf("}}"), greaterThan(0));
-
     }
 
     // endregion

@@ -3,18 +3,16 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.commonQueryTemplates.BoostQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.BoostQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
-
-import java.util.List;
-
-import static br.com.zbra.androidlinq.Linq.*;
 
 public class DisMaxQuery
         extends BoostQuery {
 
+    private QueryTypeArrayList<QueryTypeItem> queryTypeBag;
+
     protected DisMaxQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-        super(queryTypeBag);
+        this.queryTypeBag = queryTypeBag;
     }
 
     public static Init<?> builder() {
@@ -62,10 +60,9 @@ public class DisMaxQuery
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends BoostQuery.Init<T> {
+    public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
         private final static String TIE_BREAKER = "tie_breaker";
         private final static String QUERIES = "queries";
-
 
         public T tieBreaker(ZeroToOneRangeOperator tieBreakerOperator) {
             if (!queryTypeBag.containsKey(TIE_BREAKER))
@@ -78,26 +75,7 @@ public class DisMaxQuery
         }
 
         public T queries(Queryable... queries) {
-            if (queries != null && queries.length > 0) {
-                List<String> queryStrings = stream(queries)
-                    .select(q -> q.getQueryString())
-                    .toList();
-
-                StringBuilder queryJoin = new StringBuilder();
-                for (int i = 0; i < queryStrings.size(); i++) {
-                    if (i > 0)
-                        queryJoin.append(",");
-
-                    queryJoin.append(queryStrings.get(i));
-                }
-
-                if (!queryTypeBag.containsKey(QUERIES))
-                    queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(QUERIES)
-                    .value(queryJoin.toString())
-                    .build());
-            }
+            queryTypeBag.addItem(QUERIES, queries);
             return self();
         }
 

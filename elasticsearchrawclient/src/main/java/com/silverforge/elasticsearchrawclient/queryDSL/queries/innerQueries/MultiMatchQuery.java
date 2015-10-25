@@ -10,7 +10,7 @@ import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 import java.util.Date;
 
 public class MultiMatchQuery
-    extends MatchQuery {
+        extends MatchQuery {
 
     MultiMatchQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
         super(queryTypeBag);

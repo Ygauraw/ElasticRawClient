@@ -7,7 +7,7 @@ import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import com.silverforge.elasticsearchrawclient.utils.QueryUtils;
 
 public class BoostingQuery
-    implements Queryable {
+        implements Queryable {
 
     private QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
 
@@ -34,20 +34,15 @@ public class BoostingQuery
         private final static String POSITIVE = "positive";
         private final static String NEGATIVE = "negative";
         private final static String NEGATIVE_BOOST = "negative_boost";
-
         private QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
 
         public BoostingQueryBuilder positive(Queryable... queries) {
-            String queryString = QueryUtils.queryableBuilder(queries);
-            if (!queryTypeBag.containsKey(POSITIVE))
-                queryTypeBag.add(QueryTypeItem.builder().name(POSITIVE).value(queryString).build());
+            queryTypeBag.addItem(POSITIVE, queries);
             return this;
         }
 
         public BoostingQueryBuilder negative(Queryable... queries) {
-            String queryString = QueryUtils.queryableBuilder(queries);
-            if (!queryTypeBag.containsKey(NEGATIVE))
-                queryTypeBag.add(QueryTypeItem.builder().name(NEGATIVE).value(queryString).build());
+            queryTypeBag.addItem(NEGATIVE, queries);
             return this;
         }
 

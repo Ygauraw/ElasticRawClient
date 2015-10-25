@@ -1,45 +1,25 @@
-package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.commonQueryTemplates;
+package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common;
 
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
-public class MinimumShouldMatchQuery
-    implements Queryable {
-
-    protected final QueryTypeArrayList<QueryTypeItem> queryTypeBag;
-
-    protected MinimumShouldMatchQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-        this.queryTypeBag = queryTypeBag;
-    }
+public abstract class MinimumShouldMatchQuery
+        implements Queryable {
 
     @Override
     public String getQueryString() {
         return null;
     }
 
-    public class MinimumShouldMatchQueryBuilder extends Init<MinimumShouldMatchQueryBuilder> {
-        @Override
-        protected MinimumShouldMatchQueryBuilder self() {
-            return this;
-        }
-    }
-
-    public static abstract class Init<T extends Init<T>> {
-        protected final static String MINIMUM_SHOULD_MATCH = "minimum_should_match";
-
+    public static abstract class MinimumShouldMatchInit<T extends MinimumShouldMatchInit<T>> {
+        private final static String MINIMUM_SHOULD_MATCH = "minimum_should_match";
         protected final QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
-
         protected abstract T self();
 
         public T minimumShouldMatch(int value) {
-            if (!queryTypeBag.containsKey(MINIMUM_SHOULD_MATCH))
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(MINIMUM_SHOULD_MATCH)
-                    .value(Integer.toString(value))
-                    .build());
+            queryTypeBag.addItem(MINIMUM_SHOULD_MATCH, value);
             return self();
         }
 
@@ -66,17 +46,8 @@ public class MinimumShouldMatchQuery
         }
 
         public T minimumShouldMatchCombination(String expression) {
-            if (!queryTypeBag.containsKey(MINIMUM_SHOULD_MATCH))
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(MINIMUM_SHOULD_MATCH)
-                    .value(StringUtils.ensureNotNull(expression))
-                    .build());
+            queryTypeBag.addItem(MINIMUM_SHOULD_MATCH, expression);
             return self();
-        }
-
-        public MinimumShouldMatchQuery build() {
-            return new MinimumShouldMatchQuery(queryTypeBag);
         }
     }
 }

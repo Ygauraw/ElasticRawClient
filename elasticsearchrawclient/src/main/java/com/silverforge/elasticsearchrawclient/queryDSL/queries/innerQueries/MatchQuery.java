@@ -9,7 +9,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.PhraseTypeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroTermsQueryOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.commonQueryTemplates.MinimumShouldMatchQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
@@ -23,8 +23,10 @@ import static br.com.zbra.androidlinq.Linq.*;
 public class MatchQuery
         extends MinimumShouldMatchQuery {
 
+    protected QueryTypeArrayList<QueryTypeItem> queryTypeBag;
+
     MatchQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-        super(queryTypeBag);
+        this.queryTypeBag = queryTypeBag;
     }
 
     public String getQueryString() {
@@ -57,7 +59,7 @@ public class MatchQuery
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.Init<T> {
+    public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.MinimumShouldMatchInit<T> {
         private final static String FIELD_NAME = "FIELDNAME";
         private final static String VALUE = "value";
         private final static String ANALYZER = "analyzer";

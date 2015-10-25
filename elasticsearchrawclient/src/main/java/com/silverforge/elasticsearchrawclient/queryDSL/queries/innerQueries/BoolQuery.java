@@ -2,7 +2,8 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.commonQueryTemplates.MinimumShouldMatchQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.BoostQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import com.silverforge.elasticsearchrawclient.utils.QueryUtils;
@@ -10,8 +11,10 @@ import com.silverforge.elasticsearchrawclient.utils.QueryUtils;
 public class BoolQuery
     extends MinimumShouldMatchQuery {
 
+    private QueryTypeArrayList<QueryTypeItem> queryTypeBag;
+
     public BoolQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-        super(queryTypeBag);
+        this.queryTypeBag = queryTypeBag;
     }
 
     public static Init<?> builder() {
@@ -49,7 +52,7 @@ public class BoolQuery
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.Init<T> {
+    public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.MinimumShouldMatchInit<T> {
         private static final String MUST = "must";
         private static final String MUST_NOT = "must_not";
         private static final String SHOULD = "should";
@@ -59,41 +62,32 @@ public class BoolQuery
         protected abstract T self();
 
         public T must(Queryable... queries) {
-            String mustQuery = QueryUtils.queryableBuilder(queries);
-            if (!queryTypeBag.containsKey(MUST))
-                queryTypeBag.add(QueryTypeItem.builder().name(MUST).value(mustQuery).build());
+            queryTypeBag.addItem(MUST, queries);
             return self();
         }
 
         public T mustNot(Queryable... queries) {
-            String mustNotQuery = QueryUtils.queryableBuilder(queries);
-            if (!queryTypeBag.containsKey(MUST_NOT))
-                queryTypeBag.add(QueryTypeItem.builder().name(MUST_NOT).value(mustNotQuery).build());
+            queryTypeBag.addItem(MUST_NOT, queries);
             return self();
         }
 
         public T should(Queryable... queries) {
-            String shouldQuery = QueryUtils.queryableBuilder(queries);
-            if (!queryTypeBag.containsKey(SHOULD))
-                queryTypeBag.add(QueryTypeItem.builder().name(SHOULD).value(shouldQuery).build());
+            queryTypeBag.addItem(SHOULD, queries);
             return self();
         }
 
         public T disableCoord(boolean value) {
-            if(!queryTypeBag.containsKey(DISABLE_COORD))
-                queryTypeBag.add(QueryTypeItem.builder().name(DISABLE_COORD).value(BooleanUtils.booleanValue(value)).build());
+            queryTypeBag.addItem(DISABLE_COORD, value);
             return self();
         }
 
         public T boost(int boost) {
-            if (!queryTypeBag.containsKey(BOOST))
-                queryTypeBag.add(QueryTypeItem.builder().name(BOOST).value(Integer.toString(boost)).build());
+            queryTypeBag.addItem(BOOST, boost);
             return self();
         }
 
         public T boost(float boost) {
-            if (!queryTypeBag.containsKey(BOOST))
-                queryTypeBag.add(QueryTypeItem.builder().name(BOOST).value(Float.toString(boost)).build());
+            queryTypeBag.addItem(BOOST, boost);
             return self();
         }
 
