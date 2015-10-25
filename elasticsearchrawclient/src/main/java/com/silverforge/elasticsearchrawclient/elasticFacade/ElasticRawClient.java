@@ -4,7 +4,7 @@ import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkActionResu
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkTuple;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.definition.Queryable;
 
 import java.util.List;
 

@@ -32,4 +32,7 @@ public final class Constants {
     public final static String OPERATOR = "operator";
     public final static String PREFIX_LENGTH = "prefix_length";
     public final static String ZERO_TERMS_QUERY = "zero_terms_query";
+    public final static String FROM = "from";
+    public final static String SIZE = "size";
+    public final static String INNER_QUERY = "INNER_QUERY";
 }

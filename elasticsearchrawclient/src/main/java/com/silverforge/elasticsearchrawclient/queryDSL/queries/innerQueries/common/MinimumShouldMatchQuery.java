@@ -2,9 +2,8 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.com
 
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
-import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
 public abstract class MinimumShouldMatchQuery
         implements Queryable {

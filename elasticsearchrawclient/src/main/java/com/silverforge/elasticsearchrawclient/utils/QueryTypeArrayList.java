@@ -1,7 +1,7 @@
 package com.silverforge.elasticsearchrawclient.utils;
 
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.definition.Queryable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

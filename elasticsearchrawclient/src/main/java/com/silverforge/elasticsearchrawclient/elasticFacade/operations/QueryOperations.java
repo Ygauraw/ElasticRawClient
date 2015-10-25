@@ -8,7 +8,7 @@ import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClien
 import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 import com.silverforge.webconnector.definitions.Connectable;

@@ -11,7 +11,7 @@ import com.silverforge.elasticsearchrawclient.elasticFacade.operations.IndexOper
 import com.silverforge.elasticsearchrawclient.elasticFacade.operations.QueryOperations;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.definition.Queryable;
 import com.silverforge.webconnector.EndpointConnector;
 import com.silverforge.webconnector.definitions.Connectable;
 import com.silverforge.webconnector.exceptions.SettingsIsNullException;

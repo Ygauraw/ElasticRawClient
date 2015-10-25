@@ -1,9 +1,11 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries;
 
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.definition.Composable;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public final class Query
-        implements Queryable {
+        implements Queryable, Composable {
 
     private final QueryTypeArrayList<QueryTypeItem> queryTypeBag;
 
@@ -25,7 +27,7 @@ public final class Query
                 queryString.append(",");
 
             QueryTypeItem item = queryTypeBag.get(i);
-            if (item.getName().equals(QueryBuilder.INNER_QUERY)) {
+            if (item.getName().equals(Constants.INNER_QUERY)) {
                 queryString.append("\"query\":").append(item.getValue());
             } else {
                 queryString
@@ -42,30 +44,22 @@ public final class Query
     }
 
     public static class QueryBuilder {
-        private final static String FROM = "from";
-        private final static String SIZE = "size";
-        private final static String INNER_QUERY = "INNER_QUERY";
-
         private final QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
 
         QueryBuilder() {}
 
-        public QueryBuilder from(Integer from) {
-            if (!queryTypeBag.containsKey(FROM))
-                queryTypeBag.add(QueryTypeItem.builder().name(FROM).value(from.toString()).build());
+        public QueryBuilder from(int from) {
+            queryTypeBag.addItem(Constants.FROM, from);
             return this;
         }
 
         public QueryBuilder size(Integer size) {
-            if (!queryTypeBag.containsKey(SIZE))
-                queryTypeBag.add(QueryTypeItem.builder().name(SIZE).value(size.toString()).build());
+            queryTypeBag.addItem(Constants.SIZE, size);
             return this;
         }
 
         public QueryBuilder innerQuery(Queryable query) {
-            String queryString = query.getQueryString();
-            if (!queryTypeBag.containsKey(INNER_QUERY))
-                queryTypeBag.add(QueryTypeItem.builder().name(INNER_QUERY).value(queryString).build());
+            queryTypeBag.addItem(Constants.INNER_QUERY, query);
             return this;
         }
 
