@@ -3,10 +3,9 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
+import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
-import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
 import java.util.List;
 import static br.com.zbra.androidlinq.Linq.*;

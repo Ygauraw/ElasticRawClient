@@ -2,7 +2,7 @@ package com.silverforge.elasticsearchrawclient.elasticFacade.operations;
 
 import com.silverforge.elasticsearchrawclient.R;
 import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.AliasParser;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
+import com.silverforge.elasticsearchrawclient.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 import com.silverforge.webconnector.definitions.Connectable;

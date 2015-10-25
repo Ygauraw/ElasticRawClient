@@ -1,7 +1,7 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkActionResult;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkTuple;
+import com.silverforge.elasticsearchrawclient.model.BulkActionResult;
+import com.silverforge.elasticsearchrawclient.model.BulkTuple;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.definition.Queryable;

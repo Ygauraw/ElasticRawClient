@@ -3,7 +3,7 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
+import com.silverforge.elasticsearchrawclient.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 import com.silverforge.webconnector.exceptions.SettingsIsNullException;

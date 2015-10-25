@@ -7,7 +7,7 @@ import com.sf.elastic.R;
 import com.sf.elastic.models.City;
 import com.silverforge.elasticsearchrawclient.elasticFacade.ElasticClient;
 import com.silverforge.elasticsearchrawclient.elasticFacade.ElasticRawClient;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
+import com.silverforge.elasticsearchrawclient.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.webconnector.exceptions.SettingsIsNullException;
 import com.silverforge.webconnector.model.ConnectorSettings;

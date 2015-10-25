@@ -3,7 +3,7 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
+import com.silverforge.elasticsearchrawclient.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Query;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.MatchQuery;

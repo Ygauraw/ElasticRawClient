@@ -1,6 +1,6 @@
 package com.silverforge.elasticsearchrawclient.utils;
 
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
+import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 
 public class QueryUtils {
     public static void multiQueryBuilder(QueryTypeArrayList<QueryTypeItem> queryTypeBag, StringBuilder queryString) {

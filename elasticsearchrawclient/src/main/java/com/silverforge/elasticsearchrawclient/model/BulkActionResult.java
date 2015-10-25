@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.elasticFacade.model;
+package com.silverforge.elasticsearchrawclient.model;
 
 import com.silverforge.elasticsearchrawclient.elasticFacade.OperationType;
 

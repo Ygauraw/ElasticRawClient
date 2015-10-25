@@ -2,9 +2,9 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 
 import android.text.TextUtils;
 
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkActionResult;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkTuple;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
+import com.silverforge.elasticsearchrawclient.model.BulkActionResult;
+import com.silverforge.elasticsearchrawclient.model.BulkTuple;
+import com.silverforge.elasticsearchrawclient.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.elasticFacade.operations.BulkOperations;
 import com.silverforge.elasticsearchrawclient.elasticFacade.operations.DocumentOperations;
 import com.silverforge.elasticsearchrawclient.elasticFacade.operations.IndexOperations;

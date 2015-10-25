@@ -5,7 +5,7 @@ import android.util.Log;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.ElasticSettings;
+import com.silverforge.elasticsearchrawclient.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.webconnector.exceptions.ServerIsNotAvailableException;
 import com.silverforge.webconnector.exceptions.SettingsIsNullException;

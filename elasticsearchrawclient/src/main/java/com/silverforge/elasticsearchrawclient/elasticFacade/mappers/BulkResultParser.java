@@ -2,7 +2,7 @@ package com.silverforge.elasticsearchrawclient.elasticFacade.mappers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.silverforge.elasticsearchrawclient.elasticFacade.OperationType;
-import com.silverforge.elasticsearchrawclient.elasticFacade.model.BulkResultItem;
+import com.silverforge.elasticsearchrawclient.model.BulkResultItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
