@@ -1,5 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.BoostQuery;
@@ -53,41 +54,36 @@ public class BoolQuery
     }
 
     public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.MinimumShouldMatchInit<T> {
-        private static final String MUST = "must";
-        private static final String MUST_NOT = "must_not";
-        private static final String SHOULD = "should";
-        private static final String DISABLE_COORD = "disable_coord";
-        private static final String BOOST = "boost";
 
         protected abstract T self();
 
         public T must(Queryable... queries) {
-            queryTypeBag.addItem(MUST, queries);
+            queryTypeBag.addItem(Constants.MUST, queries);
             return self();
         }
 
         public T mustNot(Queryable... queries) {
-            queryTypeBag.addItem(MUST_NOT, queries);
+            queryTypeBag.addItem(Constants.MUST_NOT, queries);
             return self();
         }
 
         public T should(Queryable... queries) {
-            queryTypeBag.addItem(SHOULD, queries);
+            queryTypeBag.addItem(Constants.SHOULD, queries);
             return self();
         }
 
         public T disableCoord(boolean value) {
-            queryTypeBag.addItem(DISABLE_COORD, value);
+            queryTypeBag.addItem(Constants.DISABLE_COORD, value);
             return self();
         }
 
         public T boost(int boost) {
-            queryTypeBag.addItem(BOOST, boost);
+            queryTypeBag.addItem(Constants.BOOST, boost);
             return self();
         }
 
         public T boost(float boost) {
-            queryTypeBag.addItem(BOOST, boost);
+            queryTypeBag.addItem(Constants.BOOST, boost);
             return self();
         }
 

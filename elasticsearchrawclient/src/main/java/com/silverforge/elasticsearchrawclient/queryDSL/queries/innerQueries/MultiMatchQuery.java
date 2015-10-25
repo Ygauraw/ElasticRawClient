@@ -2,8 +2,8 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.MultiMatchTypeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
@@ -63,17 +63,12 @@ public class MultiMatchQuery
     }
 
     public static abstract class Init<T extends Init<T>> extends MatchQuery.Init<T> {
-        private final static String FIELDS = "fields";
-        private final static String USE_DIS_MAX = "use_dis_max";
-        private final static String TIE_BREAKER = "tie_breaker";
-        private final static String TYPE = "type";
-
         public T fields(String... fields) {
             return fields(fields, false);
         }
 
         public T fields(String[] fields, boolean isEdge) {
-            if (!queryTypeBag.containsKey(FIELDS)) {
+            if (!queryTypeBag.containsKey(Constants.FIELDS)) {
                 String format;
                 if (isEdge)
                     format = "[%s.edge]";
@@ -85,7 +80,7 @@ public class MultiMatchQuery
 
                 queryTypeBag.add(QueryTypeItem
                     .builder()
-                    .name(FIELDS)
+                    .name(Constants.FIELDS)
                     .value(fieldList)
                     .build());
             }
@@ -93,32 +88,19 @@ public class MultiMatchQuery
         }
 
         public T useDisMax(boolean use) {
-            if (!queryTypeBag.containsKey(USE_DIS_MAX))
-                queryTypeBag.add(QueryTypeItem
-                                    .builder()
-                                    .name(USE_DIS_MAX)
-                                    .value(BooleanUtils.booleanValue(use))
-                                    .build());
+            queryTypeBag.addItem(Constants.USE_DIS_MAX, use);
             return self();
         }
 
         public T tieBreaker(ZeroToOneRangeOperator tieBreakerOperator) {
-            if (!queryTypeBag.containsKey(TIE_BREAKER))
-                queryTypeBag.add(QueryTypeItem
-                                    .builder()
-                                    .name(TIE_BREAKER)
-                                    .value(tieBreakerOperator.toString())
-                                    .build());
+            String value = tieBreakerOperator.toString();
+            queryTypeBag.addItem(Constants.TIE_BREAKER, value);
             return self();
         }
 
         public T type(MultiMatchTypeOperator typeOperator) {
-            if (!queryTypeBag.containsKey(TYPE))
-                queryTypeBag.add(QueryTypeItem
-                                    .builder()
-                                    .name(TYPE)
-                                    .value(typeOperator.toString())
-                                    .build());
+            String value = typeOperator.toString();
+            queryTypeBag.addItem(Constants.TYPE, value);
             return self();
         }
 

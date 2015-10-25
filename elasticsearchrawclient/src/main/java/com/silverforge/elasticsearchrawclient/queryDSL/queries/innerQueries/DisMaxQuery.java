@@ -1,6 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.BoostQuery;
@@ -36,7 +37,7 @@ public class DisMaxQuery
                 .append(name)
                 .append("\":");
 
-            if (name.equals(Init.QUERIES)) {
+            if (name.equals(Constants.QUERIES)) {
                 queryString
                     .append("[")
                     .append(value)
@@ -61,21 +62,14 @@ public class DisMaxQuery
     }
 
     public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
-        private final static String TIE_BREAKER = "tie_breaker";
-        private final static String QUERIES = "queries";
-
         public T tieBreaker(ZeroToOneRangeOperator tieBreakerOperator) {
-            if (!queryTypeBag.containsKey(TIE_BREAKER))
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(TIE_BREAKER)
-                    .value(tieBreakerOperator.toString())
-                    .build());
+            String value = tieBreakerOperator.toString();
+            queryTypeBag.addItem(Constants.TIE_BREAKER, value);
             return self();
         }
 
         public T queries(Queryable... queries) {
-            queryTypeBag.addItem(QUERIES, queries);
+            queryTypeBag.addItem(Constants.QUERIES, queries);
             return self();
         }
 

@@ -1,6 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
@@ -31,29 +32,21 @@ public class BoostingQuery
     }
 
     public static class BoostingQueryBuilder {
-        private final static String POSITIVE = "positive";
-        private final static String NEGATIVE = "negative";
-        private final static String NEGATIVE_BOOST = "negative_boost";
         private QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
 
         public BoostingQueryBuilder positive(Queryable... queries) {
-            queryTypeBag.addItem(POSITIVE, queries);
+            queryTypeBag.addItem(Constants.POSITIVE, queries);
             return this;
         }
 
         public BoostingQueryBuilder negative(Queryable... queries) {
-            queryTypeBag.addItem(NEGATIVE, queries);
+            queryTypeBag.addItem(Constants.NEGATIVE, queries);
             return this;
         }
 
         public BoostingQueryBuilder negativeBoost(ZeroToOneRangeOperator negativeBoostOperator) {
-            if (!queryTypeBag.containsKey(NEGATIVE_BOOST))
-                queryTypeBag.add(
-                    QueryTypeItem
-                        .builder()
-                        .name(NEGATIVE_BOOST)
-                        .value(negativeBoostOperator.toString())
-                        .build());
+            String value = negativeBoostOperator.toString();
+            queryTypeBag.addItem(Constants.NEGATIVE_BOOST, value);
             return this;
         }
 

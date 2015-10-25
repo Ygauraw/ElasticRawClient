@@ -1,5 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.BoostQuery;
@@ -74,16 +75,9 @@ public class ConstantScoreQuery
     }
 
     public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
-        private final static String FILTER = "filter";
-
         public T filter(Queryable queryable) {
-            if (!queryTypeBag.containsKey(FILTER))
-                queryTypeBag.add(QueryTypeItem
-                    .builder()
-                    .name(FILTER)
-                    .value(queryable.getQueryString())
-                    .isParent(true)
-                    .build());
+            String value = queryable.getQueryString();
+            queryTypeBag.addParentItem(Constants.FILTER, value);
             return self();
         }
 
