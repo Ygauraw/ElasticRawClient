@@ -33,7 +33,11 @@ public class MultiMatchQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
-        assertThat(queryString, is("{\"multi_match\":{\"fields\":[\"name\",\"population\"],\"query\":\"12\"}}"));
+
+        assertThat(queryString.indexOf("{\"multi_match\":{"), is(0));
+        assertThat(queryString.indexOf("\"query\":\"12\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"fields\":[\"name\",\"population\"]"), greaterThan(0));
+        assertThat(queryString.indexOf("}}"), greaterThan(0));
     }
 
     @Test

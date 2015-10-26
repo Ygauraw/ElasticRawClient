@@ -4,6 +4,9 @@ import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Generator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
@@ -22,6 +25,7 @@ public class QueryGenerator
 
     protected final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     protected final JsonFactory jsonFactory = new JsonFactory();
+    protected final ObjectMapper mapper = new ObjectMapper();
     protected JsonGenerator jsonGenerator;
 
     protected QueryGenerator() {
@@ -77,6 +81,41 @@ public class QueryGenerator
             jsonGenerator.close();
 
             retValue = outputStream.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(this.getClass().getName(), e.getMessage());
+        }
+        return retValue;
+    }
+
+    protected String generateChildren(String queryName, Map<String, String> childItems) {
+        String retValue = "";
+        try {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeObjectFieldStart(queryName);
+
+            for (Map.Entry<String, String> entry : childItems.entrySet()) {
+                String value = entry.getValue();
+                if (value.startsWith("[")) {
+                    jsonGenerator.writeObjectFieldStart(entry.getKey());
+                    jsonGenerator.writeRaw(value);
+                } else if (value.startsWith("{")) {
+                    JsonNode actualObj = mapper.readTree(value);
+                    jsonGenerator.writeObjectField(entry.getKey(), actualObj);
+                } else
+                    jsonGenerator.writeStringField(entry.getKey(), value);
+            }
+
+            jsonGenerator.writeEndObject();
+
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+
+            retValue = outputStream
+                .toString()
+                .replace("\\", "")
+                .replace("{[", "[")
+                .replace("]}", "]");
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(this.getClass().getName(), e.getMessage());

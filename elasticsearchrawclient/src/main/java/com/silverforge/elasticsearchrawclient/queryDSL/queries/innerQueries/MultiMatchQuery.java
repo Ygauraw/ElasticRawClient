@@ -4,6 +4,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.operators.MultiMatchTypeO
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryFactory;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
@@ -23,32 +24,9 @@ public class MultiMatchQuery
 //        if (queryTypeBag.hasKeys("query", "fields"))
 //            throw new MandatoryParametersAreMissingException("query", "fields");
 
-        StringBuilder queryString = new StringBuilder();
-        queryString.append("{\"multi_match\":{");
-
-        for (int i = 0; i < queryTypeBag.size(); i++) {
-            if (i > 0)
-                queryString.append(",");
-
-            QueryTypeItem item = queryTypeBag.get(i);
-            queryString
-                .append("\"")
-                .append(item.getName())
-                .append("\":");
-
-            if (item.getValue().startsWith("[") || item.getValue().startsWith("{"))
-                queryString
-                    .append(item.getValue());
-            else
-                queryString
-                    .append("\"")
-                    .append(item.getValue())
-                    .append("\"");
-        }
-
-        queryString.append("}}");
-
-        return queryString.toString();
+        return QueryFactory
+            .multiMatchQueryGenerator()
+            .generate(queryTypeBag);
     }
 
     public static Init<?> builder() {

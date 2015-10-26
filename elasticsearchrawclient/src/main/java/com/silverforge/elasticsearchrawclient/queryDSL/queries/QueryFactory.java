@@ -13,6 +13,10 @@ public final class QueryFactory {
         return new MatchQueryGenerator();
     }
 
+    public static MultiMatchQueryGenerator multiMatchQueryGenerator() {
+        return new MultiMatchQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -29,6 +33,21 @@ public final class QueryFactory {
                 .firstOrNull(q -> q.isParent());
 
             return generateParentWithChildren("match", parent, childItems);
+        }
+    }
+
+    public final static class MultiMatchQueryGenerator
+            extends QueryGenerator {
+
+        private MultiMatchQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
+            Map<String, String> childItems = stream(queryTypeBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("multi_match", childItems);
         }
     }
 }
