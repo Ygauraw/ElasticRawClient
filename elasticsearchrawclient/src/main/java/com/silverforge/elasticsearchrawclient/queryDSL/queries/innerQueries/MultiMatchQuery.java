@@ -4,7 +4,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.operators.MultiMatchTypeO
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryFactory;
+import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 

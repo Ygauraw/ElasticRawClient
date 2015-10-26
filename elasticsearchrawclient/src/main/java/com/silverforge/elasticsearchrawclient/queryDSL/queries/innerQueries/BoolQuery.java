@@ -3,7 +3,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryFactory;
+import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 

@@ -1,8 +1,6 @@
-package com.silverforge.elasticsearchrawclient.queryDSL.queries;
+package com.silverforge.elasticsearchrawclient.queryDSL.generator;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Generator;
-import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryGenerator;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 import java.util.Map;
@@ -20,6 +18,10 @@ public final class QueryFactory {
 
     public static BoolQueryGenerator boolQueryGenerator() {
         return new BoolQueryGenerator();
+    }
+
+    public static BoostingQueryGenerator boostingQueryGenerator() {
+        return new BoostingQueryGenerator();
     }
 
     public final static class MatchQueryGenerator
@@ -68,6 +70,21 @@ public final class QueryFactory {
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("bool", childItems);
+        }
+    }
+
+    public final static class BoostingQueryGenerator
+            extends QueryGenerator {
+
+        private BoostingQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
+            Map<String, String> childItems = stream(queryTypeBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("boosting", childItems);
         }
     }
 }

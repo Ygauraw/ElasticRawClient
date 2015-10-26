@@ -1,5 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
+import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
@@ -22,13 +23,9 @@ public class BoostingQuery
 
     @Override
     public String getQueryString() {
-        StringBuilder queryString = new StringBuilder();
-        queryString.append("{\"boosting\":{");
-
-        QueryUtils.multiQueryBuilder(queryTypeBag, queryString);
-
-        queryString.append("}}");
-        return queryString.toString();
+        return QueryFactory
+            .boostingQueryGenerator()
+            .generate(queryTypeBag);
     }
 
     public static class BoostingQueryBuilder {
