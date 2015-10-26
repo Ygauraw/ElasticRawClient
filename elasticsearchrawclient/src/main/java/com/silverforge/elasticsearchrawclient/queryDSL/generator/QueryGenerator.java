@@ -96,14 +96,7 @@ public class QueryGenerator
 
             for (Map.Entry<String, String> entry : childItems.entrySet()) {
                 String value = entry.getValue();
-                if (value.startsWith("[")) {
-                    jsonGenerator.writeObjectFieldStart(entry.getKey());
-                    jsonGenerator.writeRaw(value);
-                } else if (value.startsWith("{")) {
-                    JsonNode actualObj = mapper.readTree(value);
-                    jsonGenerator.writeObjectField(entry.getKey(), actualObj);
-                } else
-                    jsonGenerator.writeStringField(entry.getKey(), value);
+                jsonGenerator.writeStringField(entry.getKey(), value);
             }
 
             jsonGenerator.writeEndObject();
@@ -114,8 +107,10 @@ public class QueryGenerator
             retValue = outputStream
                 .toString()
                 .replace("\\", "")
-                .replace("{[", "[")
-                .replace("]}", "]");
+                .replace("\"[", "[")
+                .replace("]\"", "]")
+                .replace("\"{", "{")
+                .replace("}\"", "}");
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(this.getClass().getName(), e.getMessage());

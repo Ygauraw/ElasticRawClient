@@ -3,6 +3,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
@@ -21,26 +22,9 @@ public class BoolQuery
 
     @Override
     public String getQueryString() {
-
-        StringBuilder queryString = new StringBuilder();
-        queryString.append("{\"bool\":{");
-
-        for (int i = 0; i < queryTypeBag.size(); i++) {
-            if (i > 0)
-                queryString.append(",");
-
-            QueryTypeItem item = queryTypeBag.get(i);
-            queryString.append("\"").append(item.getName()).append("\":");
-            String value = item.getValue();
-            if (value.startsWith("{") || value.startsWith("[")) {
-                queryString.append(value);
-            } else {
-                queryString.append("\"").append(value).append("\"");
-            }
-        }
-
-        queryString.append("}}");
-        return queryString.toString();
+        return QueryFactory
+            .boolQueryGenerator()
+            .generate(queryTypeBag);
     }
 
     public static class BoolQueryBuilder extends Init<BoolQueryBuilder> {
