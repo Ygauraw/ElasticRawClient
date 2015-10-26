@@ -29,6 +29,10 @@ public final class QueryFactory {
         return new ConstantScoreQueryGenerator();
     }
 
+    public static DisMaxQueryGenerator disMaxQueryGenerator() {
+        return new DisMaxQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -105,6 +109,21 @@ public final class QueryFactory {
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("constant_score", childItems);
+        }
+    }
+
+    public final static class DisMaxQueryGenerator
+            extends QueryGenerator {
+
+        private DisMaxQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
+            Map<String, String> childItems = stream(queryTypeBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("dis_max", childItems);
         }
     }
 }

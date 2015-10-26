@@ -1,5 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
+import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
@@ -22,36 +23,9 @@ public class DisMaxQuery
 
     @Override
     public String getQueryString() {
-        StringBuilder queryString = new StringBuilder();
-        queryString.append("{\"dis_max\":{");
-
-        for (int i = 0; i < queryTypeBag.size(); i++) {
-            if (i > 0)
-                queryString.append(",");
-
-            QueryTypeItem item = queryTypeBag.get(i);
-            String name = item.getName();
-            String value = item.getValue();
-            queryString
-                .append("\"")
-                .append(name)
-                .append("\":");
-
-            if (name.equals(Constants.QUERIES)) {
-                queryString
-                    .append("[")
-                    .append(value)
-                    .append("]");
-            } else {
-                queryString
-                    .append("\"")
-                    .append(value)
-                    .append("\"");
-            }
-        }
-
-        queryString.append("}}");
-        return queryString.toString();
+        return QueryFactory
+            .disMaxQueryGenerator()
+            .generate(queryTypeBag);
     }
 
     public static class DisMaxQueryBuilder extends Init<DisMaxQueryBuilder> {
