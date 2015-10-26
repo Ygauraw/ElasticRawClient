@@ -10,6 +10,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.operators.PhraseTypeOpera
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroTermsQueryOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
@@ -28,6 +29,10 @@ public class MatchQuery
     }
 
     public String getQueryString() {
+        QueryFactory
+            .matchQueryGenerator(queryTypeBag)
+            .generate();
+
         List<QueryTypeItem> parentItems = stream(queryTypeBag)
             .where(i -> i.isParent())
             .toList();
@@ -57,7 +62,8 @@ public class MatchQuery
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.MinimumShouldMatchInit<T> {
+    public static abstract class Init<T extends Init<T>>
+            extends MinimumShouldMatchQuery.MinimumShouldMatchInit<T> {
 
         public T fieldName(String fieldName) {
             if (TextUtils.isEmpty(fieldName))

@@ -1,7 +1,7 @@
 package com.silverforge.elasticsearchrawclient.utils;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,7 +12,8 @@ import java.util.Map;
 
 import static br.com.zbra.androidlinq.Linq.stream;
 
-public class QueryTypeArrayList<T extends QueryTypeItem> extends ArrayList<T> {
+public class QueryTypeArrayList<T extends QueryTypeItem>
+        extends ArrayList<T> {
 
     public boolean containsKey(String fieldName) {
         boolean retValue = false;

@@ -1,6 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 
 public class TermsQuery
     implements Queryable {

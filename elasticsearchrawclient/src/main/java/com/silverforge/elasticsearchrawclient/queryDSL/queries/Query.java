@@ -1,12 +1,12 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.definition.Composable;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.ComposableQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public final class Query
-        implements Queryable, Composable {
+        implements Queryable, ComposableQuery {
 
     private final QueryTypeArrayList<QueryTypeItem> queryTypeBag;
 
