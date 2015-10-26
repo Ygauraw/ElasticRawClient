@@ -1,6 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.generator;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.ConstantScoreQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 import java.util.Map;
@@ -22,6 +23,10 @@ public final class QueryFactory {
 
     public static BoostingQueryGenerator boostingQueryGenerator() {
         return new BoostingQueryGenerator();
+    }
+
+    public static ConstantScoreQueryGenerator constantScoreQueryGenerator() {
+        return new ConstantScoreQueryGenerator();
     }
 
     public final static class MatchQueryGenerator
@@ -85,6 +90,21 @@ public final class QueryFactory {
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("boosting", childItems);
+        }
+    }
+
+    public final static class ConstantScoreQueryGenerator
+            extends QueryGenerator {
+
+        private ConstantScoreQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
+            Map<String, String> childItems = stream(queryTypeBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("constant_score", childItems);
         }
     }
 }
