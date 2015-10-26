@@ -6,7 +6,6 @@ import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
-import com.silverforge.elasticsearchrawclient.utils.QueryUtils;
 
 public class BoostingQuery
         implements Queryable {
