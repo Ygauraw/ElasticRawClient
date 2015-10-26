@@ -31,7 +31,6 @@ public class StreamUtils {
 
     public static String getRawContent(Context context, int rawId) {
         InputStream inputStream = context.getResources().openRawResource(rawId);
-        String retValue = convertStreamToString(inputStream);
-        return retValue;
+        return convertStreamToString(inputStream);
     }
 }

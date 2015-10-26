@@ -4,9 +4,6 @@ import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Generator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
@@ -25,7 +22,6 @@ public class QueryGenerator
 
     protected final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     protected final JsonFactory jsonFactory = new JsonFactory();
-    protected final ObjectMapper mapper = new ObjectMapper();
     protected JsonGenerator jsonGenerator;
 
     protected QueryGenerator() {

@@ -1,7 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.generator;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.ConstantScoreQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 import java.util.Map;
