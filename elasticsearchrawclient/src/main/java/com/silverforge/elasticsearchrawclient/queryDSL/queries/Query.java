@@ -9,10 +9,10 @@ import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 public final class Query
         implements Queryable, ComposableQuery {
 
-    private final QueryTypeArrayList<QueryTypeItem> queryTypeBag;
+    private final QueryTypeArrayList<QueryTypeItem> queryBag;
 
     Query(QueryBuilder queryBuilder) {
-        queryTypeBag = queryBuilder.queryTypeBag;
+        queryBag = queryBuilder.queryBag;
     }
 
     public static QueryBuilder builder() {
@@ -24,11 +24,11 @@ public final class Query
         StringBuilder queryString = new StringBuilder();
 
         queryString.append("{");
-        for (int i = 0; i < queryTypeBag.size(); i++) {
+        for (int i = 0; i < queryBag.size(); i++) {
             if (i > 0)
                 queryString.append(",");
 
-            QueryTypeItem item = queryTypeBag.get(i);
+            QueryTypeItem item = queryBag.get(i);
             if (item.getName().equals(Constants.INNER_QUERY)) {
                 queryString.append("\"query\":").append(item.getValue());
             } else {
@@ -46,22 +46,22 @@ public final class Query
     }
 
     public static class QueryBuilder {
-        private final QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
+        private final QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
 
         QueryBuilder() {}
 
         public QueryBuilder from(int from) {
-            queryTypeBag.addItem(Constants.FROM, from);
+            queryBag.addItem(Constants.FROM, from);
             return this;
         }
 
         public QueryBuilder size(Integer size) {
-            queryTypeBag.addItem(Constants.SIZE, size);
+            queryBag.addItem(Constants.SIZE, size);
             return this;
         }
 
         public QueryBuilder innerQuery(Queryable query) {
-            queryTypeBag.addItem(Constants.INNER_QUERY, query);
+            queryBag.addItem(Constants.INNER_QUERY, query);
             return this;
         }
 

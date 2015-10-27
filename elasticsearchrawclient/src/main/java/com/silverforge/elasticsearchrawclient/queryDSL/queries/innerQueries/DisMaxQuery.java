@@ -11,10 +11,10 @@ import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 public class DisMaxQuery
         extends BoostQuery {
 
-    private QueryTypeArrayList<QueryTypeItem> queryTypeBag;
+    private QueryTypeArrayList<QueryTypeItem> queryBag;
 
-    protected DisMaxQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-        this.queryTypeBag = queryTypeBag;
+    protected DisMaxQuery(QueryTypeArrayList<QueryTypeItem> queryBag) {
+        this.queryBag = queryBag;
     }
 
     public static Init<?> builder() {
@@ -25,7 +25,7 @@ public class DisMaxQuery
     public String getQueryString() {
         return QueryFactory
             .disMaxQueryGenerator()
-            .generate(queryTypeBag);
+            .generate(queryBag);
     }
 
     public static class DisMaxQueryBuilder extends Init<DisMaxQueryBuilder> {
@@ -38,17 +38,17 @@ public class DisMaxQuery
     public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
         public T tieBreaker(ZeroToOneRangeOperator tieBreakerOperator) {
             String value = tieBreakerOperator.toString();
-            queryTypeBag.addItem(Constants.TIE_BREAKER, value);
+            queryBag.addItem(Constants.TIE_BREAKER, value);
             return self();
         }
 
         public T queries(Queryable... queries) {
-            queryTypeBag.addItem(Constants.QUERIES, queries);
+            queryBag.addItem(Constants.QUERIES, queries);
             return self();
         }
 
         public DisMaxQuery build() {
-            return new DisMaxQuery(queryTypeBag);
+            return new DisMaxQuery(queryBag);
         }
     }
 }

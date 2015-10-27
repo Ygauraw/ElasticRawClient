@@ -10,10 +10,10 @@ import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 public class BoolQuery
     extends MinimumShouldMatchQuery {
 
-    private QueryTypeArrayList<QueryTypeItem> queryTypeBag;
+    private QueryTypeArrayList<QueryTypeItem> queryBag;
 
-    public BoolQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-        this.queryTypeBag = queryTypeBag;
+    public BoolQuery(QueryTypeArrayList<QueryTypeItem> queryBag) {
+        this.queryBag = queryBag;
     }
 
     public static Init<?> builder() {
@@ -24,7 +24,7 @@ public class BoolQuery
     public String getQueryString() {
         return QueryFactory
             .boolQueryGenerator()
-            .generate(queryTypeBag);
+            .generate(queryBag);
     }
 
     public static class BoolQueryBuilder extends Init<BoolQueryBuilder> {
@@ -39,37 +39,37 @@ public class BoolQuery
         protected abstract T self();
 
         public T must(Queryable... queries) {
-            queryTypeBag.addItem(Constants.MUST, queries);
+            queryBag.addItem(Constants.MUST, queries);
             return self();
         }
 
         public T mustNot(Queryable... queries) {
-            queryTypeBag.addItem(Constants.MUST_NOT, queries);
+            queryBag.addItem(Constants.MUST_NOT, queries);
             return self();
         }
 
         public T should(Queryable... queries) {
-            queryTypeBag.addItem(Constants.SHOULD, queries);
+            queryBag.addItem(Constants.SHOULD, queries);
             return self();
         }
 
         public T disableCoord(boolean value) {
-            queryTypeBag.addItem(Constants.DISABLE_COORD, value);
+            queryBag.addItem(Constants.DISABLE_COORD, value);
             return self();
         }
 
         public T boost(int boost) {
-            queryTypeBag.addItem(Constants.BOOST, boost);
+            queryBag.addItem(Constants.BOOST, boost);
             return self();
         }
 
         public T boost(float boost) {
-            queryTypeBag.addItem(Constants.BOOST, boost);
+            queryBag.addItem(Constants.BOOST, boost);
             return self();
         }
 
         public BoolQuery build() {
-            return new BoolQuery(queryTypeBag);
+            return new BoolQuery(queryBag);
         }
     }
 }

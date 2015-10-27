@@ -10,10 +10,10 @@ import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 public class BoostingQuery
         implements Queryable {
 
-    private QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
+    private QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
 
-    public BoostingQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-        this.queryTypeBag = queryTypeBag;
+    public BoostingQuery(QueryTypeArrayList<QueryTypeItem> queryBag) {
+        this.queryBag = queryBag;
     }
 
     public static BoostingQueryBuilder builder() {
@@ -24,30 +24,30 @@ public class BoostingQuery
     public String getQueryString() {
         return QueryFactory
             .boostingQueryGenerator()
-            .generate(queryTypeBag);
+            .generate(queryBag);
     }
 
     public static class BoostingQueryBuilder {
-        private QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
+        private QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
 
         public BoostingQueryBuilder positive(Queryable... queries) {
-            queryTypeBag.addItem(Constants.POSITIVE, queries);
+            queryBag.addItem(Constants.POSITIVE, queries);
             return this;
         }
 
         public BoostingQueryBuilder negative(Queryable... queries) {
-            queryTypeBag.addItem(Constants.NEGATIVE, queries);
+            queryBag.addItem(Constants.NEGATIVE, queries);
             return this;
         }
 
         public BoostingQueryBuilder negativeBoost(ZeroToOneRangeOperator negativeBoostOperator) {
             String value = negativeBoostOperator.toString();
-            queryTypeBag.addItem(Constants.NEGATIVE_BOOST, value);
+            queryBag.addItem(Constants.NEGATIVE_BOOST, value);
             return this;
         }
 
         public BoostingQuery build() {
-            return new BoostingQuery(queryTypeBag);
+            return new BoostingQuery(queryBag);
         }
     }
 }

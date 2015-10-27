@@ -14,16 +14,16 @@ public abstract class BoostQuery
     }
 
     public static abstract class BoostInit<T extends BoostInit<T>> {
-        protected QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
+        protected QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
         protected abstract T self();
 
         public T boost(int boost) {
-            queryTypeBag.addItem(Constants.BOOST, boost);
+            queryBag.addItem(Constants.BOOST, boost);
             return self();
         }
 
         public T boost(float boost) {
-            queryTypeBag.addItem(Constants.BOOST, boost);
+            queryBag.addItem(Constants.BOOST, boost);
             return self();
         }
     }

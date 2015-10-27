@@ -34,7 +34,7 @@ public class QueryGenerator
     }
 
     @Override
-    public String generate(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
+    public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
         return null;
     }
 

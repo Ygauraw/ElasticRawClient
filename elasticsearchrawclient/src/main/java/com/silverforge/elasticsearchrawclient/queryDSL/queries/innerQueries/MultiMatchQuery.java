@@ -13,20 +13,20 @@ import java.util.Date;
 public class MultiMatchQuery
         extends MatchQuery {
 
-    MultiMatchQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-        super(queryTypeBag);
+    MultiMatchQuery(QueryTypeArrayList<QueryTypeItem> queryBag) {
+        super(queryBag);
     }
 
     @Override
     public String getQueryString() {
 
         // TODO : Need a proper solution here
-//        if (queryTypeBag.hasKeys("query", "fields"))
+//        if (queryBag.hasKeys("query", "fields"))
 //            throw new MandatoryParametersAreMissingException("query", "fields");
 
         return QueryFactory
             .multiMatchQueryGenerator()
-            .generate(queryTypeBag);
+            .generate(queryBag);
     }
 
     public static Init<?> builder() {
@@ -46,7 +46,7 @@ public class MultiMatchQuery
         }
 
         public T fields(String[] fields, boolean isEdge) {
-            if (!queryTypeBag.containsKey(Constants.FIELDS)) {
+            if (!queryBag.containsKey(Constants.FIELDS)) {
                 String format;
                 if (isEdge)
                     format = "[%s.edge]";
@@ -56,7 +56,7 @@ public class MultiMatchQuery
                 String fieldList = String.format(format,
                     StringUtils.makeCommaSeparatedListWithQuotationMark(fields));
 
-                queryTypeBag.add(QueryTypeItem
+                queryBag.add(QueryTypeItem
                     .builder()
                     .name(Constants.FIELDS)
                     .value(fieldList)
@@ -66,19 +66,19 @@ public class MultiMatchQuery
         }
 
         public T useDisMax(boolean use) {
-            queryTypeBag.addItem(Constants.USE_DIS_MAX, use);
+            queryBag.addItem(Constants.USE_DIS_MAX, use);
             return self();
         }
 
         public T tieBreaker(ZeroToOneRangeOperator tieBreakerOperator) {
             String value = tieBreakerOperator.toString();
-            queryTypeBag.addItem(Constants.TIE_BREAKER, value);
+            queryBag.addItem(Constants.TIE_BREAKER, value);
             return self();
         }
 
         public T type(MultiMatchTypeOperator typeOperator) {
             String value = typeOperator.toString();
-            queryTypeBag.addItem(Constants.TYPE, value);
+            queryBag.addItem(Constants.TYPE, value);
             return self();
         }
 
@@ -150,7 +150,7 @@ public class MultiMatchQuery
         // endregion
 
         public MultiMatchQuery build() {
-            return new MultiMatchQuery(queryTypeBag);
+            return new MultiMatchQuery(queryBag);
         }
     }
 

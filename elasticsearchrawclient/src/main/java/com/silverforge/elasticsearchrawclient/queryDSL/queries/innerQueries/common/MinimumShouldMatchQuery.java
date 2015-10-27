@@ -14,26 +14,26 @@ public abstract class MinimumShouldMatchQuery
     }
 
     public static abstract class MinimumShouldMatchInit<T extends MinimumShouldMatchInit<T>> {
-        protected final QueryTypeArrayList<QueryTypeItem> queryTypeBag = new QueryTypeArrayList<>();
+        protected final QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
         protected abstract T self();
 
         public T minimumShouldMatch(int value) {
-            queryTypeBag.addItem(Constants.MINIMUM_SHOULD_MATCH, value);
+            queryBag.addItem(Constants.MINIMUM_SHOULD_MATCH, value);
             return self();
         }
 
         public T minimumShouldMatchPercentage(int value) {
-            queryTypeBag.addPercentageItem(Constants.MINIMUM_SHOULD_MATCH, value);
+            queryBag.addPercentageItem(Constants.MINIMUM_SHOULD_MATCH, value);
             return self();
         }
 
         public T minimumShouldMatchPercentage(float value) {
-            queryTypeBag.addPercentageItem(Constants.MINIMUM_SHOULD_MATCH, value);
+            queryBag.addPercentageItem(Constants.MINIMUM_SHOULD_MATCH, value);
             return self();
         }
 
         public T minimumShouldMatchCombination(String expression) {
-            queryTypeBag.addItem(Constants.MINIMUM_SHOULD_MATCH, expression);
+            queryBag.addItem(Constants.MINIMUM_SHOULD_MATCH, expression);
             return self();
         }
     }

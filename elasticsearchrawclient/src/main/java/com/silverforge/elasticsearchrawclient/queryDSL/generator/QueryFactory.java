@@ -32,6 +32,10 @@ public final class QueryFactory {
         return new DisMaxQueryGenerator();
     }
 
+    public static FilteredQueryGenerator filteredQueryGenerator() {
+        return new FilteredQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -39,12 +43,12 @@ public final class QueryFactory {
         }
 
         @Override
-        public String generate(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-            Map<String, String> childItems = stream(queryTypeBag)
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
                 .where(q -> !q.isParent())
                 .toMap(q -> q.getName(), q -> q.getValue());
 
-            QueryTypeItem parent = stream(queryTypeBag)
+            QueryTypeItem parent = stream(queryBag)
                 .firstOrNull(q -> q.isParent());
 
             return generateParentWithChildren("match", parent, childItems);
@@ -58,8 +62,8 @@ public final class QueryFactory {
         }
 
         @Override
-        public String generate(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-            Map<String, String> childItems = stream(queryTypeBag)
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("multi_match", childItems);
@@ -73,8 +77,8 @@ public final class QueryFactory {
         }
 
         @Override
-        public String generate(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-            Map<String, String> childItems = stream(queryTypeBag)
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("bool", childItems);
@@ -88,8 +92,8 @@ public final class QueryFactory {
         }
 
         @Override
-        public String generate(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-            Map<String, String> childItems = stream(queryTypeBag)
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("boosting", childItems);
@@ -103,8 +107,8 @@ public final class QueryFactory {
         }
 
         @Override
-        public String generate(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-            Map<String, String> childItems = stream(queryTypeBag)
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("constant_score", childItems);
@@ -118,11 +122,26 @@ public final class QueryFactory {
         }
 
         @Override
-        public String generate(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-            Map<String, String> childItems = stream(queryTypeBag)
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("dis_max", childItems);
+        }
+    }
+
+    public final static class FilteredQueryGenerator
+            extends QueryGenerator {
+
+        private FilteredQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("filtered", childItems);
         }
     }
 }

@@ -10,10 +10,10 @@ import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 public class ConstantScoreQuery
         extends BoostQuery {
 
-    private QueryTypeArrayList<QueryTypeItem> queryTypeBag;
+    private QueryTypeArrayList<QueryTypeItem> queryBag;
 
-    public ConstantScoreQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-        this.queryTypeBag = queryTypeBag;
+    public ConstantScoreQuery(QueryTypeArrayList<QueryTypeItem> queryBag) {
+        this.queryBag = queryBag;
     }
 
     public static Init<?> builder() {
@@ -24,7 +24,7 @@ public class ConstantScoreQuery
     public String getQueryString() {
         return QueryFactory
             .constantScoreQueryGenerator()
-            .generate(queryTypeBag);
+            .generate(queryBag);
     }
 
     public static class ConstantScoreQueryBuilder extends Init<ConstantScoreQueryBuilder> {
@@ -37,12 +37,12 @@ public class ConstantScoreQuery
     public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
         public T filter(Queryable queryable) {
             String value = queryable.getQueryString();
-            queryTypeBag.addParentItem(Constants.FILTER, value);
+            queryBag.addParentItem(Constants.FILTER, value);
             return self();
         }
 
         public ConstantScoreQuery build() {
-            return new ConstantScoreQuery(queryTypeBag);
+            return new ConstantScoreQuery(queryBag);
         }
     }
 }

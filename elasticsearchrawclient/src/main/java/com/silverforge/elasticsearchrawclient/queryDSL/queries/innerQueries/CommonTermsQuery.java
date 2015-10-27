@@ -13,19 +13,19 @@ import static br.com.zbra.androidlinq.Linq.*;
 public class CommonTermsQuery
         extends MinimumShouldMatchQuery {
 
-    private QueryTypeArrayList<QueryTypeItem> queryTypeBag;
+    private QueryTypeArrayList<QueryTypeItem> queryBag;
 
-    protected CommonTermsQuery(QueryTypeArrayList<QueryTypeItem> queryTypeBag) {
-        this.queryTypeBag = queryTypeBag;
+    protected CommonTermsQuery(QueryTypeArrayList<QueryTypeItem> queryBag) {
+        this.queryBag = queryBag;
     }
 
     @Override
     public String getQueryString() {
-        List<QueryTypeItem> parentItems = stream(queryTypeBag)
+        List<QueryTypeItem> parentItems = stream(queryBag)
             .where(i -> i.isParent())
             .toList();
 
-        List<QueryTypeItem> nonParentItems = stream(queryTypeBag)
+        List<QueryTypeItem> nonParentItems = stream(queryBag)
             .where(i -> !i.isParent())
             .toList();
 
@@ -61,40 +61,40 @@ public class CommonTermsQuery
     public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.MinimumShouldMatchInit<T> {
 
         public T field(String fieldName) {
-            queryTypeBag.addParentItem(Constants.FIELD_NAME, fieldName);
+            queryBag.addParentItem(Constants.FIELD_NAME, fieldName);
             return self();
         }
 
         public T query(String query) {
-            queryTypeBag.addItem(Constants.QUERY, query);
+            queryBag.addItem(Constants.QUERY, query);
             return self();
         }
 
         public T cutoffFrequency(ZeroToOneRangeOperator cutOffFrequencyOperator) {
             String value = cutOffFrequencyOperator.toString();
-            queryTypeBag.addItem(Constants.CUTOFF_FREQUENCY, value);
+            queryBag.addItem(Constants.CUTOFF_FREQUENCY, value);
             return self();
         }
 
         // region Low Freq
 
         public T lowFreq(int value) {
-            queryTypeBag.addItem(Constants.LOW_FREQ, value);
+            queryBag.addItem(Constants.LOW_FREQ, value);
             return self();
         }
 
         public T lowFreqPercentage(int value) {
-            queryTypeBag.addPercentageItem(Constants.LOW_FREQ, value);
+            queryBag.addPercentageItem(Constants.LOW_FREQ, value);
             return self();
         }
 
         public T lowFreqPercentage(float value) {
-            queryTypeBag.addPercentageItem(Constants.LOW_FREQ, value);
+            queryBag.addPercentageItem(Constants.LOW_FREQ, value);
             return self();
         }
 
         public T lowFreqCombination(String expression) {
-            queryTypeBag.addItem(Constants.LOW_FREQ, expression);
+            queryBag.addItem(Constants.LOW_FREQ, expression);
             return self();
         }
 
@@ -103,22 +103,22 @@ public class CommonTermsQuery
         // region High Freq
 
         public T highFreq(int value) {
-            queryTypeBag.addItem(Constants.HIGH_FREQ, value);
+            queryBag.addItem(Constants.HIGH_FREQ, value);
             return self();
         }
 
         public T highFreqPercentage(int value) {
-            queryTypeBag.addPercentageItem(Constants.HIGH_FREQ, value);
+            queryBag.addPercentageItem(Constants.HIGH_FREQ, value);
             return self();
         }
 
         public T highFreqPercentage(float value) {
-            queryTypeBag.addPercentageItem(Constants.HIGH_FREQ, value);
+            queryBag.addPercentageItem(Constants.HIGH_FREQ, value);
             return self();
         }
 
         public T highFreqCombination(String expression) {
-            queryTypeBag.addItem(Constants.HIGH_FREQ, expression);
+            queryBag.addItem(Constants.HIGH_FREQ, expression);
             return self();
         }
 
@@ -126,18 +126,18 @@ public class CommonTermsQuery
 
         public T lowFreqOperator(LogicOperator lowFreqOperator) {
             String value = lowFreqOperator.toString();
-            queryTypeBag.addItem(Constants.LOW_FREQ_OPERATOR, value);
+            queryBag.addItem(Constants.LOW_FREQ_OPERATOR, value);
             return self();
         }
 
         public T highFreqOperator(LogicOperator highFreqOperator) {
             String value = highFreqOperator.toString();
-            queryTypeBag.addItem(Constants.HIGH_FREQ_OPERATOR, value);
+            queryBag.addItem(Constants.HIGH_FREQ_OPERATOR, value);
             return self();
         }
 
         public CommonTermsQuery build() {
-            return new CommonTermsQuery(queryTypeBag);
+            return new CommonTermsQuery(queryBag);
         }
     }
 
@@ -146,14 +146,14 @@ public class CommonTermsQuery
         StringBuilder queryString,
         List<QueryTypeItem> list) {
 
-        boolean haveFreqKeys = queryTypeBag.hasAtLeastOneKey(Constants.LOW_FREQ, Constants.HIGH_FREQ);
-        boolean hasMinKey = queryTypeBag.hasKeys(Constants.MINIMUM_SHOULD_MATCH);
+        boolean haveFreqKeys = queryBag.hasAtLeastOneKey(Constants.LOW_FREQ, Constants.HIGH_FREQ);
+        boolean hasMinKey = queryBag.hasKeys(Constants.MINIMUM_SHOULD_MATCH);
 
         if (hasMinKey) {
             if (list.size() > 0)
                 queryString.append(",");
 
-            QueryTypeItem minItem = queryTypeBag.getByKey(Constants.MINIMUM_SHOULD_MATCH);
+            QueryTypeItem minItem = queryBag.getByKey(Constants.MINIMUM_SHOULD_MATCH);
             queryString
                 .append("\"")
                 .append(minItem.getName())
