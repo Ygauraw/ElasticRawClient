@@ -1,6 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common;
 
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
+import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;

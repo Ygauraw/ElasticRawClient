@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Generator;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.Constants;
+import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 import java.io.ByteArrayOutputStream;
