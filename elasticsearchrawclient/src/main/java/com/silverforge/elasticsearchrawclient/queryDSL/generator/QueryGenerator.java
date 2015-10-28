@@ -42,6 +42,39 @@ public class QueryGenerator
             String queryName,
             QueryTypeItem parent,
             Map<String, String> childItems) {
+        return generateParentWithChildren(queryName, parent, childItems, false);
+    }
+
+    protected String generateObjectParentWithChildren (
+            String queryName,
+            QueryTypeItem parent,
+            Map<String, String> childItems) {
+        return generateParentWithChildren(queryName, parent, childItems, true);
+    }
+
+    protected String generateEmptyParent (
+            String queryName) {
+        String retValue = "";
+        try {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeObjectFieldStart(queryName);
+
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+
+            retValue = outputStream.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(this.getClass().getName(), e.getMessage());
+        }
+        return retValue;
+    }
+
+    protected String generateParentWithChildren (
+            String queryName,
+            QueryTypeItem parent,
+            Map<String, String> childItems,
+            boolean isEmptyParent) {
 
         String retValue = "";
         try {
@@ -68,7 +101,11 @@ public class QueryGenerator
                     }
                     jsonGenerator.writeEndObject();
                 } else {
-                    jsonGenerator.writeStringField(parentValue, "");
+                    if (isEmptyParent) {
+                        jsonGenerator.writeObjectFieldStart(parentValue);
+                        jsonGenerator.writeEndObject();
+                    } else
+                        jsonGenerator.writeStringField(parentValue, "");
                 }
             }
             jsonGenerator.writeEndObject();

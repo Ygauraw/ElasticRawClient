@@ -61,7 +61,7 @@ public class FilteredQuery
             if (threshold < 1)
                 threshold = 1;
 
-            value = value.replace("_N", Integer.toString(threshold));
+            value = value.replace("_N", "_" + Integer.toString(threshold));
             queryBag.addItem(Constants.STRATEGY, value);
             return self();
         }

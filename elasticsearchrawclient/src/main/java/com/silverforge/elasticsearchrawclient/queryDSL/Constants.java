@@ -17,6 +17,7 @@ public final class Constants {
     public final static String LENIENT = "lenient";
     public final static String LOW_FREQ = "low_freq";
     public final static String LOW_FREQ_OPERATOR = "low_freq_operator";
+    public final static String MATCH_ALL = "match_all";
     public final static String MAX_EXPANSIONS = "max_expansions";
     public final static String MINIMUM_SHOULD_MATCH = "minimum_should_match";
     public final static String MUST = "must";

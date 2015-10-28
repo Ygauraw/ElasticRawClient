@@ -21,6 +21,9 @@ public class CommonTermsQuery
 
     @Override
     public String getQueryString() {
+
+        // TODO : QueryFactory should be applied here
+
         List<QueryTypeItem> parentItems = stream(queryBag)
             .where(i -> i.isParent())
             .toList();
