@@ -1,14 +1,12 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
+import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
+import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
+import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
-import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
-import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
-
-import java.util.List;
-import static br.com.zbra.androidlinq.Linq.*;
 
 public class CommonTermsQuery
         extends MinimumShouldMatchQuery {
@@ -21,33 +19,9 @@ public class CommonTermsQuery
 
     @Override
     public String getQueryString() {
-
-        // TODO : QueryFactory should be applied here
-
-        List<QueryTypeItem> parentItems = stream(queryBag)
-            .where(i -> i.isParent())
-            .toList();
-
-        List<QueryTypeItem> nonParentItems = stream(queryBag)
-            .where(i -> !i.isParent())
-            .toList();
-
-        StringBuilder queryString = new StringBuilder();
-        queryString.append("{\"common\":{\"");
-
-        if (parentItems.size() == 0)
-            queryString.append("_all");
-        else {
-            String value = parentItems.get(0).getValue();
-            queryString.append(value);
-        }
-        queryString.append("\":{");
-
-        List<QueryTypeItem> list = addCommonQueryTypeItems(nonParentItems, queryString);
-        addMinimumShouldMatchItems(nonParentItems, queryString, list);
-
-        queryString.append("}}}");
-        return queryString.toString();
+        return QueryFactory
+            .commonTermsQueryGenerator()
+            .generate(queryBag);
     }
 
     public static Init<?> builder() {
@@ -142,77 +116,5 @@ public class CommonTermsQuery
         public CommonTermsQuery build() {
             return new CommonTermsQuery(queryBag);
         }
-    }
-
-    private void addMinimumShouldMatchItems(
-        List<QueryTypeItem> nonParentItems,
-        StringBuilder queryString,
-        List<QueryTypeItem> list) {
-
-        boolean haveFreqKeys = queryBag.hasAtLeastOneKey(Constants.LOW_FREQ, Constants.HIGH_FREQ);
-        boolean hasMinKey = queryBag.hasKeys(Constants.MINIMUM_SHOULD_MATCH);
-
-        if (hasMinKey) {
-            if (list.size() > 0)
-                queryString.append(",");
-
-            QueryTypeItem minItem = queryBag.getByKey(Constants.MINIMUM_SHOULD_MATCH);
-            queryString
-                .append("\"")
-                .append(minItem.getName())
-                .append("\":\"")
-                .append(minItem.getValue())
-                .append("\"");
-        } else if (haveFreqKeys) {
-            if (list.size() > 0)
-                queryString.append(",");
-
-            queryString.append("\"").append(Constants.MINIMUM_SHOULD_MATCH).append("\":{");
-
-            List<QueryTypeItem> freqItems = stream(nonParentItems)
-                .where(i -> i.getName().equals(Constants.LOW_FREQ) || i.getName().equals(Constants.HIGH_FREQ))
-                .toList();
-
-            for(int i = 0; i < freqItems.size(); i++) {
-                if (i > 0)
-                    queryString.append(",");
-
-                QueryTypeItem item = freqItems.get(i);
-                queryString
-                    .append("\"")
-                    .append(item.getName())
-                    .append("\":\"")
-                    .append(item.getValue())
-                    .append("\"");
-            }
-
-            queryString.append("}");
-        }
-    }
-
-    private List<QueryTypeItem> addCommonQueryTypeItems(
-        List<QueryTypeItem> nonParentItems,
-        StringBuilder queryString) {
-
-        List<QueryTypeItem> list = stream(nonParentItems)
-            .where(i -> !i.getName().equals(Constants.MINIMUM_SHOULD_MATCH))
-            .where(i -> !i.getName().equals(Constants.LOW_FREQ))
-            .where(i -> !i.getName().equals(Constants.HIGH_FREQ))
-            .toList();
-
-        for(int i = 0; i < list.size(); i++) {
-            if (i > 0)
-                queryString.append(",");
-
-            QueryTypeItem item = list.get(i);
-            queryString
-                .append("\"")
-                .append(item.getName())
-                .append("\":\"")
-                .append(item.getValue())
-                .append("\"");
-        }
-
-        return list;
     }
 }

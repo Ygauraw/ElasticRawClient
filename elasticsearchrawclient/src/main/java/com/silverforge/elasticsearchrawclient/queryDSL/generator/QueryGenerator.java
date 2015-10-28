@@ -87,6 +87,8 @@ public class QueryGenerator
             } else
                 parentValue = parent.getValue();
 
+            // TODO : it's awful, cries for refactor
+
             if (stream(childItems).any(i -> i.getKey().equals(Constants.VALUE))) {
                 jsonGenerator.writeStringField(
                     parentValue,
@@ -96,9 +98,45 @@ public class QueryGenerator
             } else {
                 if (stream(childItems).any()) {
                     jsonGenerator.writeObjectFieldStart(parentValue);
-                    for (Map.Entry<String, String> entry : childItems.entrySet()) {
-                        jsonGenerator.writeStringField(entry.getKey(), entry.getValue());
+
+                    boolean minimumExists = stream(childItems).any(i -> i.getKey().equals(Constants.MINIMUM_SHOULD_MATCH));
+                    Map.Entry<String, String> lowFreq = stream(childItems)
+                        .firstOrNull(i -> i.getKey().equals(Constants.LOW_FREQ));
+                    Map.Entry<String, String> highFreq = stream(childItems)
+                        .firstOrNull(i -> i.getKey().equals(Constants.HIGH_FREQ));
+
+                    if (!minimumExists && (lowFreq != null || highFreq != null)) {
+                        Map<String, String> filteredChildItems = stream(childItems.entrySet())
+                            .where(i -> !i.getKey().equals(Constants.MINIMUM_SHOULD_MATCH))
+                            .where(i -> !i.getKey().equals(Constants.LOW_FREQ))
+                            .where(i -> !i.getKey().equals(Constants.HIGH_FREQ))
+                            .toMap(i -> i.getKey(), i -> i.getValue());
+
+                        for (Map.Entry<String, String> entry : filteredChildItems.entrySet()) {
+                            jsonGenerator.writeStringField(entry.getKey(), entry.getValue());
+                        }
+
+                        jsonGenerator.writeObjectFieldStart(Constants.MINIMUM_SHOULD_MATCH);
+                        if (lowFreq != null)
+                            jsonGenerator.writeStringField(lowFreq.getKey(), lowFreq.getValue());
+                        if (highFreq != null)
+                            jsonGenerator.writeStringField(highFreq.getKey(), highFreq.getValue());
+                        jsonGenerator.writeEndObject();
+                    } else if (minimumExists) {
+                        Map<String, String> filteredChildItems = stream(childItems.entrySet())
+                            .where(i -> !i.getKey().equals(Constants.LOW_FREQ))
+                            .where(i -> !i.getKey().equals(Constants.HIGH_FREQ))
+                            .toMap(i -> i.getKey(), i -> i.getValue());
+
+                        for (Map.Entry<String, String> entry : filteredChildItems.entrySet()) {
+                            jsonGenerator.writeStringField(entry.getKey(), entry.getValue());
+                        }
+                    } else {
+                        for (Map.Entry<String, String> entry : childItems.entrySet()) {
+                            jsonGenerator.writeStringField(entry.getKey(), entry.getValue());
+                        }
                     }
+
                     jsonGenerator.writeEndObject();
                 } else {
                     if (isEmptyParent) {

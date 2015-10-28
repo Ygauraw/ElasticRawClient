@@ -58,10 +58,13 @@ public class FilteredQuery
 
         public T strategy(StrategyOperator strategyOperator, int threshold) {
             String value = strategyOperator.toString();
-            if (threshold < 1)
-                threshold = 1;
+            if (strategyOperator == StrategyOperator.RANDOM_ACCESS_N) {
+                if (threshold < 1)
+                    threshold = 1;
 
-            value = value.replace("_N", "_" + Integer.toString(threshold));
+                value = value.replace("_N", "_" + threshold);
+            }
+
             queryBag.addItem(Constants.STRATEGY, value);
             return self();
         }
