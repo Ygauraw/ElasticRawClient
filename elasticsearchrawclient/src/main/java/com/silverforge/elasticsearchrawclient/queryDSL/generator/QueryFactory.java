@@ -36,6 +36,10 @@ public final class QueryFactory {
         return new FilteredQueryGenerator();
     }
 
+    public static FunctionScoreQueryGenerator functionScoreQueryGenerator() {
+        return new FunctionScoreQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -144,4 +148,21 @@ public final class QueryFactory {
             return generateChildren("filtered", childItems);
         }
     }
+
+    public final static class FunctionScoreQueryGenerator
+            extends QueryGenerator {
+
+        private FunctionScoreQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("function_score", childItems);
+        }
+    }
+
+
 }

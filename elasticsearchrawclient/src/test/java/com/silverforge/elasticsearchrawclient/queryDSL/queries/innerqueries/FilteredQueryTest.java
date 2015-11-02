@@ -3,6 +3,8 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.filters.innerfilters.MatchAllFilter;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.StrategyOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.FilteredQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.MatchQuery;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

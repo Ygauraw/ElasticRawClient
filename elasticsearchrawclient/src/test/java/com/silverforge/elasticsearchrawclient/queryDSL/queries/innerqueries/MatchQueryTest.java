@@ -6,6 +6,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzyRewriteOpe
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.PhraseTypeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroTermsQueryOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.MatchQuery;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +27,6 @@ public class MatchQueryTest {
 
     @Test
     public void when_String_value_added_with_field_name_then_query_generated_well() {
-
         MatchQuery matchQuery =
             MatchQuery
                 .builder()

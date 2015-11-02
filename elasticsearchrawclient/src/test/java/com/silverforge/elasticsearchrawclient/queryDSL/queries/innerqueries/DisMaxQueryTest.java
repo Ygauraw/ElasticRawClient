@@ -2,6 +2,9 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.CommonTermsQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.DisMaxQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.MatchQuery;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
