@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
+package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,8 +8,6 @@ import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.functions.Function;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.BoostModeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ScoreModeOperator;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.FunctionScoreQuery;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.MatchQuery;
 
 
 import static org.hamcrest.Matchers.greaterThan;

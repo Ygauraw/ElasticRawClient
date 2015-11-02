@@ -6,7 +6,7 @@ import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Query;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.MatchQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.MatchQuery;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 import com.silverforge.webconnector.exceptions.SettingsIsNullException;
 import com.silverforge.webconnector.model.ConnectorSettings;

@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
+package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.MultiMatchTypeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;

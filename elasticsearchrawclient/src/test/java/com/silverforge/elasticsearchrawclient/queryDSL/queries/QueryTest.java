@@ -1,7 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.MatchQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.MatchQuery;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

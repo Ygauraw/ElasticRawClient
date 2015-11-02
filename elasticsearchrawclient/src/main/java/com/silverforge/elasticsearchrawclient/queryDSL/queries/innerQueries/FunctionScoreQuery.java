@@ -1,18 +1,17 @@
-package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
+package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Filterable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Functionable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.BoostModeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ScoreModeOperator;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.common.BoostQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.BoostQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public class FunctionScoreQuery
-            implements Queryable {
+            extends BoostQuery {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
@@ -40,24 +39,11 @@ public class FunctionScoreQuery
 
     public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
 
-        private QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
-
-        protected abstract T self();
 
         public T query(Queryable query) {
             queryBag.addItem(Constants.QUERY, query);
             return self();
         }
-//
-//        public T boost(int boost) {
-//            queryBag.addItem(Constants.BOOST, boost);
-//            return self();
-//        }
-//
-//        public T boost(float boost) {
-//            queryBag.addItem(Constants.BOOST, boost);
-//            return self();
-//        }
 
         public T maxBoost(int maxBoost) {
             queryBag.addItem(Constants.MAX_BOOST, maxBoost);

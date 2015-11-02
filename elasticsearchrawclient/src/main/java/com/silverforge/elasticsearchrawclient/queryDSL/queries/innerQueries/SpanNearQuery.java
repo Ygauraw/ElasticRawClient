@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
+package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
 public class SpanNearQuery {
 }

@@ -39,6 +39,9 @@ public final class QueryFactory {
     public static FunctionScoreQueryGenerator functionScoreQueryGenerator() {
         return new FunctionScoreQueryGenerator();
     }
+    public static CommonTermsQueryGenerator commonTermsQueryGenerator() {
+        return new CommonTermsQueryGenerator();
+    }
 
     public final static class MatchQueryGenerator
             extends QueryGenerator {
@@ -164,5 +167,22 @@ public final class QueryFactory {
         }
     }
 
+    public final static class CommonTermsQueryGenerator
+            extends QueryGenerator {
 
+        private CommonTermsQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .where(q -> !q.isParent())
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                    .firstOrNull(q -> q.isParent());
+
+            return generateObjectParentWithChildren("common", parent, childItems);
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries;
+package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
@@ -6,7 +6,6 @@ import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzyRewriteOpe
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.PhraseTypeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroTermsQueryOperator;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerqueries.MatchQuery;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
