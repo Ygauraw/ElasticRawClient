@@ -38,8 +38,6 @@ public class FunctionScoreQuery
     }
 
     public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
-
-
         public T query(Queryable query) {
             queryBag.addItem(Constants.QUERY, query);
             return self();
@@ -90,6 +88,5 @@ public class FunctionScoreQuery
         public FunctionScoreQuery build() {
             return new FunctionScoreQuery(queryBag);
         }
-
     }
 }

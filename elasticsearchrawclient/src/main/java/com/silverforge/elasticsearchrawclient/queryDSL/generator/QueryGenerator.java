@@ -16,7 +16,7 @@ import java.util.Map;
 import static br.com.zbra.androidlinq.Linq.stream;
 
 public class QueryGenerator
-        implements Generator{
+        implements Generator {
 
     private final static String TAG = QueryGenerator.class.getName();
 
