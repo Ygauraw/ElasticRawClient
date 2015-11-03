@@ -32,13 +32,10 @@ public final class QueryFactory {
         return new DisMaxQueryGenerator();
     }
 
-    public static FilteredQueryGenerator filteredQueryGenerator() {
-        return new FilteredQueryGenerator();
-    }
-
     public static FunctionScoreQueryGenerator functionScoreQueryGenerator() {
         return new FunctionScoreQueryGenerator();
     }
+
     public static CommonTermsQueryGenerator commonTermsQueryGenerator() {
         return new CommonTermsQueryGenerator();
     }
@@ -134,21 +131,6 @@ public final class QueryFactory {
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("dis_max", childItems);
-        }
-    }
-
-    public final static class FilteredQueryGenerator
-            extends QueryGenerator {
-
-        private FilteredQueryGenerator() {
-        }
-
-        @Override
-        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
-            Map<String, String> childItems = stream(queryBag)
-                .toMap(q -> q.getName(), q -> q.getValue());
-
-            return generateChildren("filtered", childItems);
         }
     }
 
