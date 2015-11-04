@@ -39,7 +39,7 @@ It's built upon **HttpsURLConnection**. [Connector.java](https://github.com/silv
 
 The Connector applies a retry pattern, by default it tries three times to get the response from server. 
 
-Current version is [![Download](https://api.bintray.com/packages/silverforge/maven/elastic-raw-client/images/download.svg) ](https://bintray.com/silverforge/maven/elastic-raw-client/_latestVersion)
+Current version is [![Download](https://api.bintray.com/packages/silverforge/maven/elastic-raw-client/images/download.svg) ](https://bintray.com/silverforge/maven/elastic-raw-client/1.1.1)
 
 ## How do I get set up? ##
 
