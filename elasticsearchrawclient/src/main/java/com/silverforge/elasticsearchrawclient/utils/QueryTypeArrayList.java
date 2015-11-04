@@ -178,14 +178,15 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
                 .build());
     }
 
+
     @SuppressWarnings("unchecked")
     public void addItem(String key, double value) {
         if (!containsKey(key))
             add((T) T
-                .builder()
-                .name(key)
-                .value(Double.toString(value))
-                .build());
+                    .builder()
+                    .name(key)
+                    .value(Double.toString(value))
+                    .build());
     }
 
     @SuppressWarnings("unchecked")
@@ -225,6 +226,22 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
                 .name(key)
                 .value("[" + joinedQueries + "]")
                 .build());
+        }
+    }
+
+    public void addItem(String key, Map<String, ?> value) {
+        if (value != null && value.size() > 0 && !containsKey(key)) {
+            String[] params = stream(value)
+                    .select(q -> q.getKey() + ":" + q.getValue())
+                    .toList()
+                    .toArray(new String[]{});
+
+            String joinedParams = StringUtils.makeCommaSeparatedList(params);
+            add((T) T
+                    .builder()
+                    .name(key)
+                    .value("[" + joinedParams + "]")
+                    .build());
         }
     }
 

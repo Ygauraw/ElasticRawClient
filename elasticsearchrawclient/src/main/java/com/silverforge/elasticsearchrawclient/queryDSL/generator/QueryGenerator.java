@@ -100,8 +100,11 @@ public class QueryGenerator
                     jsonGenerator.writeObjectFieldStart(parentValue);
 
                     boolean minimumExists = stream(childItems).any(i -> i.getKey().equals(Constants.MINIMUM_SHOULD_MATCH));
-                    boolean hasScoreMode = stream(childItems).any(i -> i.getKey().equals(Constants.SCORE_MODE));
-                    boolean hasFunction = stream(childItems).any(i -> i.getKey().equals(Constants.FUNCTION));
+
+                    // note: score_mode is now working without function provided
+
+                    //boolean hasScoreMode = stream(childItems).any(i -> i.getKey().equals(Constants.SCORE_MODE));
+                    //boolean hasFunction = stream(childItems).any(i -> i.getKey().equals(Constants.FUNCTION));
 
                     Map.Entry<String, String> lowFreq = stream(childItems)
                         .firstOrNull(i -> i.getKey().equals(Constants.LOW_FREQ));
@@ -140,6 +143,8 @@ public class QueryGenerator
                         }
                     }
 
+                    // note: score_mode is now working without function provided
+/*
                     if(hasScoreMode && !hasFunction) {
                         Map<String, String> filteredChildItems = stream(childItems.entrySet())
                                 .where(i -> !i.getKey().equals(Constants.SCORE_MODE))
@@ -153,7 +158,7 @@ public class QueryGenerator
                             jsonGenerator.writeStringField(entry.getKey(), entry.getValue());
                         }
                     }
-
+*/
                     jsonGenerator.writeEndObject();
                 } else {
                     if (isEmptyParent) {
@@ -180,14 +185,14 @@ public class QueryGenerator
         String retValue = "";
         try {
             jsonGenerator.writeStartObject();
-            jsonGenerator.writeObjectFieldStart(queryName);
 
-            for (Map.Entry<String, String> entry : childItems.entrySet()) {
-                String value = entry.getValue();
-                jsonGenerator.writeStringField(entry.getKey(), value);
+            if(!queryName.equals("")) {
+                jsonGenerator.writeObjectFieldStart(queryName);
+                writeEntries(childItems);
+                jsonGenerator.writeEndObject();
+            } else {
+                writeEntries(childItems);
             }
-
-            jsonGenerator.writeEndObject();
 
             jsonGenerator.writeEndObject();
             jsonGenerator.close();
@@ -204,5 +209,12 @@ public class QueryGenerator
             Log.e(this.getClass().getName(), e.getMessage());
         }
         return retValue;
+    }
+
+    private void writeEntries(Map<String, String> childItems) throws IOException {
+        for (Map.Entry<String, String> entry : childItems.entrySet()) {
+            String value = entry.getValue();
+            jsonGenerator.writeStringField(entry.getKey(), value);
+        }
     }
 }

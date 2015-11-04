@@ -1,6 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.generator;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
+import com.silverforge.elasticsearchrawclient.queryDSL.fieldValueFactors.FieldValueFactor;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 import java.util.Map;
@@ -38,6 +39,18 @@ public final class QueryFactory {
 
     public static CommonTermsQueryGenerator commonTermsQueryGenerator() {
         return new CommonTermsQueryGenerator();
+    }
+
+    public static FunctionGenerator functionGenerator() {
+        return new FunctionGenerator();
+    }
+
+    public static ScriptGenerator scriptGenerator() {
+        return new ScriptGenerator();
+    }
+
+    public static FieldValueFactorGenerator fieldValueFactorGenerator() {
+        return new FieldValueFactorGenerator();
     }
 
     public final static class MatchQueryGenerator
@@ -167,4 +180,50 @@ public final class QueryFactory {
             return generateObjectParentWithChildren("common", parent, childItems);
         }
     }
+
+    public final static class FunctionGenerator
+            extends QueryGenerator {
+
+        private FunctionGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("", childItems);
+        }
+    }
+
+    public final static class ScriptGenerator
+            extends QueryGenerator {
+
+        private ScriptGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("", childItems);
+        }
+    }
+
+    public final static class FieldValueFactorGenerator
+            extends QueryGenerator {
+
+        private FieldValueFactorGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("", childItems);
+        }
+    }
+
 }

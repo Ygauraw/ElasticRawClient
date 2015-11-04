@@ -3,6 +3,8 @@ package com.silverforge.elasticsearchrawclient.queryDSL.functions;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Functionable;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Scriptable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
@@ -20,7 +22,7 @@ public class Function implements Functionable {
     @Override
     public String getQueryString() {
         return QueryFactory
-                .functionScoreQueryGenerator()
+                .functionGenerator()
                 .generate(queryBag);
     }
 
@@ -51,7 +53,7 @@ public class Function implements Functionable {
             return self();
         }
 
-        public T scriptScore(Functionable script) {
+        public T scriptScore(Scriptable script) {
             queryBag.addItem(Constants.SCRIPT_SCORE, script);
             return self();
         }
@@ -71,7 +73,7 @@ public class Function implements Functionable {
             return self();
         }
 
-        public T fieldValueFactor(Functionable fieldValueFactor) {
+        public T fieldValueFactor(Queryable fieldValueFactor) {
             queryBag.addItem(Constants.FIELD_VALUE_FACTOR, fieldValueFactor);
             return self();
         }

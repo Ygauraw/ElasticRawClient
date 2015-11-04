@@ -8,7 +8,11 @@ import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.functions.Function;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.BoostModeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ScoreModeOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.scripts.Script;
 
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.not;
@@ -50,6 +54,8 @@ public class FunctionScoreQueryTest {
                         .build())
                 .function(Function
                         .builder()
+                        .weight(2)
+                        .randomScore(2)
                         .build())
                 .build();
 
@@ -58,11 +64,15 @@ public class FunctionScoreQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
         assertThat(queryString.indexOf("\"query\":{\"match\":{\"_all\":\"\"}}"), greaterThan(0));
-        assertThat(queryString.indexOf("\"function\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"function\":{\"seed\":\"2\",\"weight\":\"2\"}"), greaterThan(0));
     }
 
     @Test
     public void when_all_the_params_added_then_query_is_generated_well() {
+        Map<String, Integer> params = new HashMap<>();
+        params.put("param1",1);
+        params.put("param2", 2);
+
         FunctionScoreQuery query = FunctionScoreQuery
                 .builder()
                 .query(MatchQuery
@@ -75,11 +85,17 @@ public class FunctionScoreQueryTest {
                 .maxBoost(5.123f)
                 .function(Function
                         .builder()
+                        .scriptScore(
+                                Script
+                                .builder()
+                                .lang("lang")
+                                .params(params)
+                                .build()
+                        )
                         .build())
                 .build();
 
         String queryString = query.getQueryString();
-
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
@@ -89,7 +105,7 @@ public class FunctionScoreQueryTest {
         assertThat(queryString.indexOf("\"score_mode\":\"multiply\""), greaterThan(0));
         assertThat(queryString.indexOf("\"min_score\":\"67\""), greaterThan(0));
         assertThat(queryString.indexOf("\"max_boost\":\"5.123\""), greaterThan(0));
-        assertThat(queryString.indexOf("\"function\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"function\":{\"script\":{\"lang\":\"lang\",\"params\":[param1:1,param2:2]}}"), greaterThan(0));
     }
 
     // endregion
