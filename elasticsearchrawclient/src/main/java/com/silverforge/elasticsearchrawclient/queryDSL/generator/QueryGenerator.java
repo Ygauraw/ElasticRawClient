@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Generator;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
@@ -38,31 +40,61 @@ public class QueryGenerator
         return null;
     }
 
-    protected String generateParentWithChildren (
-            String queryName,
-            QueryTypeItem parent,
-            Map<String, String> childItems) {
-        return generateParentWithChildren(queryName, parent, childItems, false);
-    }
+    protected String generateCommonChildren(String queryName,
+                                            QueryTypeItem parent,
+                                            Map<String, String> childItems) {
 
-    protected String generateObjectParentWithChildren (
-            String queryName,
-            QueryTypeItem parent,
-            Map<String, String> childItems) {
-        return generateParentWithChildren(queryName, parent, childItems, true);
-    }
-
-    protected String generateEmptyParent (
-            String queryName) {
         String retValue = "";
         try {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart(queryName);
 
+            String parentValue = getParentValue(parent);
+            if (stream(childItems).any()) {
+                jsonGenerator.writeObjectFieldStart(parentValue);
+
+                boolean minimumExists = stream(childItems).any(i -> i.getKey().equals(Constants.MINIMUM_SHOULD_MATCH));
+                Map.Entry<String, String> lowFreq = stream(childItems)
+                    .firstOrNull(i -> i.getKey().equals(Constants.LOW_FREQ));
+                Map.Entry<String, String> highFreq = stream(childItems)
+                    .firstOrNull(i -> i.getKey().equals(Constants.HIGH_FREQ));
+
+                if (!minimumExists && (lowFreq != null || highFreq != null)) {
+                    Map<String, String> filteredChildItems = stream(childItems.entrySet())
+                        .where(i -> !i.getKey().equals(Constants.MINIMUM_SHOULD_MATCH))
+                        .where(i -> !i.getKey().equals(Constants.LOW_FREQ))
+                        .where(i -> !i.getKey().equals(Constants.HIGH_FREQ))
+                        .toMap(i -> i.getKey(), i -> i.getValue());
+
+                    writeEntries(filteredChildItems);
+
+                    jsonGenerator.writeObjectFieldStart(Constants.MINIMUM_SHOULD_MATCH);
+                    if (lowFreq != null)
+                        jsonGenerator.writeStringField(lowFreq.getKey(), lowFreq.getValue());
+                    if (highFreq != null)
+                        jsonGenerator.writeStringField(highFreq.getKey(), highFreq.getValue());
+                    jsonGenerator.writeEndObject();
+                } else if (minimumExists) {
+                    Map<String, String> filteredChildItems = stream(childItems.entrySet())
+                        .where(i -> !i.getKey().equals(Constants.LOW_FREQ))
+                        .where(i -> !i.getKey().equals(Constants.HIGH_FREQ))
+                        .toMap(i -> i.getKey(), i -> i.getValue());
+
+                    writeEntries(filteredChildItems);
+                } else {
+                    writeEntries(childItems);
+                }
+                jsonGenerator.writeEndObject();
+            } else {
+                jsonGenerator.writeObjectFieldStart(parentValue);
+                jsonGenerator.writeEndObject();
+            }
+            jsonGenerator.writeEndObject();
+
             jsonGenerator.writeEndObject();
             jsonGenerator.close();
 
-            retValue = outputStream.toString();
+            retValue = getOutputStreamValue();
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(this.getClass().getName(), e.getMessage());
@@ -70,25 +102,16 @@ public class QueryGenerator
         return retValue;
     }
 
-    protected String generateParentWithChildren (
-            String queryName,
-            QueryTypeItem parent,
-            Map<String, String> childItems,
-            boolean isEmptyParent) {
+    protected String generateMatchChildren(String queryName,
+                                           QueryTypeItem parent,
+                                           Map<String, String> childItems) {
 
         String retValue = "";
         try {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart(queryName);
 
-            String parentValue;
-            if (parent == null) {
-                parentValue = "_all";
-            } else
-                parentValue = parent.getValue();
-
-            // TODO : it's awful, cries for refactor
-
+            String parentValue = getParentValue(parent);
             if (stream(childItems).any(i -> i.getKey().equals(Constants.VALUE))) {
                 jsonGenerator.writeStringField(
                     parentValue,
@@ -98,74 +121,10 @@ public class QueryGenerator
             } else {
                 if (stream(childItems).any()) {
                     jsonGenerator.writeObjectFieldStart(parentValue);
-
-                    boolean minimumExists = stream(childItems).any(i -> i.getKey().equals(Constants.MINIMUM_SHOULD_MATCH));
-
-                    // note: score_mode is now working without function provided
-
-                    //boolean hasScoreMode = stream(childItems).any(i -> i.getKey().equals(Constants.SCORE_MODE));
-                    //boolean hasFunction = stream(childItems).any(i -> i.getKey().equals(Constants.FUNCTION));
-
-                    Map.Entry<String, String> lowFreq = stream(childItems)
-                        .firstOrNull(i -> i.getKey().equals(Constants.LOW_FREQ));
-                    Map.Entry<String, String> highFreq = stream(childItems)
-                        .firstOrNull(i -> i.getKey().equals(Constants.HIGH_FREQ));
-
-                    if (!minimumExists && (lowFreq != null || highFreq != null)) {
-                        Map<String, String> filteredChildItems = stream(childItems.entrySet())
-                            .where(i -> !i.getKey().equals(Constants.MINIMUM_SHOULD_MATCH))
-                            .where(i -> !i.getKey().equals(Constants.LOW_FREQ))
-                            .where(i -> !i.getKey().equals(Constants.HIGH_FREQ))
-                            .toMap(i -> i.getKey(), i -> i.getValue());
-
-                        for (Map.Entry<String, String> entry : filteredChildItems.entrySet()) {
-                            jsonGenerator.writeStringField(entry.getKey(), entry.getValue());
-                        }
-
-                        jsonGenerator.writeObjectFieldStart(Constants.MINIMUM_SHOULD_MATCH);
-                        if (lowFreq != null)
-                            jsonGenerator.writeStringField(lowFreq.getKey(), lowFreq.getValue());
-                        if (highFreq != null)
-                            jsonGenerator.writeStringField(highFreq.getKey(), highFreq.getValue());
-                        jsonGenerator.writeEndObject();
-                    } else if (minimumExists) {
-                        Map<String, String> filteredChildItems = stream(childItems.entrySet())
-                            .where(i -> !i.getKey().equals(Constants.LOW_FREQ))
-                            .where(i -> !i.getKey().equals(Constants.HIGH_FREQ))
-                            .toMap(i -> i.getKey(), i -> i.getValue());
-
-                        for (Map.Entry<String, String> entry : filteredChildItems.entrySet()) {
-                            jsonGenerator.writeStringField(entry.getKey(), entry.getValue());
-                        }
-                    } else {
-                        for (Map.Entry<String, String> entry : childItems.entrySet()) {
-                            jsonGenerator.writeStringField(entry.getKey(), entry.getValue());
-                        }
-                    }
-
-                    // note: score_mode is now working without function provided
-/*
-                    if(hasScoreMode && !hasFunction) {
-                        Map<String, String> filteredChildItems = stream(childItems.entrySet())
-                                .where(i -> !i.getKey().equals(Constants.SCORE_MODE))
-                                .toMap(i -> i.getKey(), i -> i.getValue());
-
-                        for (Map.Entry<String, String> entry : filteredChildItems.entrySet()) {
-                            jsonGenerator.writeStringField(entry.getKey(), entry.getValue());
-                        }
-                    } else if(!hasScoreMode) {
-                        for (Map.Entry<String, String> entry : childItems.entrySet()) {
-                            jsonGenerator.writeStringField(entry.getKey(), entry.getValue());
-                        }
-                    }
-*/
+                    writeEntries(childItems);
                     jsonGenerator.writeEndObject();
                 } else {
-                    if (isEmptyParent) {
-                        jsonGenerator.writeObjectFieldStart(parentValue);
-                        jsonGenerator.writeEndObject();
-                    } else
-                        jsonGenerator.writeStringField(parentValue, "");
+                    jsonGenerator.writeStringField(parentValue, "");
                 }
             }
             jsonGenerator.writeEndObject();
@@ -173,7 +132,7 @@ public class QueryGenerator
             jsonGenerator.writeEndObject();
             jsonGenerator.close();
 
-            retValue = outputStream.toString();
+            retValue = getOutputStreamValue();
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(this.getClass().getName(), e.getMessage());
@@ -197,13 +156,7 @@ public class QueryGenerator
             jsonGenerator.writeEndObject();
             jsonGenerator.close();
 
-            retValue = outputStream
-                .toString()
-                .replace("\\", "")
-                .replace("\"[", "[")
-                .replace("]\"", "]")
-                .replace("\"{", "{")
-                .replace("}\"", "}");
+            retValue = getOutputStreamValue();
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(this.getClass().getName(), e.getMessage());
@@ -211,10 +164,27 @@ public class QueryGenerator
         return retValue;
     }
 
+    private String getParentValue(QueryTypeItem parent) {
+        Optional<QueryTypeItem> parentItem = Optional.fromNullable(parent);
+        String parentValue = parentItem
+            .or(QueryTypeItem.builder().value("_all").build())
+            .getValue();
+        return parentValue;
+    }
+
     private void writeEntries(Map<String, String> childItems) throws IOException {
         for (Map.Entry<String, String> entry : childItems.entrySet()) {
-            String value = entry.getValue();
-            jsonGenerator.writeStringField(entry.getKey(), value);
+            jsonGenerator.writeStringField(entry.getKey(), entry.getValue());
         }
+    }
+
+    private String getOutputStreamValue() {
+        return outputStream
+            .toString()
+            .replace("\\", "")
+            .replace("\"[", "[")
+            .replace("]\"", "]")
+            .replace("\"{", "{")
+            .replace("}\"", "}");
     }
 }

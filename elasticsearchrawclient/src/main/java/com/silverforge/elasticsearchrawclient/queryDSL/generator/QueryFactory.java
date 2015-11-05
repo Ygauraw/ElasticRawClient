@@ -68,7 +68,7 @@ public final class QueryFactory {
             QueryTypeItem parent = stream(queryBag)
                 .firstOrNull(q -> q.isParent());
 
-            return generateParentWithChildren("match", parent, childItems);
+            return generateMatchChildren("match", parent, childItems);
         }
     }
 
@@ -177,7 +177,7 @@ public final class QueryFactory {
             QueryTypeItem parent = stream(queryBag)
                     .firstOrNull(q -> q.isParent());
 
-            return generateObjectParentWithChildren("common", parent, childItems);
+            return generateCommonChildren("common", parent, childItems);
         }
     }
 
