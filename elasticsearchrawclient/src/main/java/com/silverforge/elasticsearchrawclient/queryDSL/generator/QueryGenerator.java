@@ -155,6 +155,46 @@ public class QueryGenerator
         return retValue;
     }
 
+    protected String generateFuzzyChildren(String queryName,
+                                           QueryTypeItem parent,
+                                           Map<String, String> childItems) {
+
+        String retValue = "";
+        try {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeObjectFieldStart(queryName);
+
+            String parentValue = getParentValue(parent);
+            if (stream(childItems).count() == 1
+                    && stream(childItems).any(i -> i.getKey().equals(Constants.VALUE))) {
+
+                jsonGenerator.writeStringField(
+                    parentValue,
+                    stream(childItems)
+                        .first(i -> i.getKey().equals(Constants.VALUE))
+                        .getValue());
+            } else {
+                if (stream(childItems).any()) {
+                    jsonGenerator.writeObjectFieldStart(parentValue);
+                    writeEntries(childItems);
+                    jsonGenerator.writeEndObject();
+                } else {
+                    jsonGenerator.writeStringField(parentValue, "");
+                }
+            }
+            jsonGenerator.writeEndObject();
+
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+
+            retValue = getOutputStreamValue();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(this.getClass().getName(), e.getMessage());
+        }
+        return retValue;
+    }
+
     protected String generateChildren(String queryName, Map<String, String> childItems) {
         String retValue = "";
         try {

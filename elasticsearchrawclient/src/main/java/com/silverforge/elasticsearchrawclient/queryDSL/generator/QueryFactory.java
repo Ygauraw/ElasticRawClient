@@ -53,6 +53,10 @@ public final class QueryFactory {
         return new FieldValueFactorGenerator();
     }
 
+    public static FuzzyQueryGenerator fuzzyQueryGenerator() {
+        return new FuzzyQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -226,4 +230,22 @@ public final class QueryFactory {
         }
     }
 
+    public final static class FuzzyQueryGenerator
+        extends QueryGenerator {
+
+        private FuzzyQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                .firstOrNull(q -> q.isParent());
+
+            return generateFuzzyChildren("fuzzy", parent, childItems);
+        }
+    }
 }
