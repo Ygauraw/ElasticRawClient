@@ -2,6 +2,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.operators;
 
 public enum ScoreModeOperator {
 
+    NONE("none"),
     MULTIPLY("multiply"),
     SUM("sum"),
     AVG("avg"),

@@ -2,6 +2,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.generator;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.fieldValueFactors.FieldValueFactor;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.HasChildQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 import java.util.Map;
@@ -39,6 +40,10 @@ public final class QueryFactory {
 
     public static CommonTermsQueryGenerator commonTermsQueryGenerator() {
         return new CommonTermsQueryGenerator();
+    }
+
+    public static HasChildQueryGenerator hasChildQueryGenerator() {
+        return new HasChildQueryGenerator();
     }
 
     public static FunctionGenerator functionGenerator() {
@@ -182,6 +187,25 @@ public final class QueryFactory {
                     .firstOrNull(q -> q.isParent());
 
             return generateCommonChildren("common", parent, childItems);
+        }
+    }
+
+    public final static class HasChildQueryGenerator
+            extends QueryGenerator {
+
+        private HasChildQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .where(q -> !q.isParent())
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                    .firstOrNull(q -> q.isParent());
+
+            return generateCommonChildren("has_child", parent, childItems);
         }
     }
 

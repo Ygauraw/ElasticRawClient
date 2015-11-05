@@ -25,7 +25,9 @@ public final class Constants {
     public final static String LOW_FREQ_OPERATOR = "low_freq_operator";
     public final static String MATCH_ALL = "match_all";
     public final static String MAX_BOOST = "max_boost";
+    public final static String MAX_CHILDREN  = "max_children";
     public final static String MAX_EXPANSIONS = "max_expansions";
+    public final static String MIN_CHILDREN = "min_children";
     public final static String MINIMUM_SHOULD_MATCH = "minimum_should_match";
     public final static String MIN_SCORE = "min_score";
     public final static String MISSING = "missing";
