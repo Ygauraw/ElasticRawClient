@@ -114,10 +114,10 @@ public class QueryGenerator
             String parentValue = getParentValue(parent);
             if (stream(childItems).any(i -> i.getKey().equals(Constants.VALUE))) {
                 jsonGenerator.writeStringField(
-                    parentValue,
-                    stream(childItems)
-                        .first(i -> i.getKey().equals(Constants.VALUE))
-                        .getValue());
+                        parentValue,
+                        stream(childItems)
+                                .first(i -> i.getKey().equals(Constants.VALUE))
+                                .getValue());
             } else {
                 if (stream(childItems).any()) {
                     jsonGenerator.writeObjectFieldStart(parentValue);
@@ -140,22 +140,30 @@ public class QueryGenerator
         return retValue;
     }
 
+    protected String generateChildren(Map<String, String> childItems) {
+        String retValue = "";
+        try {
+            jsonGenerator.writeStartObject();
+            writeEntries(childItems);
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+            retValue = getOutputStreamValue();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(this.getClass().getName(), e.getMessage());
+        }
+        return retValue;
+    }
+
     protected String generateChildren(String queryName, Map<String, String> childItems) {
         String retValue = "";
         try {
             jsonGenerator.writeStartObject();
-
-            if(!queryName.equals("")) {
-                jsonGenerator.writeObjectFieldStart(queryName);
-                writeEntries(childItems);
-                jsonGenerator.writeEndObject();
-            } else {
-                writeEntries(childItems);
-            }
-
+            jsonGenerator.writeObjectFieldStart(queryName);
+            writeEntries(childItems);
+            jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();
             jsonGenerator.close();
-
             retValue = getOutputStreamValue();
         } catch (IOException e) {
             e.printStackTrace();

@@ -192,7 +192,7 @@ public final class QueryFactory {
             Map<String, String> childItems = stream(queryBag)
                     .toMap(q -> q.getName(), q -> q.getValue());
 
-            return generateChildren("", childItems);
+            return generateChildren(childItems);
         }
     }
 
@@ -207,7 +207,7 @@ public final class QueryFactory {
             Map<String, String> childItems = stream(queryBag)
                     .toMap(q -> q.getName(), q -> q.getValue());
 
-            return generateChildren("", childItems);
+            return generateChildren(childItems);
         }
     }
 
@@ -222,7 +222,7 @@ public final class QueryFactory {
             Map<String, String> childItems = stream(queryBag)
                     .toMap(q -> q.getName(), q -> q.getValue());
 
-            return generateChildren("", childItems);
+            return generateChildren(childItems);
         }
     }
 
