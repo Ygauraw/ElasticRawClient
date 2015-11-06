@@ -38,6 +38,7 @@ public final class Constants {
     public final static String NEGATIVE_BOOST = "negative_boost";
     public final static String OPERATOR = "operator";
     public final static String PARAMS = "params";
+    public final static String PARENT_TYPE = "parent_type";
     public final static String POSITIVE = "positive";
     public final static String PREFIX_LENGTH = "prefix_length";
     public final static String QUERIES = "queries";
