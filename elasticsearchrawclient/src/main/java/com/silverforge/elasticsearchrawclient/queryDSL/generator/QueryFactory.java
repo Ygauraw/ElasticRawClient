@@ -51,6 +51,10 @@ public final class QueryFactory {
         return new HasParentQueryGenerator();
     }
 
+    public static IdsQueryGenerator idsQueryGenerator() {
+        return new IdsQueryGenerator();
+    }
+
     public static FunctionGenerator functionGenerator() {
         return new FunctionGenerator();
     }
@@ -204,11 +208,11 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .where(q -> !q.isParent())
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             QueryTypeItem parent = stream(queryBag)
-                    .firstOrNull(q -> q.isParent());
+                .firstOrNull(q -> q.isParent());
 
             return generateCommonChildren("has_child", parent, childItems);
         }
@@ -223,13 +227,32 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .where(q -> !q.isParent())
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             QueryTypeItem parent = stream(queryBag)
-                    .firstOrNull(q -> q.isParent());
+                .firstOrNull(q -> q.isParent());
 
             return generateCommonChildren("has_parent", parent, childItems);
+        }
+    }
+
+    public final static class IdsQueryGenerator
+            extends QueryGenerator {
+
+        private IdsQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                .firstOrNull(q -> q.isParent());
+
+            return generateCommonChildren("ids", parent, childItems);
         }
     }
 

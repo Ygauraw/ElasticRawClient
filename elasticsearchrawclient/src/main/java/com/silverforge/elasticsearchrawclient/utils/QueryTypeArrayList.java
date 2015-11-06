@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import static br.com.zbra.androidlinq.Linq.stream;
@@ -187,6 +188,22 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
                     .name(key)
                     .value(Double.toString(value))
                     .build());
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addItem(String key, int... values) {
+        if (values != null && values.length > 0 && !containsKey(key)) {
+            List<Integer> valuesList = new ArrayList<>();
+            for(int i : values) {
+                valuesList.add(i);
+            }
+
+            add((T) T
+                    .builder()
+                    .name(key)
+                    .value(valuesList.toString())
+                    .build());
+        }
     }
 
     @SuppressWarnings("unchecked")
