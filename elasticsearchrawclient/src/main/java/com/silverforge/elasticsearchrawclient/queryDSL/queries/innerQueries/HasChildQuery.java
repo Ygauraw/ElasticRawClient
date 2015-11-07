@@ -12,6 +12,8 @@ import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
+import static br.com.zbra.androidlinq.Linq.*;
+
 public class HasChildQuery implements Queryable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
@@ -27,8 +29,8 @@ public class HasChildQuery implements Queryable {
     @Override
     public String getQueryString() {
         return QueryFactory
-                .hasChildQueryGenerator()
-                .generate(queryBag);
+            .hasChildQueryGenerator()
+            .generate(queryBag);
     }
 
     public static class HasChildQueryBuilder extends Init<HasChildQueryBuilder> {
@@ -68,22 +70,17 @@ public class HasChildQuery implements Queryable {
 
         public HasChildQuery build() throws MandatoryParametersAreMissingException {
             List<String> missingParams = new ArrayList<>();
-            boolean hasMissingParams = false;
 
-            if(!queryBag.containsKey(Constants.TYPE)) {
-                hasMissingParams = true;
+            if(!queryBag.containsKey(Constants.TYPE))
                 missingParams.add(Constants.TYPE);
-            }
-            if(!queryBag.containsKey(Constants.QUERY)) {
-                hasMissingParams = true;
-                missingParams.add(Constants.QUERY);
-            }
 
-            if(hasMissingParams) {
+            if(!queryBag.containsKey(Constants.QUERY))
+                missingParams.add(Constants.QUERY);
+
+            if(stream(missingParams).count() > 0)
                 throw new MandatoryParametersAreMissingException(missingParams.toString());
-            }
+
             return new HasChildQuery(queryBag);
         }
     }
-
 }

@@ -4,9 +4,11 @@ public final class Constants {
 
     public final static String FIELD_NAME = "FIELDNAME";
     public final static String INNER_QUERY = "INNER_QUERY";
+
     public final static String ANALYZER = "analyzer";
     public final static String BOOST = "boost";
     public final static String BOOST_MODE = "boost_mode";
+    public final static String COORDINATES = "coordinates";
     public final static String CUTOFF_FREQUENCY = "cutoff_frequency";
     public final static String DISABLE_COORD = "disable_coord";
     public final static String FACTOR = "factor";
@@ -19,6 +21,9 @@ public final class Constants {
     public final static String FUZZY_REWRITE = "fuzzy_rewrite";
     public final static String HIGH_FREQ = "high_freq";
     public final static String HIGH_FREQ_OPERATOR = "high_freq_operator";
+    public final static String ID = "id";
+    public final static String INDEX = "index";
+    public final static String INDEXED_SHAPE = "indexed_shape";
     public final static String LANG = "lang";
     public final static String LENIENT = "lenient";
     public final static String LOW_FREQ = "low_freq";
@@ -39,6 +44,7 @@ public final class Constants {
     public final static String OPERATOR = "operator";
     public final static String PARAMS = "params";
     public final static String PARENT_TYPE = "parent_type";
+    public final static String PATH = "path";
     public final static String POSITIVE = "positive";
     public final static String PREFIX_LENGTH = "prefix_length";
     public final static String QUERIES = "queries";

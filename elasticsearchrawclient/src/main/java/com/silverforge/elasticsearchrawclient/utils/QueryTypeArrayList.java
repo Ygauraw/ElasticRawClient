@@ -246,19 +246,20 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void addItem(String key, Map<String, ?> value) {
         if (value != null && value.size() > 0 && !containsKey(key)) {
             String[] params = stream(value)
-                    .select(q -> q.getKey() + ":" + q.getValue())
-                    .toList()
-                    .toArray(new String[]{});
+                .select(q -> q.getKey() + ":" + q.getValue())
+                .toList()
+                .toArray(new String[]{});
 
             String joinedParams = StringUtils.makeCommaSeparatedList(params);
             add((T) T
-                    .builder()
-                    .name(key)
-                    .value("[" + joinedParams + "]")
-                    .build());
+                .builder()
+                .name(key)
+                .value("[" + joinedParams + "]")
+                .build());
         }
     }
 

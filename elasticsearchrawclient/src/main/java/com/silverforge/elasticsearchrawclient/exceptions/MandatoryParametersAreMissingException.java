@@ -1,5 +1,7 @@
 package com.silverforge.elasticsearchrawclient.exceptions;
 
+import com.silverforge.elasticsearchrawclient.utils.StringUtils;
+
 public class MandatoryParametersAreMissingException extends Exception {
     private final String[] parameters;
 
@@ -9,13 +11,7 @@ public class MandatoryParametersAreMissingException extends Exception {
 
     @Override
     public String getMessage() {
-        StringBuilder messageBuilder = new StringBuilder();
-        messageBuilder.append("The following parameters are missing : ");
-
-        for (String param : parameters) {
-            messageBuilder.append(param).append(" ");
-        }
-
-        return messageBuilder.toString();
+        String list = StringUtils.makeCommaSeparatedList(parameters);
+        return String.format("The following parameters are missing : %s", list);
     }
 }
