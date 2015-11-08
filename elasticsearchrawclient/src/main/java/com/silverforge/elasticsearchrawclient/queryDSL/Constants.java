@@ -24,6 +24,7 @@ public final class Constants {
     public final static String ID = "id";
     public final static String INDEX = "index";
     public final static String INDEXED_SHAPE = "indexed_shape";
+    public final static String INDICES = "indices";
     public final static String LANG = "lang";
     public final static String LENIENT = "lenient";
     public final static String LOW_FREQ = "low_freq";
@@ -41,6 +42,7 @@ public final class Constants {
     public final static String MUST_NOT = "must_not";
     public final static String NEGATIVE = "negative";
     public final static String NEGATIVE_BOOST = "negative_boost";
+    public final static String NO_MATCH_QUERY = "no_match_query";
     public final static String OPERATOR = "operator";
     public final static String PARAMS = "params";
     public final static String PARENT_TYPE = "parent_type";

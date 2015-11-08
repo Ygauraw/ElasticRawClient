@@ -75,6 +75,10 @@ public final class QueryFactory {
         return new GeoShapeQueryGenerator();
     }
 
+    public static IndicesQueryGenerator indicesQueryGenerator() {
+        return new IndicesQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -340,6 +344,21 @@ public final class QueryFactory {
                 .firstOrNull(q -> q.isParent());
 
             return generateGeoShapeChildren("geo_shape", parent, childItems);
+        }
+    }
+
+    public final static class IndicesQueryGenerator
+            extends QueryGenerator {
+
+        private IndicesQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("indices", childItems);
         }
     }
 }
