@@ -79,6 +79,10 @@ public final class QueryFactory {
         return new IndicesQueryGenerator();
     }
 
+    public static MatchAllQueryGenerator matchAllQueryGenerator() {
+        return new MatchAllQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -359,6 +363,21 @@ public final class QueryFactory {
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("indices", childItems);
+        }
+    }
+
+    public final static class MatchAllQueryGenerator
+            extends QueryGenerator {
+
+        private MatchAllQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("match_all", childItems);
         }
     }
 }
