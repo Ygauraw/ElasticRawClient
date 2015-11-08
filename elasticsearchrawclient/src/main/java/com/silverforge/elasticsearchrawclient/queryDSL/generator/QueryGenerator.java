@@ -6,14 +6,20 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
+import com.google.common.collect.Maps;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Generator;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.ConstantScoreQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.Map;
+
+import br.com.zbra.androidlinq.Stream;
 
 import static br.com.zbra.androidlinq.Linq.stream;
 
@@ -114,10 +120,10 @@ public class QueryGenerator
             String parentValue = getParentValue(parent);
             if (stream(childItems).any(i -> i.getKey().equals(Constants.VALUE))) {
                 jsonGenerator.writeStringField(
-                        parentValue,
-                        stream(childItems)
-                                .first(i -> i.getKey().equals(Constants.VALUE))
-                                .getValue());
+                    parentValue,
+                    stream(childItems)
+                        .first(i -> i.getKey().equals(Constants.VALUE))
+                        .getValue());
             } else {
                 if (stream(childItems).any()) {
                     jsonGenerator.writeObjectFieldStart(parentValue);
@@ -182,6 +188,59 @@ public class QueryGenerator
                     jsonGenerator.writeStringField(parentValue, "");
                 }
             }
+            jsonGenerator.writeEndObject();
+
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+
+            retValue = getOutputStreamValue();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(this.getClass().getName(), e.getMessage());
+        }
+        return retValue;
+    }
+
+    protected String generateGeoShapeChildren(String queryName,
+                                           QueryTypeItem parent,
+                                           Map<String, String> childItems) {
+
+        String retValue = "";
+        try {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeObjectFieldStart(queryName);
+
+            String parentValue = getParentValue(parent);
+            jsonGenerator.writeObjectFieldStart(parentValue);
+
+            Map.Entry<String, String> shapeEntry = stream(childItems)
+                .firstOrDefault(ci ->
+                    ci.getKey().equals(Constants.INDEXED_SHAPE),
+                    Maps.immutableEntry(Constants.SHAPE, Constants.SHAPE));
+
+            jsonGenerator.writeObjectFieldStart(shapeEntry.getValue());
+
+            if (shapeEntry.getKey().equals(Constants.SHAPE)) {
+                Map<String, String> map = stream(childItems)
+                    .where(ci -> ci.getKey().equals(Constants.TYPE)
+                        || ci.getKey().equals(Constants.COORDINATES))
+                    .toMap(ci -> ci.getKey(), ci -> ci.getValue());
+
+                writeEntries(map);
+            } else {
+                Map<String, String> map = stream(childItems)
+                    .where(ci ->
+                           ci.getKey().equals(Constants.ID)
+                        || ci.getKey().equals(Constants.TYPE)
+                        || ci.getKey().equals(Constants.INDEX)
+                        || ci.getKey().equals(Constants.PATH))
+                    .toMap(ci -> ci.getKey(), ci -> ci.getValue());
+
+                writeEntries(map);
+            }
+
+            jsonGenerator.writeEndObject();
+
             jsonGenerator.writeEndObject();
 
             jsonGenerator.writeEndObject();

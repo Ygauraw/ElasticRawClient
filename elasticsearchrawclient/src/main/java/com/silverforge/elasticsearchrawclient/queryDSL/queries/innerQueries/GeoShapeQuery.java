@@ -8,6 +8,7 @@ import com.silverforge.elasticsearchrawclient.model.GeoPoint;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.GeoShapeTypeOperator;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
@@ -28,7 +29,9 @@ public class GeoShapeQuery
 
     @Override
     public String getQueryString() {
-        return null;
+        return QueryFactory
+            .geoShapeQueryGenerator()
+            .generate(queryBag);
     }
 
     public static GeoShapeQueryBuilder builder() {

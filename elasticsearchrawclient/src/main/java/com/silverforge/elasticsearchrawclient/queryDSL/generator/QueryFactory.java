@@ -71,6 +71,10 @@ public final class QueryFactory {
         return new FuzzyQueryGenerator();
     }
 
+    public static GeoShapeQueryGenerator geoShapeQueryGenerator() {
+        return new GeoShapeQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -302,7 +306,7 @@ public final class QueryFactory {
     }
 
     public final static class FuzzyQueryGenerator
-        extends QueryGenerator {
+            extends QueryGenerator {
 
         private FuzzyQueryGenerator() {
         }
@@ -317,6 +321,25 @@ public final class QueryFactory {
                 .firstOrNull(q -> q.isParent());
 
             return generateFuzzyChildren("fuzzy", parent, childItems);
+        }
+    }
+
+    public final static class GeoShapeQueryGenerator
+            extends QueryGenerator {
+
+        private GeoShapeQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                .firstOrNull(q -> q.isParent());
+
+            return generateGeoShapeChildren("geo_shape", parent, childItems);
         }
     }
 }

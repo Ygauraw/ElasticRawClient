@@ -53,6 +53,7 @@ public final class Constants {
     public final static String SCRIPT_SCORE = "script";
     public final static String SEED = "seed";
     public final static String SCORE_MODE = "score_mode";
+    public final static String SHAPE = "shape";
     public final static String SHOULD = "should";
     public final static String SIZE = "size";
     public final static String STRATEGY = "strategy";
