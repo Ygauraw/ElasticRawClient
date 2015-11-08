@@ -68,19 +68,15 @@ public class HasChildQueryTest {
     // endregion Happy path
 
     // region Sad path
-    @Test
-    public void when_no_params_added_then_exception_is_thrown()  {
-        boolean thrown = false;
 
-        try {
-            HasChildQuery query = HasChildQuery
-                    .builder()
-                    .build();
-        } catch (MandatoryParametersAreMissingException e) {
-            thrown = true;
-        }
+    // TODO : all other excepted exception tests should use this approach here and at HasParent, Ids as well
+    @Test(expected = MandatoryParametersAreMissingException.class)
+    public void when_no_params_added_then_exception_is_thrown()
+            throws MandatoryParametersAreMissingException {
 
-        assertTrue(thrown);
+        HasChildQuery
+                .builder()
+                .build();
     }
 
     @Test
