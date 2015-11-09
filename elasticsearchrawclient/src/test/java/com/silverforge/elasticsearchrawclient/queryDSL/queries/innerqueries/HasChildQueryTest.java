@@ -4,7 +4,9 @@ import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ScoreModeOperator;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -24,12 +26,12 @@ public class HasChildQueryTest {
     @Test
     public void when_minimal_requred_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
         HasChildQuery query = HasChildQuery
+            .builder()
+            .query(MatchQuery
                 .builder()
-                .query(MatchQuery
-                        .builder()
-                        .build())
-                .type("value")
-                .build();
+                .build())
+            .type("value")
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -43,15 +45,15 @@ public class HasChildQueryTest {
     @Test
     public void when_all_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
         HasChildQuery query = HasChildQuery
+            .builder()
+            .query(MatchQuery
                 .builder()
-                .query(MatchQuery
-                        .builder()
-                        .build())
-                .type("value")
-                .scoreMode(ScoreModeOperator.MIN)
-                .maxChildren(2)
-                .minChildren(1)
-                .build();
+                .build())
+            .type("value")
+            .scoreMode(ScoreModeOperator.MIN)
+            .maxChildren(2)
+            .minChildren(1)
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -69,7 +71,6 @@ public class HasChildQueryTest {
 
     // region Sad path
 
-    // TODO : all other excepted exception tests should use this approach here and at HasParent, Ids as well
     @Test(expected = MandatoryParametersAreMissingException.class)
     public void when_no_params_added_then_exception_is_thrown()
             throws MandatoryParametersAreMissingException {
@@ -79,42 +80,26 @@ public class HasChildQueryTest {
                 .build();
     }
 
-    @Test
-    public void when_no_query_added_then_exception_is_thrown()  {
-        boolean thrown = false;
-
-        try {
-            HasChildQuery query = HasChildQuery
-                    .builder()
-                    .type("value")
-                    .minChildren(1)
-                    .maxChildren(2)
-                    .build();
-        } catch (MandatoryParametersAreMissingException e) {
-            thrown = true;
-        }
-
-        assertTrue(thrown);
+    @Test(expected = MandatoryParametersAreMissingException.class)
+    public void when_no_query_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
+        HasChildQuery query = HasChildQuery
+            .builder()
+            .type("value")
+            .minChildren(1)
+            .maxChildren(2)
+            .build();
     }
 
-    @Test
-    public void when_no_type_added_then_exception_is_thrown()  {
-        boolean thrown = false;
-
-        try {
-            HasChildQuery query = HasChildQuery
-                    .builder()
-                    .query(MatchQuery
-                            .builder()
-                            .build())
-                    .minChildren(1)
-                    .maxChildren(2)
-                    .build();
-        } catch (MandatoryParametersAreMissingException e) {
-            thrown = true;
-        }
-
-        assertTrue(thrown);
+    @Test(expected = MandatoryParametersAreMissingException.class)
+    public void when_no_type_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
+        HasChildQuery query = HasChildQuery
+            .builder()
+            .query(MatchQuery
+                .builder()
+                .build())
+            .minChildren(1)
+            .maxChildren(2)
+            .build();
     }
 
     // endregion Sad path

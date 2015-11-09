@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 public class HasParentQueryTest {
 
     // region Happy path
+
     @Test
     public void when_minimal_required_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
         HasParentQuery query = HasParentQuery
@@ -59,57 +60,36 @@ public class HasParentQueryTest {
         assertThat(queryString.indexOf("\"parent_type\":\"value\""), greaterThan(0));
         assertThat(queryString.indexOf("\"score_mode\":\"min\""), greaterThan(0));
     }
+
     // endregion Happy path
 
     // region Sad path
-    @Test
-    public void when_no_params_added_then_exception_is_thrown()  {
-        boolean thrown = false;
 
-        try {
-            HasParentQuery query = HasParentQuery
-                .builder()
-                .build();
-        } catch (MandatoryParametersAreMissingException e) {
-            thrown = true;
-        }
-
-        assertTrue(thrown);
+    @Test(expected = MandatoryParametersAreMissingException.class)
+    public void when_no_params_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
+        HasParentQuery query = HasParentQuery
+            .builder()
+            .build();
     }
 
-    @Test
-    public void when_no_query_added_then_exception_is_thrown()  {
-        boolean thrown = false;
-
-        try {
-            HasParentQuery query = HasParentQuery
-                .builder()
-                .parent_type("value")
-                .build();
-        } catch (MandatoryParametersAreMissingException e) {
-            thrown = true;
-        }
-
-        assertTrue(thrown);
+    @Test(expected = MandatoryParametersAreMissingException.class)
+    public void when_no_query_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
+        HasParentQuery query = HasParentQuery
+            .builder()
+            .parent_type("value")
+            .build();
     }
 
-    @Test
-    public void when_no_parent_type_added_then_exception_is_thrown()  {
-        boolean thrown = false;
-
-        try {
-            HasParentQuery query = HasParentQuery
-                .builder()
-                .query(MatchQuery
+    @Test(expected = MandatoryParametersAreMissingException.class)
+    public void when_no_parent_type_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
+        HasParentQuery query = HasParentQuery
+            .builder()
+            .query(MatchQuery
                     .builder()
                     .build())
-                .build();
-        } catch (MandatoryParametersAreMissingException e) {
-            thrown = true;
-        }
-
-        assertTrue(thrown);
+            .build();
     }
+
     // endregion Sad path
 
 }

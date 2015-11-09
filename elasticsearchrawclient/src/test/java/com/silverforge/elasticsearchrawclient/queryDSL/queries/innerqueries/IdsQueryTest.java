@@ -23,7 +23,7 @@ public class IdsQueryTest {
     public void when_minimal_required_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
         IdsQuery query = IdsQuery
             .builder()
-            .values(1,2)
+            .values("1", "2")
             .build();
 
         String queryString = query.getQueryString();
@@ -39,7 +39,7 @@ public class IdsQueryTest {
         IdsQuery query = IdsQuery
             .builder()
             .type("value")
-            .values(1, 2)
+            .values("1", "id")
             .build();
 
         String queryString = query.getQueryString();
@@ -48,42 +48,26 @@ public class IdsQueryTest {
         assertThat(queryString, not(""));
 
         assertThat(queryString.indexOf("\"type\":\"value\""), greaterThan(0));
-        assertThat(queryString.indexOf("\"values\":[1, 2]"), greaterThan(0));
+        assertThat(queryString.indexOf("\"values\":[1, id]"), greaterThan(0));
     }
 
     // endregion Happy path
 
     // region Sad path
 
-    @Test
-    public void when_no_params_added_then_exception_is_thrown() {
-        boolean thrown = false;
-
-        try {
-            IdsQuery query = IdsQuery
-                .builder()
-                .build();
-        } catch (MandatoryParametersAreMissingException e) {
-            thrown = true;
-        }
-
-        assertTrue(thrown);
+    @Test(expected = MandatoryParametersAreMissingException.class)
+    public void when_no_params_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
+        IdsQuery query = IdsQuery
+            .builder()
+            .build();
     }
 
-    @Test
-    public void when_no_values_added_then_exception_is_thrown() {
-        boolean thrown = false;
-
-        try {
-            IdsQuery query = IdsQuery
-                .builder()
-                .type("value")
-                .build();
-        } catch (MandatoryParametersAreMissingException e) {
-            thrown = true;
-        }
-
-        assertTrue(thrown);
+    @Test(expected = MandatoryParametersAreMissingException.class)
+    public void when_no_values_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
+        IdsQuery query = IdsQuery
+            .builder()
+            .type("value")
+            .build();
     }
 
     // endregion Sad path

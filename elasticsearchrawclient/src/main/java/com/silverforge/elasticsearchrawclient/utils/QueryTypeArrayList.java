@@ -191,10 +191,10 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
     }
 
     @SuppressWarnings("unchecked")
-    public void addItem(String key, int... values) {
+    public void addItem(String key, String... values) {
         if (values != null && values.length > 0 && !containsKey(key)) {
-            List<Integer> valuesList = new ArrayList<>();
-            for(int i : values) {
+            List<String> valuesList = new ArrayList<>();
+            for(String i : values) {
                 valuesList.add(i);
             }
 

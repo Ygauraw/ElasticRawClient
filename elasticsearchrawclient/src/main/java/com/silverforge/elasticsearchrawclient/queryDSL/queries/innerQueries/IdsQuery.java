@@ -45,8 +45,7 @@ public class IdsQuery
             return self();
         }
 
-        // TODO : the type of the id should be string as id could be practically 'apple' for example
-        public T values(int... id) {
+        public T values(String... id) {
             queryBag.addItem(Constants.VALUES, id);
             return self();
         }
