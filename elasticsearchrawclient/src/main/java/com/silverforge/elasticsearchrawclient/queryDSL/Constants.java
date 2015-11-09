@@ -1,7 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL;
 
 public final class Constants {
-
     public final static String FIELD_NAME = "FIELDNAME";
     public final static String INNER_QUERY = "INNER_QUERY";
 
@@ -27,15 +26,17 @@ public final class Constants {
     public final static String INDICES = "indices";
     public final static String LANG = "lang";
     public final static String LENIENT = "lenient";
+    public final static String LIKE = "like";
     public final static String LOW_FREQ = "low_freq";
     public final static String LOW_FREQ_OPERATOR = "low_freq_operator";
-    public final static String MATCH_ALL = "match_all";
     public final static String MAX_BOOST = "max_boost";
     public final static String MAX_CHILDREN  = "max_children";
+    public final static String MAX_QUERY_TERMS  = "max_query_terms";
     public final static String MAX_EXPANSIONS = "max_expansions";
     public final static String MIN_CHILDREN = "min_children";
     public final static String MINIMUM_SHOULD_MATCH = "minimum_should_match";
     public final static String MIN_SCORE = "min_score";
+    public final static String MIN_TERM_FREQ = "min_term_freq";
     public final static String MISSING = "missing";
     public final static String MODIFIER = "modifier";
     public final static String MUST = "must";
@@ -58,7 +59,6 @@ public final class Constants {
     public final static String SHAPE = "shape";
     public final static String SHOULD = "should";
     public final static String SIZE = "size";
-    public final static String STRATEGY = "strategy";
     public final static String TIE_BREAKER = "tie_breaker";
     public final static String TYPE = "type";
     public final static String USE_DIS_MAX = "use_dis_max";
@@ -68,6 +68,4 @@ public final class Constants {
     public final static String ZERO_TERMS_QUERY = "zero_terms_query";
 
     public final static String FILTER = "filter";
-    public final static String FILTERED = "filtered";
-
 }

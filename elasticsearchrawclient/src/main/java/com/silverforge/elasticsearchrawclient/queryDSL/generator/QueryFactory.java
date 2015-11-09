@@ -83,6 +83,10 @@ public final class QueryFactory {
         return new MatchAllQueryGenerator();
     }
 
+    public static MoreLikeThisQueryGenerator moreLikeThisQueryGenerator() {
+        return new MoreLikeThisQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -378,6 +382,21 @@ public final class QueryFactory {
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("match_all", childItems);
+        }
+    }
+
+    public final static class MoreLikeThisQueryGenerator
+            extends QueryGenerator {
+
+        private MoreLikeThisQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("more_like_this", childItems);
         }
     }
 }

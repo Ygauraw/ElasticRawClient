@@ -247,6 +247,18 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
     }
 
     @SuppressWarnings("unchecked")
+    public void addItemsWithParenthesis(String key, String... values) {
+        if (values != null && values.length > 0 && !containsKey(key)) {
+            String joinedQueries = StringUtils.makeCommaSeparatedListWithQuotationMark(values);
+            add((T) T
+                .builder()
+                .name(key)
+                .value("[" + joinedQueries + "]")
+                .build());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     public void addItem(String key, Map<String, ?> value) {
         if (value != null && value.size() > 0 && !containsKey(key)) {
             String[] params = stream(value)
