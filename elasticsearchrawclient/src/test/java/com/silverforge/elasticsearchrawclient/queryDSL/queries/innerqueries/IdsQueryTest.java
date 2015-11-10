@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
@@ -31,7 +32,7 @@ public class IdsQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
-        assertThat(queryString.indexOf("\"values\":[1, 2]"), greaterThan(0));
+        assertThat(queryString.indexOf("\"values\":[\"1\",\"2\"]"), greaterThan(0));
     }
 
     @Test
@@ -48,7 +49,7 @@ public class IdsQueryTest {
         assertThat(queryString, not(""));
 
         assertThat(queryString.indexOf("\"type\":\"value\""), greaterThan(0));
-        assertThat(queryString.indexOf("\"values\":[1, id]"), greaterThan(0));
+        assertThat(queryString.indexOf("\"values\":[\"1\",\"id\"]"), greaterThan(0));
     }
 
     // endregion Happy path

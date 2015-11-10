@@ -46,7 +46,7 @@ public class IdsQuery
         }
 
         public T values(String... id) {
-            queryBag.addItem(Constants.VALUES, id);
+            queryBag.addItemsWithParenthesis(Constants.VALUES, id);
             return self();
         }
 
