@@ -15,9 +15,12 @@ public final class Constants {
     public final static String FIELD = "field";
     public final static String FIELDS = "fields";
     public final static String FROM = "from";
+    public final static String FORMAT = "format";
     public final static String FUNCTION = "function";
     public final static String FUZZINESS = "fuzziness";
     public final static String FUZZY_REWRITE = "fuzzy_rewrite";
+    public final static String GT = "gt";
+    public final static String GTE = "gte";
     public final static String HIGH_FREQ = "high_freq";
     public final static String HIGH_FREQ_OPERATOR = "high_freq_operator";
     public final static String ID = "id";
@@ -27,6 +30,8 @@ public final class Constants {
     public final static String LANG = "lang";
     public final static String LENIENT = "lenient";
     public final static String LIKE = "like";
+    public final static String LT = "lt";
+    public final static String LTE = "lte";
     public final static String LOW_FREQ = "low_freq";
     public final static String LOW_FREQ_OPERATOR = "low_freq_operator";
     public final static String MAX_BOOST = "max_boost";
@@ -60,6 +65,7 @@ public final class Constants {
     public final static String SHOULD = "should";
     public final static String SIZE = "size";
     public final static String TIE_BREAKER = "tie_breaker";
+    public final static String TIME_ZONE = "time_zone";
     public final static String TYPE = "type";
     public final static String USE_DIS_MAX = "use_dis_max";
     public final static String VALUE = "value";
