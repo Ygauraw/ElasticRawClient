@@ -108,11 +108,11 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .where(q -> !q.isParent())
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             QueryTypeItem parent = stream(queryBag)
-                    .firstOrNull(q -> q.isParent());
+                .firstOrNull(q -> q.isParent());
 
             return generateMatchChildren("match", parent, childItems);
         }
@@ -127,7 +127,7 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("multi_match", childItems);
         }
@@ -142,7 +142,7 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("bool", childItems);
         }
@@ -157,7 +157,7 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("boosting", childItems);
         }
@@ -172,7 +172,7 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("constant_score", childItems);
         }
@@ -187,7 +187,7 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("dis_max", childItems);
         }
@@ -202,7 +202,7 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("function_score", childItems);
         }
@@ -217,8 +217,8 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .where(q -> !q.isParent())
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             QueryTypeItem parent = stream(queryBag)
                     .firstOrNull(q -> q.isParent());
@@ -236,11 +236,11 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .where(q -> !q.isParent())
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             QueryTypeItem parent = stream(queryBag)
-                    .firstOrNull(q -> q.isParent());
+                .firstOrNull(q -> q.isParent());
 
             return generateCommonChildren("has_child", parent, childItems);
         }
@@ -255,11 +255,11 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .where(q -> !q.isParent())
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             QueryTypeItem parent = stream(queryBag)
-                    .firstOrNull(q -> q.isParent());
+                .firstOrNull(q -> q.isParent());
 
             return generateCommonChildren("has_parent", parent, childItems);
         }
@@ -274,11 +274,11 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .where(q -> !q.isParent())
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             QueryTypeItem parent = stream(queryBag)
-                    .firstOrNull(q -> q.isParent());
+                .firstOrNull(q -> q.isParent());
 
             return generateCommonChildren("ids", parent, childItems);
         }
@@ -293,7 +293,7 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren(childItems);
         }
@@ -308,7 +308,7 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren(childItems);
         }
@@ -323,7 +323,7 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren(childItems);
         }
@@ -338,11 +338,11 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .where(q -> !q.isParent())
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             QueryTypeItem parent = stream(queryBag)
-                    .firstOrNull(q -> q.isParent());
+                .firstOrNull(q -> q.isParent());
 
             return generateFuzzyChildren("fuzzy", parent, childItems);
         }
@@ -357,11 +357,11 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .where(q -> !q.isParent())
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             QueryTypeItem parent = stream(queryBag)
-                    .firstOrNull(q -> q.isParent());
+                .firstOrNull(q -> q.isParent());
 
             return generateGeoShapeChildren("geo_shape", parent, childItems);
         }
@@ -376,7 +376,7 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("indices", childItems);
         }
@@ -391,7 +391,7 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("match_all", childItems);
         }
@@ -406,7 +406,7 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("more_like_this", childItems);
         }
@@ -440,7 +440,7 @@ public final class QueryFactory {
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             QueryTypeItem parent = stream(queryBag)
-                    .firstOrNull(q -> q.isParent());
+                .firstOrNull(q -> q.isParent());
 
             return generateCommonChildren("prefix", parent, childItems);
         }
