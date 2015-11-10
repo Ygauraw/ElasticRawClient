@@ -91,6 +91,10 @@ public final class QueryFactory {
         return new NestedQueryGenerator();
     }
 
+    public static PrefixQueryGenerator prefixQueryGenerator() {
+        return new PrefixQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -416,6 +420,25 @@ public final class QueryFactory {
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("nested", childItems);
+        }
+    }
+
+    public final static class PrefixQueryGenerator
+            extends QueryGenerator {
+
+        private PrefixQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                .firstOrNull(q -> q.isParent());
+
+            return generateCommonChildren("prefix", parent, childItems);
         }
     }
 }
