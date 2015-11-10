@@ -87,6 +87,10 @@ public final class QueryFactory {
         return new MoreLikeThisQueryGenerator();
     }
 
+    public static NestedQueryGenerator nestedQueryGenerator() {
+        return new NestedQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -397,6 +401,21 @@ public final class QueryFactory {
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("more_like_this", childItems);
+        }
+    }
+
+    public final static class NestedQueryGenerator
+            extends QueryGenerator {
+
+        private NestedQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("nested", childItems);
         }
     }
 }
