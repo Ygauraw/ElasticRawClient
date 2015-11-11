@@ -99,6 +99,10 @@ public final class QueryFactory {
         return new RangeQueryGenerator();
     }
 
+    public static RegexpQueryGenerator regexpQueryGenerator() {
+        return new RegexpQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -464,4 +468,24 @@ public final class QueryFactory {
             return generateFuzzyChildren("range", parent, childItems);
         }
     }
+
+    public final static class RegexpQueryGenerator
+            extends QueryGenerator {
+
+        private RegexpQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .where(q -> !q.isParent())
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                    .firstOrNull(q -> q.isParent());
+
+            return generateFuzzyChildren("regexp", parent, childItems);
+        }
+    }
+
 }

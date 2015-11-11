@@ -14,6 +14,7 @@ public final class Constants {
     public final static String FIELD_VALUE_FACTOR = "field_value_factor";
     public final static String FIELD = "field";
     public final static String FIELDS = "fields";
+    public final static String FLAGS = "flags";
     public final static String FROM = "from";
     public final static String FORMAT = "format";
     public final static String FUNCTION = "function";
@@ -36,6 +37,7 @@ public final class Constants {
     public final static String LOW_FREQ_OPERATOR = "low_freq_operator";
     public final static String MAX_BOOST = "max_boost";
     public final static String MAX_CHILDREN  = "max_children";
+    public final static String MAX_DETERMINIZED_STATES = "max_determinized_states";
     public final static String MAX_QUERY_TERMS  = "max_query_terms";
     public final static String MAX_EXPANSIONS = "max_expansions";
     public final static String MIN_CHILDREN = "min_children";
