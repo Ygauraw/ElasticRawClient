@@ -84,6 +84,7 @@ public final class Constants {
     public final static String VALUE = "value";
     public final static String VALUES = "values";
     public final static String WEIGHT = "weight";
+    public final static String WILDCARD = "wildcard";
     public final static String ZERO_TERMS_QUERY = "zero_terms_query";
 
     public final static String FILTER = "filter";

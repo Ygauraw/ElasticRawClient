@@ -112,6 +112,10 @@ public final class QueryFactory {
         return new QueryStringQueryGenerator();
     }
 
+    public static WildCardQueryGenerator wildCardQueryGenerator() {
+        return new WildCardQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -515,8 +519,7 @@ public final class QueryFactory {
     public final static class QueryStringQueryGenerator
             extends QueryGenerator {
 
-        private QueryStringQueryGenerator() {
-        }
+        private QueryStringQueryGenerator() {}
 
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
@@ -526,4 +529,24 @@ public final class QueryFactory {
             return generateChildren("query_string", childItems);
         }
     }
+
+    public final static class WildCardQueryGenerator
+            extends QueryGenerator {
+
+        private WildCardQueryGenerator() {}
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .where(q -> !q.isParent())
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                    .firstOrNull(q -> q.isParent());
+
+            return generateFuzzyChildren("wildcard", parent, childItems);
+        }
+    }
+
 }
+
