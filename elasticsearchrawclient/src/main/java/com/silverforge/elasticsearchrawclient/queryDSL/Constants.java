@@ -3,14 +3,19 @@ package com.silverforge.elasticsearchrawclient.queryDSL;
 public final class Constants {
     public final static String FIELD_NAME = "FIELDNAME";
     public final static String INNER_QUERY = "INNER_QUERY";
-    public final static String ANALYZER = "analyzer";
+
+    public final static String ALLOW_LEADING_WILDCARD = "allow_leading_wildcard";
     public final static String ANALYZE_WILDCARD = "analyze_wildcard";
+    public final static String ANALYZER = "analyzer";
+    public final static String AUTO_GENERATE_PHRASE_QUERIES = "auto_generate_phrase_queries";
     public final static String BOOST = "boost";
     public final static String BOOST_MODE = "boost_mode";
     public final static String COORDINATES = "coordinates";
     public final static String CUTOFF_FREQUENCY = "cutoff_frequency";
+    public final static String DEFAULT_FIELD = "default_field";
     public final static String DEFAULT_OPERATOR = "default_operator";
     public final static String DISABLE_COORD = "disable_coord";
+    public final static String ENABLE_POSITION_INCREMENTS = "enable_position_increments";
     public final static String FACTOR = "factor";
     public final static String FIELD_VALUE_FACTOR = "field_value_factor";
     public final static String FIELD = "field";
@@ -20,6 +25,8 @@ public final class Constants {
     public final static String FORMAT = "format";
     public final static String FUNCTION = "function";
     public final static String FUZZINESS = "fuzziness";
+    public final static String FUZZY_MAX_EXPANSIONS = "fuzzy_max_expansions";
+    public final static String FUZZY_PREFIX_LENGTH = "fuzzy_prefix_length";
     public final static String FUZZY_REWRITE = "fuzzy_rewrite";
     public final static String GT = "gt";
     public final static String GTE = "gte";
@@ -58,6 +65,7 @@ public final class Constants {
     public final static String PARAMS = "params";
     public final static String PARENT_TYPE = "parent_type";
     public final static String PATH = "path";
+    public final static String PHRASE_SLOP = "phrase_slop";
     public final static String POSITIVE = "positive";
     public final static String PREFIX_LENGTH = "prefix_length";
     public final static String QUERIES = "queries";

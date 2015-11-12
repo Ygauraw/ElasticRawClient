@@ -108,6 +108,10 @@ public final class QueryFactory {
         return new SimpleQueryStringQueryGenerator();
     }
 
+    public static QueryStringQueryGenerator queryStringQueryGenerator() {
+        return new QueryStringQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -483,18 +487,18 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .where(q -> !q.isParent())
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             QueryTypeItem parent = stream(queryBag)
-                    .firstOrNull(q -> q.isParent());
+                .firstOrNull(q -> q.isParent());
 
             return generateFuzzyChildren("regexp", parent, childItems);
         }
     }
 
     public final static class SimpleQueryStringQueryGenerator
-            extends QueryGenerator {
+        extends QueryGenerator {
 
         private SimpleQueryStringQueryGenerator() {
         }
@@ -502,10 +506,24 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("simple_query_string", childItems);
         }
     }
 
+    public final static class QueryStringQueryGenerator
+            extends QueryGenerator {
+
+        private QueryStringQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("query_string", childItems);
+        }
+    }
 }
