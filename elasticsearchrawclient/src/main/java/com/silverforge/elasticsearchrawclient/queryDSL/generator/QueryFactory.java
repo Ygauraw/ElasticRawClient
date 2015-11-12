@@ -108,6 +108,10 @@ public final class QueryFactory {
         return new SimpleQueryStringQueryGenerator();
     }
 
+    public static SpanFirstQueryGenerator spanFirstQueryGenerator() {
+        return new SpanFirstQueryGenerator();
+    }
+
     public static QueryStringQueryGenerator queryStringQueryGenerator() {
         return new QueryStringQueryGenerator();
     }
@@ -538,15 +542,29 @@ public final class QueryFactory {
         @Override
         public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
             Map<String, String> childItems = stream(queryBag)
-                    .where(q -> !q.isParent())
-                    .toMap(q -> q.getName(), q -> q.getValue());
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
 
             QueryTypeItem parent = stream(queryBag)
-                    .firstOrNull(q -> q.isParent());
+                .firstOrNull(q -> q.isParent());
 
             return generateFuzzyChildren("wildcard", parent, childItems);
         }
     }
 
+    public final static class SpanFirstQueryGenerator
+            extends QueryGenerator {
+
+        private SpanFirstQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateSpanFirst("span_first", childItems);
+        }
+    }
 }
 

@@ -215,7 +215,7 @@ public class QueryGenerator
 
             Map.Entry<String, String> shapeEntry = stream(childItems)
                 .firstOrDefault(ci ->
-                    ci.getKey().equals(Constants.INDEXED_SHAPE),
+                        ci.getKey().equals(Constants.INDEXED_SHAPE),
                     Maps.immutableEntry(Constants.SHAPE, Constants.SHAPE));
 
             jsonGenerator.writeObjectFieldStart(shapeEntry.getValue());
@@ -270,6 +270,41 @@ public class QueryGenerator
         }
         return retValue;
     }
+
+    protected String generateSpanFirst(String queryName, Map<String, String> childItems) {
+        String retValue = "";
+        try {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeObjectFieldStart(queryName);
+            jsonGenerator.writeObjectFieldStart("match");
+            jsonGenerator.writeObjectFieldStart("span_term");
+
+            jsonGenerator.writeStringField(
+                stream(childItems)
+                    .firstOrDefault(c -> c.getKey().equals(Constants.FIELD_NAME), Maps.immutableEntry(Constants.FIELD_NAME, "_all")).getValue(),
+                stream(childItems)
+                    .firstOrDefault(c -> c.getKey().equals(Constants.VALUE), Maps.immutableEntry(Constants.VALUE, "")).getValue()
+            );
+
+            jsonGenerator.writeEndObject();
+            jsonGenerator.writeEndObject();
+
+            jsonGenerator.writeStringField(Constants.END,
+                stream(childItems)
+                    .firstOrDefault(c -> c.getKey().equals(Constants.END), Maps.immutableEntry(Constants.END, "3")).getValue()
+                );
+
+            jsonGenerator.writeEndObject();
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+            retValue = getOutputStreamValue();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(this.getClass().getName(), e.getMessage());
+        }
+        return retValue;
+    }
+
 
     private String getParentValue(QueryTypeItem parent) {
         Optional<QueryTypeItem> parentItem = Optional.fromNullable(parent);

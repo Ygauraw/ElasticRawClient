@@ -16,6 +16,7 @@ public final class Constants {
     public final static String DEFAULT_OPERATOR = "default_operator";
     public final static String DISABLE_COORD = "disable_coord";
     public final static String ENABLE_POSITION_INCREMENTS = "enable_position_increments";
+    public final static String END = "end";
     public final static String FACTOR = "factor";
     public final static String FIELD_VALUE_FACTOR = "field_value_factor";
     public final static String FIELD = "field";
