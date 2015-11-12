@@ -3,12 +3,13 @@ package com.silverforge.elasticsearchrawclient.queryDSL;
 public final class Constants {
     public final static String FIELD_NAME = "FIELDNAME";
     public final static String INNER_QUERY = "INNER_QUERY";
-
     public final static String ANALYZER = "analyzer";
+    public final static String ANALYZE_WILDCARD = "analyze_wildcard";
     public final static String BOOST = "boost";
     public final static String BOOST_MODE = "boost_mode";
     public final static String COORDINATES = "coordinates";
     public final static String CUTOFF_FREQUENCY = "cutoff_frequency";
+    public final static String DEFAULT_OPERATOR = "default_operator";
     public final static String DISABLE_COORD = "disable_coord";
     public final static String FACTOR = "factor";
     public final static String FIELD_VALUE_FACTOR = "field_value_factor";
@@ -33,6 +34,8 @@ public final class Constants {
     public final static String LIKE = "like";
     public final static String LT = "lt";
     public final static String LTE = "lte";
+    public final static String LOCALE = "locale";
+    public final static String LOWERCASE_EXPANDED_TERMS = "lowercase_expanded_terms";
     public final static String LOW_FREQ = "low_freq";
     public final static String LOW_FREQ_OPERATOR = "low_freq_operator";
     public final static String MAX_BOOST = "max_boost";

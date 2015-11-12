@@ -4,6 +4,7 @@ import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.fieldValueFactors.FieldValueFactor;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.HasChildQuery;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.HasParentQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.SimpleQueryStringQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 import java.util.Map;
@@ -101,6 +102,10 @@ public final class QueryFactory {
 
     public static RegexpQueryGenerator regexpQueryGenerator() {
         return new RegexpQueryGenerator();
+    }
+
+    public static SimpleQueryStringQueryGenerator simpleQueryStringQueryGenerator() {
+        return new SimpleQueryStringQueryGenerator();
     }
 
     public final static class MatchQueryGenerator
@@ -485,6 +490,21 @@ public final class QueryFactory {
                     .firstOrNull(q -> q.isParent());
 
             return generateFuzzyChildren("regexp", parent, childItems);
+        }
+    }
+
+    public final static class SimpleQueryStringQueryGenerator
+            extends QueryGenerator {
+
+        private SimpleQueryStringQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("simple_query_string", childItems);
         }
     }
 
