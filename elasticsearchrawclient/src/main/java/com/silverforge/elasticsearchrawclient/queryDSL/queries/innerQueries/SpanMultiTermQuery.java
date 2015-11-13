@@ -1,12 +1,16 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.BoostQuery;
 
 public class SpanMultiTermQuery
-    implements Queryable {
+        extends BoostQuery {
 
     @Override
     public String getQueryString() {
         return null;
+    }
+
+    public static abstract class Init<T extends Init<T>> extends BoostInit<T> {
+
     }
 }

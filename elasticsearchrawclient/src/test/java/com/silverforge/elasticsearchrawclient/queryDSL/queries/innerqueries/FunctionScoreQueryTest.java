@@ -1,10 +1,12 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
 import com.silverforge.elasticsearchrawclient.queryDSL.functions.Function;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.BoostModeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ScoreModeOperator;
@@ -22,6 +24,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
+@Category(value = QueryTest.class)
 public class FunctionScoreQueryTest {
 
     // region Happy path

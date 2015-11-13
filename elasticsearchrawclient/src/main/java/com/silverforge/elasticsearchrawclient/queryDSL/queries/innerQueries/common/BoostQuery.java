@@ -6,7 +6,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public abstract class BoostQuery
-        implements Queryable{
+        implements Queryable {
 
     @Override
     public String getQueryString() {

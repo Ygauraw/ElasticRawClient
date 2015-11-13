@@ -4,6 +4,7 @@ import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.MatchQuery;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -13,6 +14,7 @@ import static org.hamcrest.Matchers.*;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
+@Category(value = com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest.class)
 public class QueryTest {
 
     // region Happy path
