@@ -2,13 +2,15 @@ package com.silverforge.elasticsearchrawclient.queryDSL.functions;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.FieldValueFactorable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Functionable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Scriptable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
-public class Function implements Functionable {
+public class Function
+        implements Functionable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
     public Function(QueryTypeArrayList<QueryTypeItem> queryBag) {
@@ -69,11 +71,11 @@ public class Function implements Functionable {
         }
 
         public T randomScore() {
-
+            queryBag.addItem(Constants.SEED, "");
             return self();
         }
 
-        public T fieldValueFactor(Queryable fieldValueFactor) {
+        public T fieldValueFactor(FieldValueFactorable fieldValueFactor) {
             queryBag.addItem(Constants.FIELD_VALUE_FACTOR, fieldValueFactor);
             return self();
         }
@@ -81,7 +83,5 @@ public class Function implements Functionable {
         public Function build() {
             return new Function(queryBag);
         }
-
     }
-
 }

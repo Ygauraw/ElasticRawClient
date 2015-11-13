@@ -1,10 +1,5 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
 import com.silverforge.elasticsearchrawclient.queryDSL.functions.Function;
@@ -12,6 +7,11 @@ import com.silverforge.elasticsearchrawclient.queryDSL.operators.BoostModeOperat
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ScoreModeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.scripts.Script;
 
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +19,8 @@ import java.util.Map;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -43,6 +43,9 @@ public class FunctionScoreQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"function_score\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
 
         assertThat(queryString.indexOf("\"query\":{\"match\":{\"_all\":\"\"}}"), greaterThan(0));
         assertThat(queryString.indexOf("\"boost\":\"89\""), greaterThan(0));
@@ -90,10 +93,10 @@ public class FunctionScoreQueryTest {
                         .builder()
                         .scriptScore(
                                 Script
-                                .builder()
-                                .lang("lang")
-                                .params(params)
-                                .build()
+                                    .builder()
+                                    .lang("lang")
+                                    .params(params)
+                                    .build()
                         )
                         .build())
                 .build();

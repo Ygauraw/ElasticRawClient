@@ -2,12 +2,14 @@ package com.silverforge.elasticsearchrawclient.queryDSL.fieldValueFactors;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.FieldValueFactorable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ModifierOperator;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
-public class FieldValueFactor implements Queryable {
+public class FieldValueFactor
+        implements FieldValueFactorable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
     public FieldValueFactor(QueryTypeArrayList<QueryTypeItem> queryBag) {
