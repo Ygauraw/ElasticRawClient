@@ -120,6 +120,10 @@ public final class QueryFactory {
         return new WildCardQueryGenerator();
     }
 
+    public static ScriptQueryGenerator scriptQueryGenerator() {
+        return new ScriptQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -566,5 +570,21 @@ public final class QueryFactory {
             return generateSpanFirst("span_first", childItems);
         }
     }
+
+    public final static class ScriptQueryGenerator
+            extends QueryGenerator {
+
+        private ScriptQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("script", childItems);
+        }
+    }
+
 }
 

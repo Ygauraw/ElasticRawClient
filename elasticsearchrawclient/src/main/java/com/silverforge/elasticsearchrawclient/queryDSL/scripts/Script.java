@@ -48,8 +48,8 @@ public class Script implements Scriptable {
             return self();
         }
 
-        public T script(String script) {
-            queryBag.addItem(Constants.SCRIPT, script);
+        public T inline(String inline) {
+            queryBag.addItem(Constants.INLINE, inline);
             return self();
         }
 

@@ -37,6 +37,7 @@ public final class Constants {
     public final static String INDEX = "index";
     public final static String INDEXED_SHAPE = "indexed_shape";
     public final static String INDICES = "indices";
+    public final static String INLINE = "inline";
     public final static String LANG = "lang";
     public final static String LENIENT = "lenient";
     public final static String LIKE = "like";
