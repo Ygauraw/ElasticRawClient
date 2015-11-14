@@ -10,13 +10,14 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -27,7 +28,9 @@ public class RangeQueryTest {
     // region Happy path
 
     @Test
-    public void when_minimal_requred_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+    public void when_minimal_required_params_added_then_query_is_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         RangeQuery query = RangeQuery
                 .builder()
                 .fieldName("name")
@@ -42,7 +45,9 @@ public class RangeQueryTest {
     }
 
     @Test
-    public void when_all_field_name_defined_with_value_then_minimum_best_query_generated_well() throws MandatoryParametersAreMissingException {
+    public void when_all_field_name_defined_with_value_then_minimum_best_query_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         RangeQuery query = RangeQuery
                 .builder()
                 .fieldName("name")
@@ -58,7 +63,13 @@ public class RangeQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
-        assertThat(queryString.indexOf("\"range\":{\"name\":"), greaterThan(0));
+        // TODO : tests should check if the query starts with curly brace and the appropriate keyword(s)
+        // it would be also nice if the tests checks if the curly braces at the end of the query
+        // please modify the tests in the light of this todo
+//        assertThat(queryString.indexOf("\"range\":{\"name\":"), greaterThan(0));
+        assertThat(queryString.startsWith("{\"range\":{\"name\":"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"gte\":\"10\""), greaterThan(0));
         assertThat(queryString.indexOf("\"gt\":\"9\""), greaterThan(0));
         assertThat(queryString.indexOf("\"lte\":\"20\""), greaterThan(0));
@@ -67,7 +78,9 @@ public class RangeQueryTest {
     }
 
     @Test
-    public void when_date_used_for_range_values_then_minimum_best_query_generated_well() throws ParseException, MandatoryParametersAreMissingException {
+    public void when_date_used_for_range_values_then_minimum_best_query_generated_well()
+            throws ParseException, MandatoryParametersAreMissingException {
+
         String gte = "2012-01-02";
         String gt = "2012-01-01";
         String lte = "2012-12-12";
@@ -106,14 +119,18 @@ public class RangeQueryTest {
     // region Sad path
 
     @Test(expected = MandatoryParametersAreMissingException.class)
-    public void when_no_params_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
+    public void when_no_params_added_then_exception_is_thrown()
+            throws MandatoryParametersAreMissingException {
+
         RangeQuery query = RangeQuery
                 .builder()
                 .build();
     }
 
     @Test
-    public void when_no_timezone_provided_then_query_is_generated_well() throws ParseException, MandatoryParametersAreMissingException {
+    public void when_no_timezone_provided_then_query_is_generated_well()
+            throws ParseException, MandatoryParametersAreMissingException {
+
         String gte = "2012-01-02";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -136,7 +153,9 @@ public class RangeQueryTest {
     }
 
     @Test
-    public void when_no_format_provided_then_query_is_generated_well() throws ParseException, MandatoryParametersAreMissingException {
+    public void when_no_format_provided_then_query_is_generated_well()
+            throws ParseException, MandatoryParametersAreMissingException {
+
         String gte = "2012-01-02";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -157,5 +176,4 @@ public class RangeQueryTest {
     }
 
     // endregion Sad path
-
 }

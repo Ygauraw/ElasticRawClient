@@ -166,12 +166,19 @@ public class RangeQuery
         // endregion date
 
         public RangeQuery build() throws MandatoryParametersAreMissingException {
-            List<String> missingParams = new ArrayList<>();
+
+            // TODO : if you have only one mandatory parameter it's maybe worth not to use a list for it
+            // not just because step counts but performance as well
+            // please rewrite the other queries according to this
+//            List<String> missingParams = new ArrayList<>();
+//
+//            if(!queryBag.containsKey(Constants.FIELD_NAME))
+//                missingParams.add(Constants.FIELD_NAME);
+//            if(stream(missingParams).count() > 0)
+//                throw new MandatoryParametersAreMissingException(missingParams.toString());
 
             if(!queryBag.containsKey(Constants.FIELD_NAME))
-                missingParams.add(Constants.FIELD_NAME);
-            if(stream(missingParams).count() > 0)
-                throw new MandatoryParametersAreMissingException(missingParams.toString());
+                throw new MandatoryParametersAreMissingException(Constants.FIELD_NAME);
 
             return new RangeQuery(queryBag);
         }

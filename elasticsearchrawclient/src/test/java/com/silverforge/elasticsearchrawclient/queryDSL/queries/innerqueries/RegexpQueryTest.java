@@ -23,7 +23,9 @@ public class RegexpQueryTest {
     // region Happy path
 
     @Test
-    public void when_minimal_requred_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+    public void when_minimal_required_params_added_then_query_is_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         RegexpQuery query = RegexpQuery
                 .builder()
                 .fieldName("name")
@@ -38,7 +40,9 @@ public class RegexpQueryTest {
     }
 
     @Test
-    public void when_all_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+    public void when_all_params_added_then_query_is_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         RegexpQuery query = RegexpQuery
                 .builder()
                 .fieldName("name")
@@ -65,14 +69,18 @@ public class RegexpQueryTest {
     // region Sad path
 
     @Test(expected = MandatoryParametersAreMissingException.class)
-    public void when_no_params_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
+    public void when_no_params_added_then_exception_is_thrown()
+            throws MandatoryParametersAreMissingException {
+
         RegexpQuery query = RegexpQuery
                 .builder()
                 .build();
     }
 
     @Test
-    public void when_empty_nameField_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+    public void when_empty_nameField_added_then_query_is_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         RegexpQuery query = RegexpQuery
                 .builder()
                 .fieldName("")
@@ -87,7 +95,9 @@ public class RegexpQueryTest {
     }
 
     @Test
-    public void when_only_value_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+    public void when_only_value_added_then_query_is_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         RegexpQuery query = RegexpQuery
                 .builder()
                 .fieldName("")

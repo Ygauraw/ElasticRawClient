@@ -28,7 +28,9 @@ public class SimpleQueryStringQueryTest {
     // region Happy path
 
     @Test
-    public void when_minimal_requred_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+    public void when_minimal_required_params_added_then_query_is_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         SimpleQueryStringQuery query = SimpleQueryStringQuery
                 .builder()
                 .query("\"fried eggs\" +(eggplant | potato) -frittata")
@@ -43,7 +45,9 @@ public class SimpleQueryStringQueryTest {
     }
 
     @Test
-    public void when_all_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+    public void when_all_params_added_then_query_is_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         SimpleQueryStringQuery query = SimpleQueryStringQuery
                 .builder()
                 .query("\"fried eggs\" +(eggplant | potato) -frittata")
@@ -80,14 +84,18 @@ public class SimpleQueryStringQueryTest {
     // region Sad path
 
     @Test(expected = MandatoryParametersAreMissingException.class)
-    public void when_no_params_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
+    public void when_no_params_added_then_exception_is_thrown()
+            throws MandatoryParametersAreMissingException {
+
         SimpleQueryStringQuery query = SimpleQueryStringQuery
                 .builder()
                 .build();
     }
 
     @Test
-    public void when_empty_query_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+    public void when_empty_query_added_then_query_is_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         SimpleQueryStringQuery query = SimpleQueryStringQuery
                 .builder()
                 .query("\"\"")

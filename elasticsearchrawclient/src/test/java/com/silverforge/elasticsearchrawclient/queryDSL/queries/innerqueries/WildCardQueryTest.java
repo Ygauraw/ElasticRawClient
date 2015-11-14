@@ -23,7 +23,9 @@ public class WildCardQueryTest {
     // region Happy path
 
     @Test
-    public void when_minimal_requred_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+    public void when_minimal_requred_params_added_then_query_is_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         WildCardQuery query = WildCardQuery
                 .builder()
                 .fieldName("cities")
@@ -38,7 +40,9 @@ public class WildCardQueryTest {
     }
 
     @Test
-    public void when_wildcard_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+    public void when_wildcard_params_added_then_query_is_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         WildCardQuery query = WildCardQuery
                 .builder()
                 .fieldName("cities")
@@ -57,7 +61,9 @@ public class WildCardQueryTest {
     }
 
     @Test
-    public void when_value_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+    public void when_value_added_then_query_is_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         WildCardQuery query = WildCardQuery
                 .builder()
                 .fieldName("cities")
@@ -80,8 +86,10 @@ public class WildCardQueryTest {
     // region Sad path
 
     @Test(expected = MandatoryParametersAreMissingException.class)
-    public void when_no_params_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
-        WildCardQuery query = WildCardQuery
+    public void when_no_params_added_then_exception_is_thrown()
+            throws MandatoryParametersAreMissingException {
+
+        WildCardQuery
                 .builder()
                 .build();
     }
