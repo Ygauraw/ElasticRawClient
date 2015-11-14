@@ -27,7 +27,9 @@ public class ScriptQuery
                 .generate(queryBag);
     }
 
-    public static class ScriptQueryBuilder extends Init<ScriptQueryBuilder> {
+    public static class ScriptQueryBuilder
+            extends Init<ScriptQueryBuilder> {
+
         @Override
         protected ScriptQueryBuilder self() {
             return this;

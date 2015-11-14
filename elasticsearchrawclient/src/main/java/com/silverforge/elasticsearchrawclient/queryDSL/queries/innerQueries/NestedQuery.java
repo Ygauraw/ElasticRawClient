@@ -9,7 +9,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.operators.ScoreModeOperat
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public class NestedQuery
-    implements Queryable {
+        implements Queryable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
 
@@ -28,7 +28,9 @@ public class NestedQuery
             .generate(queryBag);
     }
 
-    public static class NestedQueryBuilder extends Init<NestedQueryBuilder> {
+    public static class NestedQueryBuilder
+            extends Init<NestedQueryBuilder> {
+
         @Override
         protected NestedQueryBuilder self() {
             return this;

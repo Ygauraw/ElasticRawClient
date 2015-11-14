@@ -1,6 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
+import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.MultiMatchTypeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
@@ -25,7 +26,9 @@ public class MultiMatchQueryTest {
     // region Happy path
 
     @Test
-    public void when_fields_value_added_then_fields_generated_well() {
+    public void when_fields_value_added_then_fields_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         MultiMatchQuery query = MultiMatchQuery
             .builder()
             .fields(new String[]{"name", "population"})
@@ -44,7 +47,9 @@ public class MultiMatchQueryTest {
     }
 
     @Test
-    public void when_all_fields_value_added_then_fields_generated_well() {
+    public void when_all_fields_value_added_then_fields_generated_well()
+            throws MandatoryParametersAreMissingException {
+
         MultiMatchQuery query = MultiMatchQuery
             .builder()
             .fields(new String[]{"name", "population"})
@@ -77,18 +82,33 @@ public class MultiMatchQueryTest {
 
     // region Sad path
 
-    @Test
-    public void when_no_parameters_defined_then_query_is_empty() {
-        MultiMatchQuery query = MultiMatchQuery
+    @Test(expected = MandatoryParametersAreMissingException.class)
+    public void when_no_parameters_defined_then_query_throws_exception()
+            throws MandatoryParametersAreMissingException {
+
+        MultiMatchQuery
             .builder()
             .build();
+    }
 
-        String queryString = query.getQueryString();
+    @Test(expected = MandatoryParametersAreMissingException.class)
+    public void when_no_fields_defined_then_query_throws_exception()
+            throws MandatoryParametersAreMissingException {
 
-        assertThat(queryString, notNullValue());
-        assertThat(queryString, not(""));
+        MultiMatchQuery
+            .builder()
+            .query("blah")
+            .build();
+    }
 
-        assertThat(queryString, is("{\"multi_match\":{}}"));
+    @Test(expected = MandatoryParametersAreMissingException.class)
+    public void when_no_query_defined_then_query_throws_exception()
+            throws MandatoryParametersAreMissingException {
+
+        MultiMatchQuery
+            .builder()
+            .fields("apple", "plum")
+            .build();
     }
 
     //

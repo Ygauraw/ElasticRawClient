@@ -1,29 +1,35 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
+import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.AnalyzerOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzyRewriteOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.MultiMatchTypeOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.PhraseTypeOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroTermsQueryOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
 import java.util.Date;
 
 public class MultiMatchQuery
-        extends MatchQuery {
+        extends MinimumShouldMatchQuery {
+
+    private QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
 
     MultiMatchQuery(QueryTypeArrayList<QueryTypeItem> queryBag) {
-        super(queryBag);
+        this.queryBag = queryBag;
     }
 
     @Override
     public String getQueryString() {
-
-        // TODO : Need a proper solution here
-//        if (queryBag.hasKeys("query", "fields"))
-//            throw new MandatoryParametersAreMissingException("query", "fields");
-
         return QueryFactory
             .multiMatchQueryGenerator()
             .generate(queryBag);
@@ -33,14 +39,18 @@ public class MultiMatchQuery
         return new MultiMatchQueryBuilder();
     }
 
-    public static class MultiMatchQueryBuilder extends Init<MultiMatchQueryBuilder> {
+    public static class MultiMatchQueryBuilder
+            extends Init<MultiMatchQueryBuilder> {
+
         @Override
         protected MultiMatchQueryBuilder self() {
             return this;
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends MatchQuery.Init<T> {
+    public static abstract class Init<T extends Init<T>>
+            extends MinimumShouldMatchInit<T> {
+
         public T fields(String... fields) {
             return fields(fields, false);
         }
@@ -82,76 +92,102 @@ public class MultiMatchQuery
             return self();
         }
 
-        @Deprecated
-        public T fieldName(String fieldName) {
-            throw new UnsupportedOperationException();
+        public T analyzer(String analyzer) {
+            queryBag.addItem(Constants.ANALYZER, analyzer);
+            return self();
         }
 
-        @Deprecated
-        public T allFields() {
-            throw new UnsupportedOperationException();
+        public T analyzer(AnalyzerOperator analyzer) {
+            String value = analyzer.toString();
+            queryBag.addItem(Constants.ANALYZER, value);
+            return self();
         }
 
-        // region value operators
-
-        @Deprecated
-        public T value(String value) {
-            throw new UnsupportedOperationException();
+        public T fuzziness(FuzzinessOperator fuzzinessOperator) {
+            String value = fuzzinessOperator.toString();
+            queryBag.addItem(Constants.FUZZINESS, value);
+            return self();
         }
 
-        // region integer numbers
-
-        @Deprecated
-        public T value(Byte value) {
-            throw new UnsupportedOperationException();
+        public T fuzziness(String fuzzinessOperator) {
+            queryBag.addItem(Constants.FUZZINESS, fuzzinessOperator);
+            return self();
         }
 
-        @Deprecated
-        public T value(Short value) {
-            throw new UnsupportedOperationException();
+        public T fuzzyRewrite(FuzzyRewriteOperator fuzzyRewriteOperator) {
+            return fuzzyRewrite(fuzzyRewriteOperator, (byte) 1);
         }
 
-        @Deprecated
-        public T value(Integer value) {
-            throw new UnsupportedOperationException();
+        public T fuzzyRewrite(FuzzyRewriteOperator fuzzyRewriteOperator, byte topN) {
+            if (!queryBag.containsKey(Constants.FUZZY_REWRITE)) {
+                if (fuzzyRewriteOperator == FuzzyRewriteOperator.TOP_TERMS_N
+                    || fuzzyRewriteOperator == FuzzyRewriteOperator.TOP_TERMS_BOOST_N) {
+
+                    String fuzzyRewriteTop = fuzzyRewriteOperator.toString().replace("_N", "_" + topN);
+                    queryBag.add(QueryTypeItem
+                        .builder()
+                        .name(Constants.FUZZY_REWRITE)
+                        .value(fuzzyRewriteTop)
+                        .build());
+                } else {
+                    queryBag.add(QueryTypeItem
+                        .builder()
+                        .name(Constants.FUZZY_REWRITE)
+                        .value(fuzzyRewriteOperator.toString())
+                        .build());
+                }
+            }
+            return self();
         }
 
-        @Deprecated
-        public T value(Long value) {
-            throw new UnsupportedOperationException();
+        public T lenient(boolean lenient) {
+            queryBag.addItem(Constants.LENIENT, lenient);
+            return self();
         }
 
-        // endregion
-
-        // region float numbers
-
-        @Deprecated
-        public T value(Float value) {
-            throw new UnsupportedOperationException();
+        public T maxExpansions(int maxExpansions) {
+            queryBag.addItem(Constants.MAX_EXPANSIONS, maxExpansions);
+            return self();
         }
 
-        @Deprecated
-        public T value(Double value) {
-            throw new UnsupportedOperationException();
+        public T operator(LogicOperator queryOperator) {
+            String value = queryOperator.toString();
+            queryBag.addItem(Constants.OPERATOR, value);
+            return self();
         }
 
-        // endregion
-
-        @Deprecated
-        public T value(Date value, String format) {
-            throw new UnsupportedOperationException();
+        public T prefixLength(int prefixLength) {
+            queryBag.addItem(Constants.PREFIX_LENGTH, prefixLength);
+            return self();
         }
 
-        @Deprecated
-        public T value(Boolean value) {
-            throw new UnsupportedOperationException();
+        public T query(String queryExpression) {
+            queryBag.addItem(Constants.QUERY, queryExpression);
+            return self();
         }
 
-        // endregion
+        public T type(PhraseTypeOperator phraseTypeOperator) {
+            String value = phraseTypeOperator.toString();
+            queryBag.addItem(Constants.TYPE, value);
+            return self();
+        }
 
-        public MultiMatchQuery build() {
+        public T zeroTermsQuery(ZeroTermsQueryOperator zeroTermsQueryOperator) {
+            String value = zeroTermsQueryOperator.toString();
+            queryBag.addItem(Constants.ZERO_TERMS_QUERY, value);
+            return self();
+        }
+
+        public MultiMatchQuery build()
+                throws MandatoryParametersAreMissingException {
+
+            if (!queryBag.containsKey(Constants.QUERY))
+                throw new MandatoryParametersAreMissingException(Constants.QUERY);
+
+            if (!queryBag.containsKey(Constants.FIELDS))
+                throw new MandatoryParametersAreMissingException(Constants.FIELDS);
+
             return new MultiMatchQuery(queryBag);
         }
     }
-
 }

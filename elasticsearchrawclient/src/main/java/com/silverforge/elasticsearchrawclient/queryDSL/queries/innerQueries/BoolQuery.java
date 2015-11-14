@@ -8,7 +8,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.comm
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public class BoolQuery
-    extends MinimumShouldMatchQuery {
+        extends MinimumShouldMatchQuery {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
@@ -27,14 +27,17 @@ public class BoolQuery
             .generate(queryBag);
     }
 
-    public static class BoolQueryBuilder extends Init<BoolQueryBuilder> {
+    public static class BoolQueryBuilder
+            extends Init<BoolQueryBuilder> {
+
         @Override
         protected BoolQueryBuilder self() {
             return this;
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.MinimumShouldMatchInit<T> {
+    public static abstract class Init<T extends Init<T>>
+            extends MinimumShouldMatchQuery.MinimumShouldMatchInit<T> {
 
         protected abstract T self();
 

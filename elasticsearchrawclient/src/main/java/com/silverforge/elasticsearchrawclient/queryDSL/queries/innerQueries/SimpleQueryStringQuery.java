@@ -19,7 +19,7 @@ import java.util.Locale;
 import static br.com.zbra.androidlinq.Linq.stream;
 
 public class SimpleQueryStringQuery
-    implements Queryable {
+        implements Queryable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
@@ -38,7 +38,9 @@ public class SimpleQueryStringQuery
                 .generate(queryBag);
     }
 
-    public static class SimpleQueryStringQueryBuilder extends Init<SimpleQueryStringQueryBuilder> {
+    public static class SimpleQueryStringQueryBuilder
+            extends Init<SimpleQueryStringQueryBuilder> {
+
         @Override
         protected SimpleQueryStringQueryBuilder self() {
             return this;
@@ -46,7 +48,6 @@ public class SimpleQueryStringQuery
     }
 
     public static abstract class Init<T extends Init<T>> {
-
         private QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
 
         protected abstract T self();
@@ -116,5 +117,4 @@ public class SimpleQueryStringQuery
             return new SimpleQueryStringQuery(queryBag);
         }
     }
-
 }

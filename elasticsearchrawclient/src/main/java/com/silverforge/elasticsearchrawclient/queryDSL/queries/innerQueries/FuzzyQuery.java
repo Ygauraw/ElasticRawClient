@@ -7,12 +7,13 @@ import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.BoostQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.FieldValueQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 import java.util.Date;
 
 public class FuzzyQuery
-    extends BoostQuery {
+        extends FieldValueQuery {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
@@ -31,7 +32,9 @@ public class FuzzyQuery
         return new FuzzyQueryBuilder();
     }
 
-    public static class FuzzyQueryBuilder extends Init<FuzzyQueryBuilder> {
+    public static class FuzzyQueryBuilder
+            extends Init<FuzzyQueryBuilder> {
+
         @Override
         protected FuzzyQueryBuilder self() {
             return this;
@@ -39,77 +42,17 @@ public class FuzzyQuery
     }
 
     public static abstract class Init<T extends Init<T>>
-            extends BoostQuery.BoostInit<T> {
+            extends FieldValueInit<T> {
 
-        public T fieldName(String fieldName) {
-            if (TextUtils.isEmpty(fieldName))
-                return allFields();
-
-            queryBag.addParentItem(Constants.FIELD_NAME, fieldName);
+        public T boost(int boost) {
+            queryBag.addItem(Constants.BOOST, boost);
             return self();
         }
 
-        public T allFields() {
-            queryBag.addParentItem(Constants.FIELD_NAME, "_all");
+        public T boost(float boost) {
+            queryBag.addItem(Constants.BOOST, boost);
             return self();
         }
-
-        // region value operators
-
-        public T value(String value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        // region integer numbers
-
-        public T value(byte value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        public T value(short value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        public T value(int value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        public T value(long value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        // endregion
-
-        // region float numbers
-
-        public T value(float value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        public T value(double value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        // endregion
-
-        public T value(Date value, String format) {
-            queryBag.addItem(Constants.VALUE, value, format);
-            return self();
-        }
-
-        public T value(boolean value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        // endregion
 
         public T fuzziness(FuzzinessOperator fuzzinessOperator) {
             String value = fuzzinessOperator.toString();

@@ -41,7 +41,9 @@ public class MoreLikeThisQuery
         return new MoreLikeThisQueryBuilder();
     }
 
-    public static class MoreLikeThisQueryBuilder extends Init<MoreLikeThisQueryBuilder> {
+    public static class MoreLikeThisQueryBuilder
+            extends Init<MoreLikeThisQueryBuilder> {
+
         @Override
         protected MoreLikeThisQueryBuilder self() {
             return this;

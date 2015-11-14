@@ -30,14 +30,18 @@ public class FunctionScoreQuery
                 .generate(queryBag);
     }
 
-    public static class FunctionScoreQueryBuilder extends Init<FunctionScoreQueryBuilder> {
+    public static class FunctionScoreQueryBuilder
+            extends Init<FunctionScoreQueryBuilder> {
+
         @Override
         protected FunctionScoreQueryBuilder self() {
             return this;
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
+    public static abstract class Init<T extends Init<T>>
+            extends BoostQuery.BoostInit<T> {
+
         public T query(Queryable query) {
             queryBag.addItem(Constants.QUERY, query);
             return self();

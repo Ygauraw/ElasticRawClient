@@ -19,7 +19,7 @@ import java.util.List;
 import static br.com.zbra.androidlinq.Linq.*;
 
 public class GeoShapeQuery
-    implements Queryable {
+        implements Queryable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
@@ -38,7 +38,9 @@ public class GeoShapeQuery
         return new GeoShapeQueryBuilder();
     }
 
-    public static class GeoShapeQueryBuilder extends Init<GeoShapeQueryBuilder> {
+    public static class GeoShapeQueryBuilder
+            extends Init<GeoShapeQueryBuilder> {
+
         @Override
         protected GeoShapeQueryBuilder self() {
             return this;

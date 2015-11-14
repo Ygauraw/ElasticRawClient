@@ -27,14 +27,18 @@ public class ConstantScoreQuery
             .generate(queryBag);
     }
 
-    public static class ConstantScoreQueryBuilder extends Init<ConstantScoreQueryBuilder> {
+    public static class ConstantScoreQueryBuilder
+            extends Init<ConstantScoreQueryBuilder> {
+
         @Override
         protected ConstantScoreQueryBuilder self() {
             return this;
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
+    public static abstract class Init<T extends Init<T>>
+            extends BoostQuery.BoostInit<T> {
+
         public T filter(Queryable queryable) {
             String value = queryable.getQueryString();
             queryBag.addParentItem(Constants.FILTER, value);

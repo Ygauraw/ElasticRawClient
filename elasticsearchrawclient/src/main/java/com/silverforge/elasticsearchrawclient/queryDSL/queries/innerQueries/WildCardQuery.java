@@ -6,13 +6,14 @@ import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.BoostQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.FieldValueQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import java.util.ArrayList;
 import java.util.List;
 import static br.com.zbra.androidlinq.Linq.stream;
 
 public class WildCardQuery
-        extends BoostQuery {
+        extends FieldValueQuery {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
@@ -31,7 +32,9 @@ public class WildCardQuery
         return new WildCardQueryBuilder();
     }
 
-    public static class WildCardQueryBuilder extends Init<WildCardQueryBuilder> {
+    public static class WildCardQueryBuilder
+            extends Init<WildCardQueryBuilder> {
+
         @Override
         protected WildCardQueryBuilder self() {
             return this;
@@ -39,23 +42,15 @@ public class WildCardQuery
     }
 
     public static abstract class Init<T extends Init<T>>
-            extends BoostQuery.BoostInit<T> {
+            extends FieldValueInit<T> {
 
-        public T fieldName(String fieldName) {
-            if (TextUtils.isEmpty(fieldName))
-                return allFields();
-
-            queryBag.addParentItem(Constants.FIELD_NAME, fieldName);
+        public T boost(int boost) {
+            queryBag.addItem(Constants.BOOST, boost);
             return self();
         }
 
-        public T allFields() {
-            queryBag.addParentItem(Constants.FIELD_NAME, "_all");
-            return self();
-        }
-
-        public T value(String value) {
-            queryBag.addItem(Constants.VALUE, value);
+        public T boost(float boost) {
+            queryBag.addItem(Constants.BOOST, boost);
             return self();
         }
 

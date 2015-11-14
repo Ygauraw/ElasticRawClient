@@ -28,14 +28,18 @@ public class DisMaxQuery
             .generate(queryBag);
     }
 
-    public static class DisMaxQueryBuilder extends Init<DisMaxQueryBuilder> {
+    public static class DisMaxQueryBuilder
+            extends Init<DisMaxQueryBuilder> {
+
         @Override
         protected DisMaxQueryBuilder self() {
             return this;
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
+    public static abstract class Init<T extends Init<T>>
+            extends BoostQuery.BoostInit<T> {
+
         public T tieBreaker(ZeroToOneRangeOperator tieBreakerOperator) {
             String value = tieBreakerOperator.toString();
             queryBag.addItem(Constants.TIE_BREAKER, value);

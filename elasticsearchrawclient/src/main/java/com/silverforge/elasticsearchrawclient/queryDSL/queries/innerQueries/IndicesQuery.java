@@ -27,7 +27,9 @@ public class IndicesQuery
             .generate(queryBag);
     }
 
-    public static class IndicesQueryBuilder extends Init<IndicesQueryBuilder> {
+    public static class IndicesQueryBuilder
+            extends Init<IndicesQueryBuilder> {
+
         @Override
         protected IndicesQueryBuilder self() {
             return this;

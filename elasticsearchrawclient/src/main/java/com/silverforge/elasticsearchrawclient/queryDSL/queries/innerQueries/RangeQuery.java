@@ -17,7 +17,7 @@ import java.util.List;
 import static br.com.zbra.androidlinq.Linq.stream;
 
 public class RangeQuery
-    extends BoostQuery {
+        extends BoostQuery {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
@@ -36,7 +36,9 @@ public class RangeQuery
         return new RangeQueryBuilder();
     }
 
-    public static class RangeQueryBuilder extends Init<RangeQueryBuilder> {
+    public static class RangeQueryBuilder
+            extends Init<RangeQueryBuilder> {
+
         @Override
         protected RangeQueryBuilder self() {
             return this;

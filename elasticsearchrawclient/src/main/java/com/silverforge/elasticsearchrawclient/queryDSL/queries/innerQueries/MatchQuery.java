@@ -11,13 +11,14 @@ import com.silverforge.elasticsearchrawclient.queryDSL.operators.PhraseTypeOpera
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroTermsQueryOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.FieldValueQuery;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.MinimumShouldMatchQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 import java.util.Date;
 
 public class MatchQuery
-        extends MinimumShouldMatchQuery {
+        extends FieldValueQuery {
 
     protected QueryTypeArrayList<QueryTypeItem> queryBag;
 
@@ -35,7 +36,9 @@ public class MatchQuery
          return new MatchQueryBuilder();
     }
 
-    public static class MatchQueryBuilder extends Init<MatchQueryBuilder> {
+    public static class MatchQueryBuilder
+            extends Init<MatchQueryBuilder> {
+
         @Override
         protected MatchQueryBuilder self() {
             return this;
@@ -43,77 +46,27 @@ public class MatchQuery
     }
 
     public static abstract class Init<T extends Init<T>>
-            extends MinimumShouldMatchQuery.MinimumShouldMatchInit<T> {
+            extends FieldValueInit<T> {
 
-        public T fieldName(String fieldName) {
-            if (TextUtils.isEmpty(fieldName))
-                return allFields();
-
-            queryBag.addParentItem(Constants.FIELD_NAME, fieldName);
+        public T minimumShouldMatch(int value) {
+            queryBag.addItem(Constants.MINIMUM_SHOULD_MATCH, value);
             return self();
         }
 
-        public T allFields() {
-            queryBag.addParentItem(Constants.FIELD_NAME, "_all");
+        public T minimumShouldMatchPercentage(int value) {
+            queryBag.addPercentageItem(Constants.MINIMUM_SHOULD_MATCH, value);
             return self();
         }
 
-        // region value operators
-
-        public T value(String value) {
-            queryBag.addItem(Constants.VALUE, value);
+        public T minimumShouldMatchPercentage(float value) {
+            queryBag.addPercentageItem(Constants.MINIMUM_SHOULD_MATCH, value);
             return self();
         }
 
-        // region integer numbers
-
-        public T value(byte value) {
-            queryBag.addItem(Constants.VALUE, value);
+        public T minimumShouldMatchCombination(String expression) {
+            queryBag.addItem(Constants.MINIMUM_SHOULD_MATCH, expression);
             return self();
         }
-
-        public T value(short value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        public T value(int value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        public T value(long value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        // endregion
-
-        // region float numbers
-
-        public T value(float value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        public T value(double value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        // endregion
-
-        public T value(Date value, String format) {
-            queryBag.addItem(Constants.VALUE, value, format);
-            return self();
-        }
-
-        public T value(boolean value) {
-            queryBag.addItem(Constants.VALUE, value);
-            return self();
-        }
-
-        // endregion
 
         public T analyzer(String analyzer) {
             queryBag.addItem(Constants.ANALYZER, analyzer);

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IdsQuery
-    implements Queryable {
+        implements Queryable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
@@ -31,14 +31,17 @@ public class IdsQuery
             .generate(queryBag);
     }
 
-    public static class IdsQueryBuilder extends Init<IdsQueryBuilder> {
+    public static class IdsQueryBuilder
+            extends Init<IdsQueryBuilder> {
+
         @Override
         protected IdsQueryBuilder self() {
             return this;
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
+    public static abstract class Init<T extends Init<T>>
+            extends BoostQuery.BoostInit<T> {
 
         public T type(String type) {
             queryBag.addItem(Constants.TYPE, type);

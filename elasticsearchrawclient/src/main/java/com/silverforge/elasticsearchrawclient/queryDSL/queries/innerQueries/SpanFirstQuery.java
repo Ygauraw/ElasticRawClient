@@ -32,7 +32,9 @@ public class SpanFirstQuery
             .generate(queryBag);
     }
 
-    public static class SpanFirstQueryBuilder extends Init<SpanFirstQueryBuilder> {
+    public static class SpanFirstQueryBuilder
+            extends Init<SpanFirstQueryBuilder> {
+
         @Override
         protected SpanFirstQueryBuilder self() {
             return this;

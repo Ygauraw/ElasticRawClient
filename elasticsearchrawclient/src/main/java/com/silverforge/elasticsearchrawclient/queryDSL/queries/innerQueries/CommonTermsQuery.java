@@ -35,7 +35,8 @@ public class CommonTermsQuery
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchQuery.MinimumShouldMatchInit<T> {
+    public static abstract class Init<T extends Init<T>>
+            extends MinimumShouldMatchQuery.MinimumShouldMatchInit<T> {
 
         public T field(String fieldName) {
             queryBag.addParentItem(Constants.FIELD_NAME, fieldName);

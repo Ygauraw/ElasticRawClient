@@ -14,7 +14,8 @@ import java.util.List;
 
 import static br.com.zbra.androidlinq.Linq.*;
 
-public class HasChildQuery implements Queryable {
+public class HasChildQuery
+        implements Queryable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
@@ -33,14 +34,17 @@ public class HasChildQuery implements Queryable {
             .generate(queryBag);
     }
 
-    public static class HasChildQueryBuilder extends Init<HasChildQueryBuilder> {
+    public static class HasChildQueryBuilder
+            extends Init<HasChildQueryBuilder> {
+
         @Override
         protected HasChildQueryBuilder self() {
             return this;
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
+    public static abstract class Init<T extends Init<T>>
+            extends BoostQuery.BoostInit<T> {
 
         public T query(Queryable query) {
             queryBag.addItem(Constants.QUERY, query);

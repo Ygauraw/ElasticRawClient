@@ -1,6 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
+import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
@@ -25,7 +26,9 @@ public class BoolQueryTest {
     // region Happy path
 
     @Test
-    public void when_query_fully_defined_then_query_generated_with_must_should_must_not() {
+    public void when_query_fully_defined_then_query_generated_with_must_should_must_not()
+            throws MandatoryParametersAreMissingException {
+
         BoolQuery query = BoolQuery
             .builder()
             .must(

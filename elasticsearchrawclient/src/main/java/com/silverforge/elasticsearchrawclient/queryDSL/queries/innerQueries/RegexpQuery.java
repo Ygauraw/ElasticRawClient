@@ -36,7 +36,9 @@ public class RegexpQuery
         return new RegexpQueryBuilder();
     }
 
-    public static class RegexpQueryBuilder extends Init<RegexpQueryBuilder> {
+    public static class RegexpQueryBuilder
+            extends Init<RegexpQueryBuilder> {
+
         @Override
         protected RegexpQueryBuilder self() {
             return this;

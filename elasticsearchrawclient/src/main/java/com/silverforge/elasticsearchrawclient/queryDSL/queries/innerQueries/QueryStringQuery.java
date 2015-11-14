@@ -31,14 +31,18 @@ public class QueryStringQuery
         return new QueryStringQueryBuilder();
     }
 
-    public static class QueryStringQueryBuilder extends Init<QueryStringQueryBuilder> {
+    public static class QueryStringQueryBuilder
+            extends Init<QueryStringQueryBuilder> {
+
         @Override
         protected QueryStringQueryBuilder self() {
             return this;
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends MinimumShouldMatchInit<T> {
+    public static abstract class Init<T extends Init<T>>
+            extends MinimumShouldMatchInit<T> {
+
         public T defaultField(String fieldName) {
             queryBag.addItem(Constants.DEFAULT_FIELD, fieldName);
             return self();

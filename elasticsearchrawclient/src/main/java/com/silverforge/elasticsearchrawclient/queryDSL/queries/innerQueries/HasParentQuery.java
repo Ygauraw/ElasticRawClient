@@ -32,14 +32,17 @@ public class HasParentQuery
             .generate(queryBag);
     }
 
-    public static class HasParentQueryBuilder extends Init<HasParentQueryBuilder> {
+    public static class HasParentQueryBuilder
+            extends Init<HasParentQueryBuilder> {
+
         @Override
         protected HasParentQueryBuilder self() {
             return this;
         }
     }
 
-    public static abstract class Init<T extends Init<T>> extends BoostQuery.BoostInit<T> {
+    public static abstract class Init<T extends Init<T>>
+            extends BoostQuery.BoostInit<T> {
 
         public T query(Queryable query) {
             queryBag.addItem(Constants.QUERY, query);
