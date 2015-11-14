@@ -28,14 +28,14 @@ public class ScriptQueryTest {
         params.put("param1", 1);
         params.put("param2", 2);
         ScriptQuery query = ScriptQuery
+            .builder()
+            .script(Script
                 .builder()
-                .script(Script
-                        .builder()
-                        .inline("inline_script_value")
-                        .lang("lang")
-                        .params(params)
-                        .build())
-                .build();
+                .inline("inline_script_value")
+                .lang("lang")
+                .params(params)
+                .build())
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -51,12 +51,12 @@ public class ScriptQueryTest {
     @Test
     public void when_only_script_added_then_query_is_generated_well() {
         ScriptQuery query = ScriptQuery
+            .builder()
+            .script(Script
                 .builder()
-                .script(Script
-                        .builder()
-                        .inline("inline_script_value")
-                        .build())
-                .build();
+                .inline("inline_script_value")
+                .build())
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -73,8 +73,8 @@ public class ScriptQueryTest {
     @Test
     public void when_no_params_added_then_query_is_generated_well() {
         ScriptQuery query = ScriptQuery
-                .builder()
-                .build();
+            .builder()
+            .build();
 
         String queryString = query.getQueryString();
 

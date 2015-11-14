@@ -27,9 +27,9 @@ public class WildCardQueryTest {
             throws MandatoryParametersAreMissingException {
 
         WildCardQuery query = WildCardQuery
-                .builder()
-                .fieldName("cities")
-                .build();
+            .builder()
+            .fieldName("cities")
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -44,11 +44,11 @@ public class WildCardQueryTest {
             throws MandatoryParametersAreMissingException {
 
         WildCardQuery query = WildCardQuery
-                .builder()
-                .fieldName("cities")
-                .boost(2.4f)
-                .wildcard("k.*")
-                .build();
+            .builder()
+            .fieldName("cities")
+            .boost(2.4f)
+            .wildcard("k.*")
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -65,11 +65,11 @@ public class WildCardQueryTest {
             throws MandatoryParametersAreMissingException {
 
         WildCardQuery query = WildCardQuery
-                .builder()
-                .fieldName("cities")
-                .boost(2)
-                .value("k.*")
-                .build();
+            .builder()
+            .fieldName("cities")
+            .boost(2)
+            .value("k.*")
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -90,8 +90,8 @@ public class WildCardQueryTest {
             throws MandatoryParametersAreMissingException {
 
         WildCardQuery
-                .builder()
-                .build();
+            .builder()
+            .build();
     }
 
     // endregion Sad path

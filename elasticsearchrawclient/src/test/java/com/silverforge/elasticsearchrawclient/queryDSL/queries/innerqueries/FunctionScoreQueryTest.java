@@ -32,12 +32,12 @@ public class FunctionScoreQueryTest {
     @Test
     public void when_minimal_requred_params_added_then_query_is_generated_well() {
         FunctionScoreQuery query = FunctionScoreQuery
+            .builder()
+            .query(MatchQuery
                 .builder()
-                .query(MatchQuery
-                        .builder()
-                        .build())
-                .boost(89)
-                .build();
+                .build())
+            .boost(89)
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -54,16 +54,16 @@ public class FunctionScoreQueryTest {
     @Test
     public void when_function_param_added_then_query_is_generated_well() {
         FunctionScoreQuery query = FunctionScoreQuery
+            .builder()
+            .query(MatchQuery
                 .builder()
-                .query(MatchQuery
-                        .builder()
-                        .build())
-                .function(Function
-                        .builder()
-                        .weight(2)
-                        .randomScore(2)
-                        .build())
-                .build();
+                .build())
+            .function(Function
+                .builder()
+                .weight(2)
+                .randomScore(2)
+                .build())
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -82,23 +82,23 @@ public class FunctionScoreQueryTest {
         FunctionScoreQuery query = FunctionScoreQuery
                 .builder()
                 .query(MatchQuery
-                        .builder()
-                        .build())
+                    .builder()
+                    .build())
                 .boost(8.9f)
                 .boostMode(BoostModeOperator.MULTIPLY)
                 .scoreMode(ScoreModeOperator.MULTIPLY)
                 .minScore(67)
                 .maxBoost(5.123f)
                 .function(Function
+                    .builder()
+                    .scriptScore(
+                        Script
                         .builder()
-                        .scriptScore(
-                                Script
-                                    .builder()
-                                    .lang("lang")
-                                    .params(params)
-                                    .build()
-                        )
-                        .build())
+                        .lang("lang")
+                        .params(params)
+                        .build()
+                    )
+                    .build())
                 .build();
 
         String queryString = query.getQueryString();
@@ -121,8 +121,8 @@ public class FunctionScoreQueryTest {
     @Test
     public void when_no_params_added_then_minimal_query_is_generated_well() {
         FunctionScoreQuery query = FunctionScoreQuery
-                .builder()
-                .build();
+            .builder()
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -133,13 +133,13 @@ public class FunctionScoreQueryTest {
     @Test
     public void when_query_param_is_null_then_query_is_generated_well() {
         FunctionScoreQuery query = FunctionScoreQuery
+            .builder()
+            .boost(89)
+            .boostMode(BoostModeOperator.MULTIPLY)
+            .function(Function
                 .builder()
-                .boost(89)
-                .boostMode(BoostModeOperator.MULTIPLY)
-                .function(Function
-                        .builder()
-                        .build())
-                .build();
+                .build())
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -154,13 +154,13 @@ public class FunctionScoreQueryTest {
     @Test
     public void when_function_param_is_null_then_query_is_generated_well() {
         FunctionScoreQuery query = FunctionScoreQuery
+            .builder()
+            .query(MatchQuery
                 .builder()
-                .query(MatchQuery
-                        .builder()
-                        .build())
-                .boost(89)
-                .boostMode(BoostModeOperator.MULTIPLY)
-                .build();
+                .build())
+            .boost(89)
+            .boostMode(BoostModeOperator.MULTIPLY)
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -173,5 +173,4 @@ public class FunctionScoreQueryTest {
     }
 
     // endregion
-
 }

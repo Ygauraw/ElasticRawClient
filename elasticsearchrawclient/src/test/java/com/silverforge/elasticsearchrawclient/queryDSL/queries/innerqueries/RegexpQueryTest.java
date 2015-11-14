@@ -27,9 +27,9 @@ public class RegexpQueryTest {
             throws MandatoryParametersAreMissingException {
 
         RegexpQuery query = RegexpQuery
-                .builder()
-                .fieldName("name")
-                .build();
+            .builder()
+            .fieldName("name")
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -44,13 +44,13 @@ public class RegexpQueryTest {
             throws MandatoryParametersAreMissingException {
 
         RegexpQuery query = RegexpQuery
-                .builder()
-                .fieldName("name")
-                .value("s.*")
-                .flags(FlagOperator.INTERSECTION, FlagOperator.COMPLEMENT, FlagOperator.EMPTY)
-                .boost(2)
-                .max_determinized_states(10000)
-                .build();
+            .builder()
+            .fieldName("name")
+            .value("s.*")
+            .flags(FlagOperator.INTERSECTION, FlagOperator.COMPLEMENT, FlagOperator.EMPTY)
+            .boost(2)
+            .max_determinized_states(10000)
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -73,8 +73,8 @@ public class RegexpQueryTest {
             throws MandatoryParametersAreMissingException {
 
         RegexpQuery query = RegexpQuery
-                .builder()
-                .build();
+            .builder()
+            .build();
     }
 
     @Test
@@ -82,9 +82,9 @@ public class RegexpQueryTest {
             throws MandatoryParametersAreMissingException {
 
         RegexpQuery query = RegexpQuery
-                .builder()
-                .fieldName("")
-                .build();
+            .builder()
+            .fieldName("")
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -99,10 +99,10 @@ public class RegexpQueryTest {
             throws MandatoryParametersAreMissingException {
 
         RegexpQuery query = RegexpQuery
-                .builder()
-                .fieldName("")
-                .value("s.*")
-                .build();
+            .builder()
+            .fieldName("")
+            .value("s.*")
+            .build();
 
         String queryString = query.getQueryString();
 

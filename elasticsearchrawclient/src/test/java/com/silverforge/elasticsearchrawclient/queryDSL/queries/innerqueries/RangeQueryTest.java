@@ -32,9 +32,9 @@ public class RangeQueryTest {
             throws MandatoryParametersAreMissingException {
 
         RangeQuery query = RangeQuery
-                .builder()
-                .fieldName("name")
-                .build();
+            .builder()
+            .fieldName("name")
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -49,14 +49,14 @@ public class RangeQueryTest {
             throws MandatoryParametersAreMissingException {
 
         RangeQuery query = RangeQuery
-                .builder()
-                .fieldName("name")
-                .gte(10)
-                .gt(9)
-                .lte(20)
-                .lt(21)
-                .boost(2.0f)
-                .build();
+            .builder()
+            .fieldName("name")
+            .gte(10)
+            .gt(9)
+            .lte(20)
+            .lt(21)
+            .boost(2.0f)
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -88,16 +88,16 @@ public class RangeQueryTest {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         RangeQuery query = RangeQuery
-                .builder()
-                .fieldName("name")
-                .gte(sdf.parse(gte),"yyyy-MM-dd")
-                .gt(sdf.parse(gt),"yyyy-MM-dd")
-                .lte(sdf.parse(lte),"yyyy-MM-dd")
-                .lt(sdf.parse(lt),"yyyy-MM-dd")
-                .format("dd/MM/yyyy")
-                .timeZone(TimeZoneOperator.UTC)
-                .boost(2.0f)
-                .build();
+            .builder()
+            .fieldName("name")
+            .gte(sdf.parse(gte),"yyyy-MM-dd")
+            .gt(sdf.parse(gt),"yyyy-MM-dd")
+            .lte(sdf.parse(lte),"yyyy-MM-dd")
+            .lt(sdf.parse(lt),"yyyy-MM-dd")
+            .format("dd/MM/yyyy")
+            .timeZone(TimeZoneOperator.UTC)
+            .boost(2.0f)
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -123,8 +123,8 @@ public class RangeQueryTest {
             throws MandatoryParametersAreMissingException {
 
         RangeQuery query = RangeQuery
-                .builder()
-                .build();
+            .builder()
+            .build();
     }
 
     @Test
@@ -135,12 +135,12 @@ public class RangeQueryTest {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         RangeQuery query = RangeQuery
-                .builder()
-                .fieldName("name")
-                .gte(sdf.parse(gte), "yyyy-MM-dd")
-                .format("dd/MM/yyyy")
-                .boost(2.0f)
-                .build();
+            .builder()
+            .fieldName("name")
+            .gte(sdf.parse(gte), "yyyy-MM-dd")
+            .format("dd/MM/yyyy")
+            .boost(2.0f)
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -160,11 +160,11 @@ public class RangeQueryTest {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         RangeQuery query = RangeQuery
-                .builder()
-                .fieldName("name")
-                .gte(sdf.parse(gte), "yyyy-MM-dd")
-                .boost(2)
-                .build();
+            .builder()
+            .fieldName("name")
+            .gte(sdf.parse(gte), "yyyy-MM-dd")
+            .boost(2)
+            .build();
 
         String queryString = query.getQueryString();
 

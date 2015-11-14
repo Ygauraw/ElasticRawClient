@@ -32,9 +32,9 @@ public class SimpleQueryStringQueryTest {
             throws MandatoryParametersAreMissingException {
 
         SimpleQueryStringQuery query = SimpleQueryStringQuery
-                .builder()
-                .query("\"fried eggs\" +(eggplant | potato) -frittata")
-                .build();
+            .builder()
+            .query("\"fried eggs\" +(eggplant | potato) -frittata")
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -49,18 +49,18 @@ public class SimpleQueryStringQueryTest {
             throws MandatoryParametersAreMissingException {
 
         SimpleQueryStringQuery query = SimpleQueryStringQuery
-                .builder()
-                .query("\"fried eggs\" +(eggplant | potato) -frittata")
-                .fields("body^5", "_all")
-                .default_operator(LogicOperator.AND)
-                .analyzer("analyzer value")
-                .flags(SimpleFlagOperator.AND, SimpleFlagOperator.OR, SimpleFlagOperator.FUZZY)
-                .lowercase_expanded_terms(true)
-                .analyze_wildcard(false)
-                .locale(Locale.ENGLISH)
-                .lenient(true)
-                .minimum_should_match("20%")
-                .build();
+            .builder()
+            .query("\"fried eggs\" +(eggplant | potato) -frittata")
+            .fields("body^5", "_all")
+            .default_operator(LogicOperator.AND)
+            .analyzer("analyzer value")
+            .flags(SimpleFlagOperator.AND, SimpleFlagOperator.OR, SimpleFlagOperator.FUZZY)
+            .lowercase_expanded_terms(true)
+            .analyze_wildcard(false)
+            .locale(Locale.ENGLISH)
+            .lenient(true)
+            .minimum_should_match("20%")
+            .build();
 
         String queryString = query.getQueryString();
 
@@ -88,8 +88,8 @@ public class SimpleQueryStringQueryTest {
             throws MandatoryParametersAreMissingException {
 
         SimpleQueryStringQuery query = SimpleQueryStringQuery
-                .builder()
-                .build();
+            .builder()
+            .build();
     }
 
     @Test
@@ -97,9 +97,9 @@ public class SimpleQueryStringQueryTest {
             throws MandatoryParametersAreMissingException {
 
         SimpleQueryStringQuery query = SimpleQueryStringQuery
-                .builder()
-                .query("\"\"")
-                .build();
+            .builder()
+            .query("\"\"")
+            .build();
 
         String queryString = query.getQueryString();
 

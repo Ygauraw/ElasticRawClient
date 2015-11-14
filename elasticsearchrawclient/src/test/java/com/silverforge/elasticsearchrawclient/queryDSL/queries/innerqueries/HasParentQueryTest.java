@@ -88,8 +88,8 @@ public class HasParentQueryTest {
         HasParentQuery query = HasParentQuery
             .builder()
             .query(MatchQuery
-                    .builder()
-                    .build())
+                .builder()
+                .build())
             .build();
     }
 
