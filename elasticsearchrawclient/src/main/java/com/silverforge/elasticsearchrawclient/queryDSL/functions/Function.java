@@ -4,7 +4,6 @@ import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.FieldValueFactorable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Functionable;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Scriptable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
@@ -22,7 +21,7 @@ public class Function
     }
 
     @Override
-    public String getQueryString() {
+    public String getFunctionString() {
         return QueryFactory
                 .functionGenerator()
                 .generate(queryBag);

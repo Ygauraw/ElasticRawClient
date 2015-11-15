@@ -1,6 +1,7 @@
 package com.silverforge.elasticsearchrawclient.utils;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Functionable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 
 import java.text.SimpleDateFormat;
@@ -234,6 +235,34 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
         if (values != null && values.length > 0 && !containsKey(key)) {
             String[] queries = stream(values)
                 .select(q -> q.getQueryString())
+                .toList()
+                .toArray(new String[]{});
+
+            String joinedQueries = StringUtils.makeCommaSeparatedList(queries);
+            add((T) T
+                .builder()
+                .name(key)
+                .value("[" + joinedQueries + "]")
+                .build());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addItem(String key, Functionable value) {
+        if (value != null && !containsKey(key)) {
+            add((T) T
+                .builder()
+                .name(key)
+                .value(value.getFunctionString())
+                .build());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addItem(String key, Functionable... values) {
+        if (values != null && values.length > 0 && !containsKey(key)) {
+            String[] queries = stream(values)
+                .select(q -> q.getFunctionString())
                 .toList()
                 .toArray(new String[]{});
 
