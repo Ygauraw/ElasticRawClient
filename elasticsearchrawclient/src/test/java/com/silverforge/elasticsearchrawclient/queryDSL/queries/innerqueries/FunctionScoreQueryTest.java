@@ -3,6 +3,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
 import com.silverforge.elasticsearchrawclient.queryDSL.functions.Function;
+import com.silverforge.elasticsearchrawclient.queryDSL.functions.Weight;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.BoostModeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ScoreModeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.scripts.Script;
@@ -36,6 +37,33 @@ public class FunctionScoreQueryTest {
             .query(MatchQuery
                 .builder()
                 .build())
+            .boost(89)
+            .build();
+
+        String queryString = query.getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"function_score\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
+        assertThat(queryString.indexOf("\"query\":{\"match\":{\"_all\":\"\"}}"), greaterThan(0));
+        assertThat(queryString.indexOf("\"boost\":\"89\""), greaterThan(0));
+    }
+
+    @Test
+    public void when_function_added_then_query_is_generated_well() {
+        FunctionScoreQuery query = FunctionScoreQuery
+            .builder()
+            .query(MatchQuery
+                .builder()
+                .build())
+            .function(Weight
+                .builder()
+                .weight(45.6f)
+                .build()
+            )
             .boost(89)
             .build();
 

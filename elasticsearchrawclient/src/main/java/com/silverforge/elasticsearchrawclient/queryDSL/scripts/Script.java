@@ -7,7 +7,8 @@ import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import java.util.Map;
 
-public class Script implements Scriptable {
+public class Script
+        implements Scriptable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
@@ -22,8 +23,8 @@ public class Script implements Scriptable {
     @Override
     public String getQueryString() {
         return QueryFactory
-                .scriptGenerator()
-                .generate(queryBag);
+            .scriptGenerator()
+            .generate(queryBag);
     }
 
     public static class ScriptBuilder extends Init<ScriptBuilder> {
