@@ -2,6 +2,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 
 import org.junit.Test;
@@ -12,6 +13,8 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -22,16 +25,17 @@ public class DisMaxQueryTest {
 
     @Test
     public void when_queries_defined_then_query_generated_well() {
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
+
+        Queryable commonTermsQueryable = mock(Queryable.class);
+        when(commonTermsQueryable.getQueryString()).thenReturn("{\"common\":{\"body\":{\"query\":\"this is bonsai cool\",\"cutoff_frequency\":\"0.001\"}}}");
+
         DisMaxQuery query = DisMaxQuery
             .builder()
             .queries(
-                MatchQuery
-                    .builder()
-                    .allFields()
-                    .build(),
-                CommonTermsQuery
-                    .builder()
-                    .build()
+                matchAllQueryable,
+                commonTermsQueryable
             )
             .build();
 
@@ -43,22 +47,23 @@ public class DisMaxQueryTest {
         assertThat(queryString.startsWith("{\"dis_max\":{"), is(true));
         assertThat(queryString.endsWith("}}"), is(true));
 
-        assertThat(queryString.indexOf("\"match\":"), greaterThan(0));
+        assertThat(queryString.indexOf("\"match_all\":"), greaterThan(0));
         assertThat(queryString.indexOf("\"common\":"), greaterThan(0));
     }
 
     @Test
     public void when_query_is_fully_defined_then_query_generated_well() {
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
+
+        Queryable commonTermsQueryable = mock(Queryable.class);
+        when(commonTermsQueryable.getQueryString()).thenReturn("{\"common\":{\"body\":{\"query\":\"this is bonsai cool\",\"cutoff_frequency\":\"0.001\"}}}");
+
         DisMaxQuery query = DisMaxQuery
             .builder()
             .queries(
-                MatchQuery
-                    .builder()
-                    .allFields()
-                    .build(),
-                CommonTermsQuery
-                    .builder()
-                    .build()
+                matchAllQueryable,
+                commonTermsQueryable
             )
             .tieBreaker(ZeroToOneRangeOperator._0_8)
             .boost(3)
@@ -72,7 +77,7 @@ public class DisMaxQueryTest {
         assertThat(queryString.startsWith("{\"dis_max\":{"), is(true));
         assertThat(queryString.endsWith("}}"), is(true));
 
-        assertThat(queryString.indexOf("\"match\":"), greaterThan(0));
+        assertThat(queryString.indexOf("\"match_all\":"), greaterThan(0));
         assertThat(queryString.indexOf("\"common\":"), greaterThan(0));
 
         assertThat(queryString.indexOf("\"tie_breaker\":\"0.8\""), greaterThan(0));
@@ -97,5 +102,6 @@ public class DisMaxQueryTest {
         assertThat(queryString.startsWith("{\"dis_max\":{"), is(true));
         assertThat(queryString.endsWith("}}"), is(true));
     }
+
     // endregion
 }
