@@ -13,6 +13,10 @@ public final class FunctionFactory {
         return new WeightGenerator();
     }
 
+    public static RandomScoreGenerator randomScoreGenerator() {
+        return new RandomScoreGenerator();
+    }
+
     public static class WeightGenerator
             extends QueryGenerator {
 
@@ -24,6 +28,20 @@ public final class FunctionFactory {
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren(childItems);
+        }
+    }
+
+    public static class RandomScoreGenerator
+            extends QueryGenerator {
+
+        private RandomScoreGenerator() {}
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("random_score", childItems);
         }
     }
 }
