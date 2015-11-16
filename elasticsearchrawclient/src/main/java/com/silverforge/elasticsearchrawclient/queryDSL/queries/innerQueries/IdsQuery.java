@@ -54,16 +54,8 @@ public class IdsQuery
         }
 
         public IdsQuery build() throws MandatoryParametersAreMissingException {
-            List<String> missingParams = new ArrayList<>();
-            boolean hasMissingParams = false;
-
             if(!queryBag.containsKey(Constants.VALUES)) {
-                hasMissingParams = true;
-                missingParams.add(Constants.VALUES);
-            }
-
-            if(hasMissingParams) {
-                throw new MandatoryParametersAreMissingException(missingParams.toString());
+                throw new MandatoryParametersAreMissingException(Constants.VALUES);
             }
             return new IdsQuery(queryBag);
         }

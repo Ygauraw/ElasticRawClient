@@ -106,14 +106,9 @@ public class SimpleQueryStringQuery
         }
 
         public SimpleQueryStringQuery build() throws MandatoryParametersAreMissingException {
-
-            List<String> missingParams = new ArrayList<>();
-
-            if(!queryBag.containsKey(Constants.QUERY))
-                missingParams.add(Constants.QUERY);
-            if(stream(missingParams).count() > 0)
-                throw new MandatoryParametersAreMissingException(missingParams.toString());
-
+            if(!queryBag.containsKey(Constants.QUERY)) {
+                throw new MandatoryParametersAreMissingException(Constants.QUERY);
+            }
             return new SimpleQueryStringQuery(queryBag);
         }
     }

@@ -55,13 +55,12 @@ public class PrefixQuery
         }
 
         public PrefixQuery build() throws MandatoryParametersAreMissingException {
-
-            if (!queryBag.containsKey(Constants.FIELD_NAME))
+            if (!queryBag.containsKey(Constants.FIELD_NAME)) {
                 throw new MandatoryParametersAreMissingException(Constants.FIELD_NAME);
-
-            if (!queryBag.containsKey(Constants.VALUE))
+            }
+            if (!queryBag.containsKey(Constants.VALUE)) {
                 throw new MandatoryParametersAreMissingException(Constants.VALUE);
-
+            }
             return new PrefixQuery(queryBag);
         }
     }

@@ -60,13 +60,9 @@ public class WildCardQuery
         }
 
         public WildCardQuery build() throws MandatoryParametersAreMissingException {
-            List<String> missingParams = new ArrayList<>();
-
-            if(!queryBag.containsKey(Constants.FIELD_NAME))
-                missingParams.add(Constants.FIELD_NAME);
-            if(stream(missingParams).count() > 0)
-                throw new MandatoryParametersAreMissingException(missingParams.toString());
-
+            if(!queryBag.containsKey(Constants.FIELD_NAME)) {
+                throw new MandatoryParametersAreMissingException(Constants.FIELD_NAME);
+            }
             return new WildCardQuery(queryBag);
         }
 

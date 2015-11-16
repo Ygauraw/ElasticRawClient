@@ -12,6 +12,8 @@ import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
+import static br.com.zbra.androidlinq.Linq.stream;
+
 public class HasParentQuery
         implements Queryable {
 
@@ -62,18 +64,14 @@ public class HasParentQuery
 
         public HasParentQuery build() throws MandatoryParametersAreMissingException {
             List<String> missingParams = new ArrayList<>();
-            boolean hasMissingParams = false;
 
             if(!queryBag.containsKey(Constants.PARENT_TYPE)) {
-                hasMissingParams = true;
                 missingParams.add(Constants.PARENT_TYPE);
             }
             if(!queryBag.containsKey(Constants.QUERY)) {
-                hasMissingParams = true;
                 missingParams.add(Constants.QUERY);
             }
-
-            if(hasMissingParams) {
+            if(stream(missingParams).count() > 0) {
                 throw new MandatoryParametersAreMissingException(missingParams.toString());
             }
             return new HasParentQuery(queryBag);

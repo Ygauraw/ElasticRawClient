@@ -75,15 +75,15 @@ public class HasChildQuery
         public HasChildQuery build() throws MandatoryParametersAreMissingException {
             List<String> missingParams = new ArrayList<>();
 
-            if(!queryBag.containsKey(Constants.TYPE))
+            if(!queryBag.containsKey(Constants.TYPE)) {
                 missingParams.add(Constants.TYPE);
-
-            if(!queryBag.containsKey(Constants.QUERY))
+            }
+            if(!queryBag.containsKey(Constants.QUERY)) {
                 missingParams.add(Constants.QUERY);
-
-            if(stream(missingParams).count() > 0)
+            }
+            if(stream(missingParams).count() > 0) {
                 throw new MandatoryParametersAreMissingException(missingParams.toString());
-
+            }
             return new HasChildQuery(queryBag);
         }
     }
