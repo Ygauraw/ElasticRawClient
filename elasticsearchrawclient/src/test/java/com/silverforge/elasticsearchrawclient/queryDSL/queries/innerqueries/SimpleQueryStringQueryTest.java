@@ -6,6 +6,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SimpleFlagOperator;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -41,6 +42,9 @@ public class SimpleQueryStringQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
+        assertThat(queryString.startsWith("{\"simple_query_string\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"query\":\"\"fried eggs\" +(eggplant | potato) -frittata\""), greaterThan(0));
     }
 
@@ -66,6 +70,9 @@ public class SimpleQueryStringQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"simple_query_string\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
 
         assertThat(queryString.indexOf("\"query\":\"\"fried eggs\" +(eggplant | potato) -frittata\""), greaterThan(0));
         assertThat(queryString.indexOf("\"fields\":[\"body^5\",\"_all\"]"), greaterThan(0));
@@ -105,6 +112,9 @@ public class SimpleQueryStringQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"simple_query_string\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
 
         assertThat(queryString.indexOf("\"query\":\"\""), greaterThan(0));
     }

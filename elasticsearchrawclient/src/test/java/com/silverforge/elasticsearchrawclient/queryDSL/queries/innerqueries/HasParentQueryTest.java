@@ -12,6 +12,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -39,6 +40,9 @@ public class HasParentQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
+        assertThat(queryString.startsWith("{\"has_parent\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"query\":{\"match\":{\"_all\":\"\"}}"), greaterThan(0));
         assertThat(queryString.indexOf("\"parent_type\":\"value\""), greaterThan(0));
     }
@@ -58,6 +62,9 @@ public class HasParentQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"has_parent\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
 
         assertThat(queryString.indexOf("\"query\":{\"match\":{\"_all\":\"\"}}"), greaterThan(0));
         assertThat(queryString.indexOf("\"parent_type\":\"value\""), greaterThan(0));

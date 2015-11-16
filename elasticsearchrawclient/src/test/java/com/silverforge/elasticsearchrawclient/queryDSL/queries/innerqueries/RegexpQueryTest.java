@@ -5,12 +5,14 @@ import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreM
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FlagOperator;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -36,6 +38,9 @@ public class RegexpQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
+        assertThat(queryString.startsWith("{\"regexp\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"regexp\":{\"name\":\"\"}"), greaterThan(0));
     }
 
@@ -57,7 +62,9 @@ public class RegexpQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
-        assertThat(queryString.indexOf("\"regexp\":{\"name\":"), greaterThan(0));
+        assertThat(queryString.startsWith("{\"regexp\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"value\":\"s.*\""), greaterThan(0));
         assertThat(queryString.indexOf("\"flags\":\"INTERSECTION|COMPLEMENT|EMPTY\""), greaterThan(0));
         assertThat(queryString.indexOf("\"boost\":\"2\""), greaterThan(0));
@@ -91,6 +98,9 @@ public class RegexpQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
+        assertThat(queryString.startsWith("{\"regexp\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"regexp\":{\"_all\":\"\"}"), greaterThan(0));
     }
 
@@ -108,6 +118,9 @@ public class RegexpQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"regexp\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
 
         assertThat(queryString.indexOf("\"regexp\":{\"_all\":\"s.*\"}"), greaterThan(0));
     }

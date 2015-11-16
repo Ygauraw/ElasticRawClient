@@ -41,6 +41,9 @@ public class RangeQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
+        assertThat(queryString.startsWith("{\"range\":{\"name\":"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"range\":{\"name\":\"\"}"), greaterThan(0));
     }
 
@@ -63,10 +66,6 @@ public class RangeQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
-        // TODO : tests should check if the query starts with curly brace and the appropriate keyword(s)
-        // it would be also nice if the tests checks if the curly braces at the end of the query
-        // please modify the tests in the light of this todo
-//        assertThat(queryString.indexOf("\"range\":{\"name\":"), greaterThan(0));
         assertThat(queryString.startsWith("{\"range\":{\"name\":"), is(true));
         assertThat(queryString.endsWith("}}"), is(true));
 
@@ -75,6 +74,7 @@ public class RangeQueryTest {
         assertThat(queryString.indexOf("\"lte\":\"20\""), greaterThan(0));
         assertThat(queryString.indexOf("\"lt\":\"21\""), greaterThan(0));
         assertThat(queryString.indexOf("\"boost\":\"2.0\""), greaterThan(0));
+
     }
 
     @Test
@@ -104,7 +104,9 @@ public class RangeQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
-        assertThat(queryString.indexOf("\"range\":{\"name\":"), greaterThan(0));
+        assertThat(queryString.startsWith("{\"range\":{\"name\":"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"gte\":\"2012-01-02\""), greaterThan(0));
         assertThat(queryString.indexOf("\"gt\":\"2012-01-01\""), greaterThan(0));
         assertThat(queryString.indexOf("\"lte\":\"2012-12-12\""), greaterThan(0));
@@ -146,7 +148,10 @@ public class RangeQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
-        assertThat(queryString.indexOf("\"range\":{\"name\":"), greaterThan(0));
+
+        assertThat(queryString.startsWith("{\"range\":{\"name\":"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"gte\":\"2012-01-02\""), greaterThan(0));
         assertThat(queryString.indexOf("\"format\":\"dd/MM/yyyy\""), greaterThan(0));
         assertThat(queryString.indexOf("\"boost\":\"2.0\""), greaterThan(0));
@@ -170,7 +175,10 @@ public class RangeQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
-        assertThat(queryString.indexOf("\"range\":{\"name\":"), greaterThan(0));
+
+        assertThat(queryString.startsWith("{\"range\":{\"name\":"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"gte\":\"2012-01-02\""), greaterThan(0));
         assertThat(queryString.indexOf("\"boost\":\"2\""), greaterThan(0));
     }

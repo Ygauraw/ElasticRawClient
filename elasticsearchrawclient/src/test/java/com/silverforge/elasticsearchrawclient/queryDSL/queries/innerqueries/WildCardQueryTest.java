@@ -11,6 +11,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -36,6 +37,9 @@ public class WildCardQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
+        assertThat(queryString.startsWith("{\"wildcard\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"wildcard\":{\"cities\":\"\"}"), greaterThan(0));
     }
 
@@ -54,6 +58,9 @@ public class WildCardQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"wildcard\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
 
         assertThat(queryString.indexOf("\"wildcard\":{\"cities\":{"), greaterThan(0));
         assertThat(queryString.indexOf("\"wildcard\":\"k.*\""), greaterThan(0));
@@ -75,6 +82,9 @@ public class WildCardQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"wildcard\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
 
         assertThat(queryString.indexOf("\"wildcard\":{\"cities\":{"), greaterThan(0));
         assertThat(queryString.indexOf("\"value\":\"k.*\""), greaterThan(0));

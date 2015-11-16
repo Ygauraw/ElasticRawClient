@@ -3,6 +3,8 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
 import com.silverforge.elasticsearchrawclient.queryDSL.scripts.Script;
+
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -11,6 +13,7 @@ import org.robolectric.annotation.Config;
 import java.util.HashMap;
 import java.util.Map;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -30,11 +33,11 @@ public class ScriptQueryTest {
         ScriptQuery query = ScriptQuery
             .builder()
             .script(Script
-                .builder()
-                .inline("inline_script_value")
-                .lang("lang")
-                .params(params)
-                .build())
+                    .builder()
+                    .inline("inline_script_value")
+                    .lang("lang")
+                    .params(params)
+                    .build())
             .build();
 
         String queryString = query.getQueryString();
@@ -42,10 +45,13 @@ public class ScriptQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
-        assertThat(queryString.indexOf("\"script\":{\"script\":{"), greaterThan(0));
+        assertThat(queryString.startsWith("{\"script\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"inline\":\"inline_script_value\""), greaterThan(0));
         assertThat(queryString.indexOf("\"lang\":\"lang\""), greaterThan(0));
         assertThat(queryString.indexOf("\"params\":[param1:1,param2:2]"), greaterThan(0));
+
     }
 
     @Test
@@ -53,17 +59,21 @@ public class ScriptQueryTest {
         ScriptQuery query = ScriptQuery
             .builder()
             .script(Script
-                .builder()
-                .inline("inline_script_value")
-                .build())
+                    .builder()
+                    .inline("inline_script_value")
+                    .build())
             .build();
 
         String queryString = query.getQueryString();
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
-        assertThat(queryString.indexOf("\"script\":{\"script\":{"), greaterThan(0));
+
+        assertThat(queryString.startsWith("{\"script\":{"), Matchers.is(true));
+        assertThat(queryString.endsWith("}}"), Matchers.is(true));
+
         assertThat(queryString.indexOf("\"inline\":\"inline_script_value\""), greaterThan(0));
+
     }
 
     // endregion Happy path
@@ -80,7 +90,10 @@ public class ScriptQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
-        assertThat(queryString.indexOf("\"script\":{}"), greaterThan(0));
+
+        assertThat(queryString.startsWith("{\"script\":{"), Matchers.is(true));
+        assertThat(queryString.endsWith("}}"), Matchers.is(true));
+
     }
 
     // endregion Sad path

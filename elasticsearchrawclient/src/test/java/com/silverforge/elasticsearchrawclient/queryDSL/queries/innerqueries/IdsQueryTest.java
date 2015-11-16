@@ -4,6 +4,7 @@ import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -36,6 +37,9 @@ public class IdsQueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
+        assertThat(queryString.startsWith("{\"ids\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
         assertThat(queryString.indexOf("\"values\":[\"1\",\"2\"]"), greaterThan(0));
     }
 
@@ -51,6 +55,9 @@ public class IdsQueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"ids\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
 
         assertThat(queryString.indexOf("\"type\":\"value\""), greaterThan(0));
         assertThat(queryString.indexOf("\"values\":[\"1\",\"id\"]"), greaterThan(0));
