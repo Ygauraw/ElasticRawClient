@@ -2,6 +2,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -14,6 +15,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -24,12 +27,12 @@ public class ConstantScoreQueryTest {
 
     @Test
     public void when_filter_andboost_added_then_the_whole_query_is_generated() {
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
+
         ConstantScoreQuery query = ConstantScoreQuery
             .builder()
-            .filter(MatchQuery
-                .builder()
-                .allFields()
-                .build())
+            .filter(matchAllQueryable)
             .boost(1.2F)
             .build();
 
@@ -42,17 +45,18 @@ public class ConstantScoreQueryTest {
         assertThat(queryString.startsWith("{\"constant_score\":{\"filter\":"), is(true));
         assertThat(queryString.endsWith("}}"), is(true));
 
-        assertThat(queryString.indexOf("},\"boost\":\"1.2\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"boost\":\"1.2\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"filter\":{\"match_all\":{}}"), greaterThan(0));
     }
 
     @Test
     public void when_only_filter_added_then_the_query_is_generated() {
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
+
         ConstantScoreQuery query = ConstantScoreQuery
             .builder()
-            .filter(MatchQuery
-                .builder()
-                .allFields()
-                .build())
+            .filter(matchAllQueryable)
             .build();
 
         String queryString = query.getQueryString();
