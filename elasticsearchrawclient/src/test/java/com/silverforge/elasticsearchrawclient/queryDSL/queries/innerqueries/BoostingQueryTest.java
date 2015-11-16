@@ -2,6 +2,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ZeroToOneRangeOperator;
 
 import org.junit.Test;
@@ -15,6 +16,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -25,22 +28,26 @@ public class BoostingQueryTest {
 
     @Test
     public void when_query_fully_defined_then_query_generated_with_positive_negative() {
+
+        Queryable matchQueryable = mock(Queryable.class);
+        when(matchQueryable.getQueryString()).thenReturn("{\"match\":{\"name\":\"Karcag\"}}");
+
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
+
+        Queryable multiMatchQueryable = mock(Queryable.class);
+        when(multiMatchQueryable.getQueryString()).thenReturn("{\"multi_match\":{\"fields\":[\"name\",\"population\"],\"query\":\"Karcag Budapest\",\"use_dis_max\":\"false\",\"analyzer\":\"standard\",\"tie_breaker\":\"0.4\"}}");
+
+        Queryable complicatedMatchQueryable = mock(Queryable.class);
+        when(complicatedMatchQueryable.getQueryString()).thenReturn("{\"match\":{\"name\":{\"query\":\"Karcag Budapest\",\"operator\":\"or\",\"analyzer\":\"keyword\"}}}");
+
         BoostingQuery query = BoostingQuery
             .builder()
             .positive(
-                MatchQuery
-                    .builder()
-                    .allFields()
-                    .build(),
-                MatchQuery
-                    .builder()
-                    .fieldName("name")
-                    .value("Karcag")
-                    .build())
+                matchAllQueryable,
+                matchQueryable)
             .negative(
-                MatchQuery
-                    .builder()
-                    .build())
+                complicatedMatchQueryable)
             .negativeBoost(ZeroToOneRangeOperator._0_6)
             .build();
 
@@ -56,6 +63,48 @@ public class BoostingQueryTest {
         assertThat(queryString.indexOf("\"negative\":["), greaterThan(0));
 
         assertThat(queryString.indexOf("\"negative_boost\":\"0.6\""), greaterThan(0));
+    }
+
+    @Test
+    public void when_positive_defined_then_query_generated_with_positive() {
+        Queryable matchQueryable = mock(Queryable.class);
+        when(matchQueryable.getQueryString()).thenReturn("{\"match\":{\"name\":\"Karcag\"}}");
+
+        BoostingQuery query = BoostingQuery
+            .builder()
+            .positive(matchQueryable)
+            .build();
+
+        String queryString = query.getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"boosting\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
+        assertThat(queryString.indexOf("\"positive\":[{\"match\":{\"name\":\"Karcag\"}}]"), greaterThan(0));
+    }
+
+    @Test
+    public void when_negative_defined_then_query_generated_with_negative() {
+        Queryable matchQueryable = mock(Queryable.class);
+        when(matchQueryable.getQueryString()).thenReturn("{\"match\":{\"name\":\"Karcag\"}}");
+
+        BoostingQuery query = BoostingQuery
+            .builder()
+            .negative(matchQueryable)
+            .build();
+
+        String queryString = query.getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{\"boosting\":{"), is(true));
+        assertThat(queryString.endsWith("}}"), is(true));
+
+        assertThat(queryString.indexOf("\"negative\":[{\"match\":{\"name\":\"Karcag\"}}]"), greaterThan(0));
     }
 
     // endregion
