@@ -124,6 +124,14 @@ public final class QueryFactory {
         return new ScriptQueryGenerator();
     }
 
+    public static TemplateQueryGenerator templateQueryGenerator() {
+        return new TemplateQueryGenerator();
+    }
+
+    public static ParamsGenerator paramsGenerator() {
+        return new ParamsGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -583,6 +591,35 @@ public final class QueryFactory {
                     .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("script", childItems);
+        }
+    }
+
+    public final static class TemplateQueryGenerator
+            extends QueryGenerator {
+
+        private TemplateQueryGenerator() {}
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("template", childItems);
+        }
+    }
+
+    public final static class ParamsGenerator
+            extends QueryGenerator {
+
+        private ParamsGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren(childItems);
         }
     }
 

@@ -21,6 +21,7 @@ public final class Constants {
     public final static String FIELD_VALUE_FACTOR = "field_value_factor";
     public final static String FIELD = "field";
     public final static String FIELDS = "fields";
+    public final static String FILE = "file";
     public final static String FLAGS = "flags";
     public final static String FROM = "from";
     public final static String FORMAT = "format";
@@ -60,6 +61,7 @@ public final class Constants {
     public final static String MODIFIER = "modifier";
     public final static String MUST = "must";
     public final static String MUST_NOT = "must_not";
+    public final static String NAME = "name";
     public final static String NEGATIVE = "negative";
     public final static String NEGATIVE_BOOST = "negative_boost";
     public final static String NO_MATCH_QUERY = "no_match_query";
