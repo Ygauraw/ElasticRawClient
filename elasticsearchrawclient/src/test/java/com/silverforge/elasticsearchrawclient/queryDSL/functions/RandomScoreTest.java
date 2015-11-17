@@ -50,10 +50,10 @@ public class RandomScoreTest {
         assertThat(functionString, notNullValue());
         assertThat(functionString, not(""));
 
-        assertThat(functionString.startsWith("{\"random_score\":{"), is(true));
-        assertThat(functionString.endsWith("}}"), is(true));
+        assertThat(functionString.startsWith("{"), is(true));
+        assertThat(functionString.endsWith("}"), is(true));
 
-        assertThat(functionString.indexOf("\"seed\":\"78\""), greaterThan(0));
+        assertThat(functionString.indexOf("\"random_score\":{\"seed\":\"78\"}"), greaterThan(0));
         assertThat(functionString.indexOf("\"filter\":{\"match_all\":{}}"), greaterThan(0));
     }
 

@@ -13,6 +13,10 @@ public final class FunctionFactory {
         return new WeightGenerator();
     }
 
+    public static ScriptScoreGenerator scriptScoreGenerator() {
+        return new ScriptScoreGenerator();
+    }
+
     public static RandomScoreGenerator randomScoreGenerator() {
         return new RandomScoreGenerator();
     }
@@ -27,7 +31,21 @@ public final class FunctionFactory {
             Map<String, String> childItems = stream(queryBag)
                 .toMap(q -> q.getName(), q -> q.getValue());
 
-            return generateChildren(childItems);
+            return generateFunctionChildren(childItems);
+        }
+    }
+
+    public static class ScriptScoreGenerator
+            extends QueryGenerator {
+
+        private ScriptScoreGenerator() {}
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateScriptScoreChildren("script_score", childItems);
         }
     }
 
@@ -41,7 +59,7 @@ public final class FunctionFactory {
             Map<String, String> childItems = stream(queryBag)
                 .toMap(q -> q.getName(), q -> q.getValue());
 
-            return generateChildren("random_score", childItems);
+            return generateFunctionChildren("random_score", childItems);
         }
     }
 }

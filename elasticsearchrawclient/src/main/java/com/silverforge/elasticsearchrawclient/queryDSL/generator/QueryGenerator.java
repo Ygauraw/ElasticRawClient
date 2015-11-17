@@ -1,5 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.generator;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -151,6 +152,75 @@ public class QueryGenerator
         try {
             jsonGenerator.writeStartObject();
             writeEntries(childItems);
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+            retValue = getOutputStreamValue();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(this.getClass().getName(), e.getMessage());
+        }
+        return retValue;
+    }
+
+    protected String generateFunctionChildren(Map<String, String> childItems) {
+        return generateFunctionChildren(null, childItems);
+    }
+
+    protected String generateFunctionChildren(String queryName, Map<String, String> childItems) {
+        String retValue = "";
+        try {
+            Map.Entry<String, String> filter = stream(childItems)
+                .firstOrNull(ci -> ci.getKey().equals(Constants.FILTER));
+
+            Map<String, String> children = stream(childItems)
+                .where(ci -> !ci.getKey().equals(Constants.FILTER))
+                .toMap(ci -> ci.getKey(), ci -> ci.getValue());
+
+            jsonGenerator.writeStartObject();
+            if (filter != null)
+                jsonGenerator.writeStringField(filter.getKey(), filter.getValue());
+
+            if (!TextUtils.isEmpty(queryName))
+                jsonGenerator.writeObjectFieldStart(queryName);
+
+            writeEntries(children);
+
+            if (!TextUtils.isEmpty(queryName))
+                jsonGenerator.writeEndObject();
+
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+            retValue = getOutputStreamValue();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(this.getClass().getName(), e.getMessage());
+        }
+        return retValue;
+    }
+
+    protected String generateScriptScoreChildren(String queryName, Map<String, String> childItems) {
+        String retValue = "";
+        try {
+            Map.Entry<String, String> filter = stream(childItems)
+                .firstOrNull(ci -> ci.getKey().equals(Constants.FILTER));
+
+            Map.Entry<String, String> script = stream(childItems)
+                .firstOrNull(ci -> ci.getKey().equals(Constants.SCRIPT));
+
+            Map<String, String> children = stream(childItems)
+                .where(ci -> !ci.getKey().equals(Constants.FILTER))
+                .where(ci -> !ci.getKey().equals(Constants.SCRIPT))
+                .toMap(ci -> ci.getKey(), ci -> ci.getValue());
+
+            jsonGenerator.writeStartObject();
+            if (filter != null)
+                jsonGenerator.writeStringField(filter.getKey(), filter.getValue());
+
+            if (script != null)
+                jsonGenerator.writeStringField(queryName, script.getValue());
+
+            writeEntries(children);
+
             jsonGenerator.writeEndObject();
             jsonGenerator.close();
             retValue = getOutputStreamValue();
