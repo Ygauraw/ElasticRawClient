@@ -128,6 +128,10 @@ public final class QueryFactory {
         return new TemplateQueryGenerator();
     }
 
+    public static ExistsQueryGenerator existsQueryGenerator() {
+        return new ExistsQueryGenerator();
+    }
+
     public static ParamsGenerator paramsGenerator() {
         return new ParamsGenerator();
     }
@@ -620,6 +624,20 @@ public final class QueryFactory {
                     .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren(childItems);
+        }
+    }
+
+    public final static class ExistsQueryGenerator
+            extends QueryGenerator {
+
+        private ExistsQueryGenerator() {}
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("exists", childItems);
         }
     }
 
