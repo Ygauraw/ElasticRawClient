@@ -3,6 +3,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ScoreModeOperator;
 
 import org.junit.Rule;
@@ -19,6 +20,8 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -29,11 +32,12 @@ public class HasChildQueryTest {
 
     @Test
     public void when_minimal_requred_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
+
         HasChildQuery query = HasChildQuery
             .builder()
-            .query(MatchQuery
-                .builder()
-                .build())
+            .query(matchAllQueryable)
             .type("value")
             .build();
 
@@ -45,17 +49,18 @@ public class HasChildQueryTest {
         assertThat(queryString.startsWith("{\"has_child\":{"), is(true));
         assertThat(queryString.endsWith("}}"), is(true));
 
-        assertThat(queryString.indexOf("\"query\":{\"match\":{\"_all\":\"\"}}"), greaterThan(0));
+        assertThat(queryString.indexOf("\"query\":{\"match_all\":{}}"), greaterThan(0));
         assertThat(queryString.indexOf("\"type\":\"value\""), greaterThan(0));
     }
 
     @Test
     public void when_all_params_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
+
         HasChildQuery query = HasChildQuery
             .builder()
-            .query(MatchQuery
-                .builder()
-                .build())
+            .query(matchAllQueryable)
             .type("value")
             .scoreMode(ScoreModeOperator.MIN)
             .maxChildren(2)
@@ -70,7 +75,7 @@ public class HasChildQueryTest {
         assertThat(queryString.startsWith("{\"has_child\":{"), is(true));
         assertThat(queryString.endsWith("}}"), is(true));
 
-        assertThat(queryString.indexOf("\"query\":{\"match\":{\"_all\":\"\"}}"), greaterThan(0));
+        assertThat(queryString.indexOf("\"query\":{\"match_all\":{}}"), greaterThan(0));
         assertThat(queryString.indexOf("\"type\":\"value\""), greaterThan(0));
         assertThat(queryString.indexOf("\"score_mode\":\"min\""), greaterThan(0));
         assertThat(queryString.indexOf("\"max_children\":\"2\""), greaterThan(0));
@@ -91,7 +96,9 @@ public class HasChildQueryTest {
     }
 
     @Test(expected = MandatoryParametersAreMissingException.class)
-    public void when_no_query_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
+    public void when_no_query_added_then_exception_is_thrown()
+            throws MandatoryParametersAreMissingException {
+
         HasChildQuery query = HasChildQuery
             .builder()
             .type("value")
@@ -101,17 +108,19 @@ public class HasChildQueryTest {
     }
 
     @Test(expected = MandatoryParametersAreMissingException.class)
-    public void when_no_type_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
-        HasChildQuery query = HasChildQuery
+    public void when_no_type_added_then_exception_is_thrown()
+            throws MandatoryParametersAreMissingException {
+
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
+
+        HasChildQuery
             .builder()
-            .query(MatchQuery
-                .builder()
-                .build())
+            .query(matchAllQueryable)
             .minChildren(1)
             .maxChildren(2)
             .build();
     }
 
     // endregion Sad path
-
 }

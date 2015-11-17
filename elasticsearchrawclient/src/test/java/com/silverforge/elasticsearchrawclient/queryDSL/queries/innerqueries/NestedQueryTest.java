@@ -3,6 +3,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ScoreModeOperator;
 
 import org.junit.Test;
@@ -13,6 +14,8 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -25,10 +28,13 @@ public class NestedQueryTest {
     public void when_all_parameters_defined_then_query_generated_well()
             throws MandatoryParametersAreMissingException {
 
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
+
         String queryString = NestedQuery
             .builder()
             .path("mypath.somewhere.else")
-            .query(MatchAllQuery.builder().build())
+            .query(matchAllQueryable)
             .scoreMode(ScoreModeOperator.MIN)
             .build()
             .getQueryString();
@@ -50,12 +56,15 @@ public class NestedQueryTest {
 
     @Test
     public void when_null_path_defined_then_query_generated_well()
-        throws MandatoryParametersAreMissingException {
+            throws MandatoryParametersAreMissingException {
+
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
 
         String queryString = NestedQuery
             .builder()
             .path(null)
-            .query(MatchAllQuery.builder().build())
+            .query(matchAllQueryable)
             .build()
             .getQueryString();
 
@@ -71,11 +80,14 @@ public class NestedQueryTest {
 
     @Test(expected = MandatoryParametersAreMissingException.class)
     public void when_path_is_missing_then_exception_thrown()
-        throws MandatoryParametersAreMissingException {
+            throws MandatoryParametersAreMissingException {
+
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
 
         NestedQuery
             .builder()
-            .query(MatchAllQuery.builder().build())
+            .query(matchAllQueryable)
             .build()
             .getQueryString();
     }
