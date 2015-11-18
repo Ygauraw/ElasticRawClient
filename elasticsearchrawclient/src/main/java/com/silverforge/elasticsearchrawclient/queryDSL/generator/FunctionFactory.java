@@ -9,6 +9,14 @@ import static br.com.zbra.androidlinq.Linq.stream;
 
 public final class FunctionFactory {
 
+    public static DecayFunctionGenerator gaussGenerator() {
+        return new DecayFunctionGenerator("gauss");
+    }
+
+    public static DecayFunctionGenerator expGenerator() {
+        return new DecayFunctionGenerator("exp");
+    }
+
     public static DecayFunctionGenerator linearGenerator() {
         return new DecayFunctionGenerator("linear");
     }
