@@ -132,6 +132,10 @@ public final class QueryFactory {
         return new ExistsQueryGenerator();
     }
 
+    public static MissingQueryGenerator missingQueryGenerator() {
+        return new MissingQueryGenerator();
+    }
+
     public static ParamsGenerator paramsGenerator() {
         return new ParamsGenerator();
     }
@@ -638,6 +642,20 @@ public final class QueryFactory {
                     .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("exists", childItems);
+        }
+    }
+
+    public final static class MissingQueryGenerator
+            extends QueryGenerator {
+
+        private MissingQueryGenerator() {}
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("missing", childItems);
         }
     }
 

@@ -17,6 +17,7 @@ public final class Constants {
     public final static String DISABLE_COORD = "disable_coord";
     public final static String ENABLE_POSITION_INCREMENTS = "enable_position_increments";
     public final static String END = "end";
+    public final static String EXISTENCE = "existence";
     public final static String FACTOR = "factor";
     public final static String FIELD_VALUE_FACTOR = "field_value_factor";
     public final static String FIELD = "field";
@@ -65,6 +66,7 @@ public final class Constants {
     public final static String NEGATIVE = "negative";
     public final static String NEGATIVE_BOOST = "negative_boost";
     public final static String NO_MATCH_QUERY = "no_match_query";
+    public final static String NULL_VALUE = "null_value";
     public final static String OPERATOR = "operator";
     public final static String PARAMS = "params";
     public final static String PARENT_TYPE = "parent_type";
