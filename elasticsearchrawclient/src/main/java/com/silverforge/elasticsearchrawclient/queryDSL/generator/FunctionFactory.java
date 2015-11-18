@@ -9,6 +9,10 @@ import static br.com.zbra.androidlinq.Linq.stream;
 
 public final class FunctionFactory {
 
+    public static DecayFunctionGenerator linearGenerator() {
+        return new DecayFunctionGenerator("linear");
+    }
+
     public static WeightGenerator weightGenerator() {
         return new WeightGenerator();
     }
@@ -60,6 +64,29 @@ public final class FunctionFactory {
                 .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateFunctionChildren("random_score", childItems);
+        }
+    }
+
+    public static class DecayFunctionGenerator
+            extends QueryGenerator {
+
+        private String functionName;
+
+        private DecayFunctionGenerator(String functionName) {
+            this.functionName = functionName;
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+
+            QueryTypeItem parent = stream(queryBag)
+                .firstOrNull(q -> q.isParent());
+
+            Map<String, String> childItems = stream(queryBag)
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateDecayFunction(functionName, parent, childItems);
         }
     }
 }

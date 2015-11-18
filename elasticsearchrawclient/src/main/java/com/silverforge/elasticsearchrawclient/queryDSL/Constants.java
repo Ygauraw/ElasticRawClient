@@ -12,6 +12,7 @@ public final class Constants {
     public final static String BOOST_MODE = "boost_mode";
     public final static String COORDINATES = "coordinates";
     public final static String CUTOFF_FREQUENCY = "cutoff_frequency";
+    public final static String DECAY = "decay";
     public final static String DEFAULT_FIELD = "default_field";
     public final static String DEFAULT_OPERATOR = "default_operator";
     public final static String DISABLE_COORD = "disable_coord";
@@ -60,6 +61,7 @@ public final class Constants {
     public final static String MIN_TERM_FREQ = "min_term_freq";
     public final static String MISSING = "missing";
     public final static String MODIFIER = "modifier";
+    public final static String MULTI_VALUE_MODE = "multi_value_mode";
     public final static String MUST = "must";
     public final static String MUST_NOT = "must_not";
     public final static String NAME = "name";
@@ -67,7 +69,9 @@ public final class Constants {
     public final static String NEGATIVE_BOOST = "negative_boost";
     public final static String NO_MATCH_QUERY = "no_match_query";
     public final static String NULL_VALUE = "null_value";
+    public final static String OFFSET = "offset";
     public final static String OPERATOR = "operator";
+    public final static String ORIGIN = "origin";
     public final static String PARAMS = "params";
     public final static String PARENT_TYPE = "parent_type";
     public final static String PATH = "path";
@@ -76,10 +80,11 @@ public final class Constants {
     public final static String PREFIX_LENGTH = "prefix_length";
     public final static String QUERIES = "queries";
     public final static String QUERY = "query";
+    public final static String SCALE = "scale";
+    public final static String SCORE_MODE = "score_mode";
     public final static String SCRIPT = "script";
     public final static String SCRIPT_SCORE = "script";
     public final static String SEED = "seed";
-    public final static String SCORE_MODE = "score_mode";
     public final static String SHAPE = "shape";
     public final static String SHOULD = "should";
     public final static String SIZE = "size";

@@ -362,7 +362,7 @@ public class QueryGenerator
             jsonGenerator.writeStringField(Constants.END,
                 stream(childItems)
                     .firstOrDefault(c -> c.getKey().equals(Constants.END), Maps.immutableEntry(Constants.END, "3")).getValue()
-                );
+            );
 
             jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();
@@ -375,6 +375,43 @@ public class QueryGenerator
         return retValue;
     }
 
+    protected String generateDecayFunction(
+            String functionName,
+            QueryTypeItem parent,
+            Map<String, String> childItems) {
+
+        String retValue = "";
+
+        try {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeObjectFieldStart(functionName);
+
+            Map.Entry<String, String> multiValueMode = stream(childItems)
+                .firstOrNull(ci -> ci.getKey().equals(Constants.MULTI_VALUE_MODE));
+
+            if (parent != null) {
+                Map<String, String> children = stream(childItems)
+                    .where(ci -> !ci.getKey().equals(Constants.MULTI_VALUE_MODE))
+                    .toMap(ci -> ci.getKey(), ci -> ci.getValue());
+
+                jsonGenerator.writeObjectFieldStart(parent.getValue());
+                writeEntries(children);
+                jsonGenerator.writeEndObject();
+            }
+
+            if (multiValueMode != null)
+                jsonGenerator.writeStringField(multiValueMode.getKey(), multiValueMode.getValue());
+
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+            retValue = getOutputStreamValue();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(this.getClass().getName(), e.getMessage());
+        }
+
+        return retValue;
+    }
 
     private String getParentValue(QueryTypeItem parent) {
         Optional<QueryTypeItem> parentItem = Optional.fromNullable(parent);
