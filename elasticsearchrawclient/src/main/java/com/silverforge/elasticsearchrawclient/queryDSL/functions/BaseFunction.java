@@ -6,7 +6,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.definition.Functionable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
-public class BaseFunction
+class BaseFunction
         implements Functionable {
 
     protected QueryTypeArrayList<QueryTypeItem> queryBag;

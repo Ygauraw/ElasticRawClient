@@ -5,7 +5,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.MultiValueModeOperator;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
-public abstract class DecayFunction {
+abstract class DecayFunction {
     public static abstract class Init<T extends Init<T>> {
         protected final QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
 
