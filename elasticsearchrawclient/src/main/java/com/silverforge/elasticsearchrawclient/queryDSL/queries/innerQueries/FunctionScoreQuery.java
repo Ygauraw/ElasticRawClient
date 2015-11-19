@@ -26,8 +26,8 @@ public class FunctionScoreQuery
     @Override
     public String getQueryString() {
         return QueryFactory
-                .functionScoreQueryGenerator()
-                .generate(queryBag);
+            .functionScoreQueryGenerator()
+            .generate(queryBag);
     }
 
     public static class FunctionScoreQueryBuilder
@@ -80,12 +80,7 @@ public class FunctionScoreQuery
         }
 
         public T functions(Functionable... function) {
-            queryBag.addItem(Constants.FUNCTION, function);
-            return self();
-        }
-
-        public T function(Functionable function) {
-            queryBag.addItem(Constants.FUNCTION, function);
+            queryBag.addItem(Constants.FUNCTIONS, function);
             return self();
         }
 

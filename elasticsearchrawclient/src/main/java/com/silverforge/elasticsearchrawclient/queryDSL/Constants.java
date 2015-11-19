@@ -27,7 +27,7 @@ public final class Constants {
     public final static String FLAGS = "flags";
     public final static String FROM = "from";
     public final static String FORMAT = "format";
-    public final static String FUNCTION = "function";
+    public final static String FUNCTIONS = "functions";
     public final static String FUZZINESS = "fuzziness";
     public final static String FUZZY_MAX_EXPANSIONS = "fuzzy_max_expansions";
     public final static String FUZZY_PREFIX_LENGTH = "fuzzy_prefix_length";

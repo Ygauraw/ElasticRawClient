@@ -1,10 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.generator;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.fieldValueFactors.FieldValueFactor;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.HasChildQuery;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.HasParentQuery;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.SimpleQueryStringQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 import java.util.Map;
@@ -62,10 +58,6 @@ public final class QueryFactory {
 
     public static ScriptGenerator scriptGenerator() {
         return new ScriptGenerator();
-    }
-
-    public static FieldValueFactorGenerator fieldValueFactorGenerator() {
-        return new FieldValueFactorGenerator();
     }
 
     public static FuzzyQueryGenerator fuzzyQueryGenerator() {
@@ -348,21 +340,6 @@ public final class QueryFactory {
             extends QueryGenerator {
 
         private ScriptGenerator() {
-        }
-
-        @Override
-        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
-            Map<String, String> childItems = stream(queryBag)
-                .toMap(q -> q.getName(), q -> q.getValue());
-
-            return generateChildren(childItems);
-        }
-    }
-
-    public final static class FieldValueFactorGenerator
-            extends QueryGenerator {
-
-        private FieldValueFactorGenerator() {
         }
 
         @Override
