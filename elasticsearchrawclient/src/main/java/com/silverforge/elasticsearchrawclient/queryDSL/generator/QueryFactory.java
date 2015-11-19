@@ -132,6 +132,10 @@ public final class QueryFactory {
         return new TypeQueryGenerator();
     }
 
+    public static TermsQueryGenerator termsQueryGenerator() {
+        return new TermsQueryGenerator();
+    }
+
     public static ParamsGenerator paramsGenerator() {
         return new ParamsGenerator();
     }
@@ -651,6 +655,21 @@ public final class QueryFactory {
                     .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("type", childItems);
+        }
+    }
+
+    public final static class TermsQueryGenerator
+            extends QueryGenerator {
+
+        private TermsQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("terms", childItems);
         }
     }
 
