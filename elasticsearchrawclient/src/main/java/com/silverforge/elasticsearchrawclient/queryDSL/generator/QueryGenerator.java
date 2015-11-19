@@ -324,6 +324,25 @@ public class QueryGenerator
         return retValue;
     }
 
+    protected String generateParentChildren(String queryName, QueryTypeItem parent, Map<String, String> childItems) {
+        String retValue = "";
+        try {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeObjectFieldStart(queryName);
+            jsonGenerator.writeObjectFieldStart(parent.getValue());
+            writeEntries(childItems);
+            jsonGenerator.writeEndObject();
+            jsonGenerator.writeEndObject();
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+            retValue = getOutputStreamValue();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(this.getClass().getName(), e.getMessage());
+        }
+        return retValue;
+    }
+
     protected String generateChildren(String queryName, Map<String, String> childItems) {
         String retValue = "";
         try {

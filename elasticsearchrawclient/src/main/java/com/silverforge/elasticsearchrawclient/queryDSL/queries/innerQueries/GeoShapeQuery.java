@@ -72,8 +72,7 @@ public class GeoShapeQuery
         }
 
         public T coordinates(GeoPoint geoPoint) {
-            String value = String.format("[%s,%s]", geoPoint.getLongitude(), geoPoint.getLatitude());
-            queryBag.addItem(Constants.COORDINATES, value);
+            queryBag.addItem(Constants.COORDINATES, geoPoint);
             return self();
         }
 

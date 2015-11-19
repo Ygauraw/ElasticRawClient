@@ -1,5 +1,6 @@
 package com.silverforge.elasticsearchrawclient.utils;
 
+import com.silverforge.elasticsearchrawclient.model.GeoPoint;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Functionable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
@@ -215,6 +216,18 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
                 .builder()
                 .name(key)
                 .value(formatter.format(value))
+                .build());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addItem(String key, GeoPoint geoPoint) {
+        if (!containsKey(key)) {
+            String value = String.format("[%s,%s]", geoPoint.getLongitude(), geoPoint.getLatitude());
+            add((T) T
+                .builder()
+                .name(key)
+                .value(value)
                 .build());
         }
     }

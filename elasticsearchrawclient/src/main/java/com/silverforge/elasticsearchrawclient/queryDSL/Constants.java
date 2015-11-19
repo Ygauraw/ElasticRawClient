@@ -10,6 +10,8 @@ public final class Constants {
     public final static String AUTO_GENERATE_PHRASE_QUERIES = "auto_generate_phrase_queries";
     public final static String BOOST = "boost";
     public final static String BOOST_MODE = "boost_mode";
+    public final static String BOTTOM_LEFT = "bottom_left";
+    public final static String BOTTOM_RIGHT = "bottom_right";
     public final static String COORDINATES = "coordinates";
     public final static String CUTOFF_FREQUENCY = "cutoff_frequency";
     public final static String DECAY = "decay";
@@ -90,6 +92,8 @@ public final class Constants {
     public final static String SIZE = "size";
     public final static String TIE_BREAKER = "tie_breaker";
     public final static String TIME_ZONE = "time_zone";
+    public final static String TOP_LEFT = "top_left";
+    public final static String TOP_RIGHT = "top_right";
     public final static String TYPE = "type";
     public final static String USE_DIS_MAX = "use_dis_max";
     public final static String VALUE = "value";

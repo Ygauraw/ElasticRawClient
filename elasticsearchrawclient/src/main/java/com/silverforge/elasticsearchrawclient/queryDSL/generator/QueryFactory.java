@@ -68,6 +68,10 @@ public final class QueryFactory {
         return new GeoShapeQueryGenerator();
     }
 
+    public static GeoBoundingBoxQueryGenerator geoBoundingBoxQueryGenerator() {
+        return new GeoBoundingBoxQueryGenerator();
+    }
+
     public static IndicesQueryGenerator indicesQueryGenerator() {
         return new IndicesQueryGenerator();
     }
@@ -390,6 +394,25 @@ public final class QueryFactory {
                 .firstOrNull(q -> q.isParent());
 
             return generateGeoShapeChildren("geo_shape", parent, childItems);
+        }
+    }
+
+    public final static class GeoBoundingBoxQueryGenerator
+            extends QueryGenerator {
+
+        private GeoBoundingBoxQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                .firstOrNull(q -> q.isParent());
+
+            return generateParentChildren("geo_bounding_box", parent, childItems);
         }
     }
 
