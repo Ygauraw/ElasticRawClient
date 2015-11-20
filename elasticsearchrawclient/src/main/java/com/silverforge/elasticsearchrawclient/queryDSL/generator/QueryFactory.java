@@ -140,6 +140,10 @@ public final class QueryFactory {
         return new TermsQueryGenerator();
     }
 
+    public static TermQueryGenerator termQueryGenerator() {
+        return new TermQueryGenerator();
+    }
+
     public static ParamsGenerator paramsGenerator() {
         return new ParamsGenerator();
     }
@@ -693,6 +697,24 @@ public final class QueryFactory {
                     .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("terms", childItems);
+        }
+    }
+
+    public final static class TermQueryGenerator
+            extends QueryGenerator {
+
+        private TermQueryGenerator() {}
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .where(q -> !q.isParent())
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                    .firstOrNull(q -> q.isParent());
+
+            return generateFuzzyChildren("term", parent, childItems);
         }
     }
 
