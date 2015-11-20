@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class GeoPoint {
-    private float longitude;
-    private float latitude;
+    private double longitude;
+    private double latitude;
 }

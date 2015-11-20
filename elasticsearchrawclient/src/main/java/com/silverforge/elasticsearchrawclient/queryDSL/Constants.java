@@ -18,6 +18,7 @@ public final class Constants {
     public final static String DEFAULT_FIELD = "default_field";
     public final static String DEFAULT_OPERATOR = "default_operator";
     public final static String DISABLE_COORD = "disable_coord";
+    public final static String DISTANCE = "distance";
     public final static String ENABLE_POSITION_INCREMENTS = "enable_position_increments";
     public final static String END = "end";
     public final static String EXISTENCE = "existence";

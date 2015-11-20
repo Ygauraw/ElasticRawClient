@@ -72,6 +72,10 @@ public final class QueryFactory {
         return new GeoBoundingBoxQueryGenerator();
     }
 
+    public static GeoDistanceQueryGenerator geoDistanceQueryGenerator() {
+        return new GeoDistanceQueryGenerator();
+    }
+
     public static IndicesQueryGenerator indicesQueryGenerator() {
         return new IndicesQueryGenerator();
     }
@@ -417,6 +421,25 @@ public final class QueryFactory {
                 .firstOrNull(q -> q.isParent());
 
             return generateParentChildren("geo_bounding_box", parent, childItems);
+        }
+    }
+
+    public final static class GeoDistanceQueryGenerator
+            extends QueryGenerator {
+
+        private GeoDistanceQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                .firstOrNull(q -> q.isParent());
+
+            return generateGeoDistance("geo_distance", parent, childItems);
         }
     }
 
