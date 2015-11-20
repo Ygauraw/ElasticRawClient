@@ -94,6 +94,7 @@ public final class Constants {
     public final static String SIZE = "size";
     public final static String TIE_BREAKER = "tie_breaker";
     public final static String TIME_ZONE = "time_zone";
+    public final static String TO = "to";
     public final static String TOP_LEFT = "top_left";
     public final static String TOP_RIGHT = "top_right";
     public final static String TYPE = "type";
