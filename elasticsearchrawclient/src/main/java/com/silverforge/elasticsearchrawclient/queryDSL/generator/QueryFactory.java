@@ -156,6 +156,10 @@ public final class QueryFactory {
         return new LimitQueryGenerator();
     }
 
+    public static OrQueryGenerator orQueryGenerator() {
+        return new OrQueryGenerator();
+    }
+
     public static ParamsGenerator paramsGenerator() {
         return new ParamsGenerator();
     }
@@ -774,6 +778,20 @@ public final class QueryFactory {
                     .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("limit", childItems);
+        }
+    }
+
+    public final static class OrQueryGenerator
+            extends QueryGenerator {
+
+        private OrQueryGenerator() {}
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("or", childItems);
         }
     }
 

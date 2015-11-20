@@ -27,6 +27,7 @@ public final class Constants {
     public final static String FIELD = "field";
     public final static String FIELDS = "fields";
     public final static String FILE = "file";
+    public final static String FILTERS = "filters";
     public final static String FLAGS = "flags";
     public final static String FROM = "from";
     public final static String FORMAT = "format";
