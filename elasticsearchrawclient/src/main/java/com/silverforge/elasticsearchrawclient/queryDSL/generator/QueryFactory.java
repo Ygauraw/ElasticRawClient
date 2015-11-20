@@ -152,6 +152,10 @@ public final class QueryFactory {
         return new NotQueryGenerator();
     }
 
+    public static LimitQueryGenerator limitQueryGenerator() {
+        return new LimitQueryGenerator();
+    }
+
     public static ParamsGenerator paramsGenerator() {
         return new ParamsGenerator();
     }
@@ -756,6 +760,20 @@ public final class QueryFactory {
                     .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("not", childItems);
+        }
+    }
+
+    public final static class LimitQueryGenerator
+            extends QueryGenerator {
+
+        private LimitQueryGenerator() {}
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("limit", childItems);
         }
     }
 
