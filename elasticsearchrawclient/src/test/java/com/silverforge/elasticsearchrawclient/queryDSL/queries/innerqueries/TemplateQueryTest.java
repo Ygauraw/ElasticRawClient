@@ -59,8 +59,9 @@ public class TemplateQueryTest {
         MatchQuery matchQuery = mock(MatchQuery.class);
         when(matchQuery.getQueryString()).thenReturn("{\"match\":{\"_all\":\"Karcag\"}}");
 
-        Params params = mock(Params.class);
-        when(params.getQueryString()).thenReturn("{\"paramName\" : \"paramValue\"}");
+        Map<String, String> params = new HashMap<>();
+        params.put("param1","param");
+        params.put("param2","param");
 
         TemplateQuery query = TemplateQuery
                 .builder()
@@ -78,15 +79,16 @@ public class TemplateQueryTest {
 
         assertThat(queryString.indexOf("\"template\":{\"inline\":{"), greaterThan(0));
         assertThat(queryString.indexOf("\"inline\":{\"match\":{\"_all\":\"Karcag\"}}"), greaterThan(0));
-        assertThat(queryString.indexOf("\"params\":{\"paramName\" : \"paramValue\"}"), greaterThan(0));
+        assertThat(queryString.indexOf("\"params\":{\"param1\":\"param\",\"param2\":\"param\"}"), greaterThan(0));
 
     }
 
     @Test
     public void when_template_id_added_then_query_is_generated_well() throws MandatoryParametersAreMissingException {
 
-        Params params = mock(Params.class);
-        when(params.getQueryString()).thenReturn("{\"paramName\" : \"paramValue\"}");
+        Map<String, String> params = new HashMap<>();
+        params.put("param1","param");
+        params.put("param2", "param");
 
         TemplateQuery query = TemplateQuery
                 .builder()
@@ -104,7 +106,7 @@ public class TemplateQueryTest {
 
         assertThat(queryString.indexOf("\"template\":{"), greaterThan(0));
         assertThat(queryString.indexOf("\"id\":\"id\""), greaterThan(0));
-        assertThat(queryString.indexOf("\"params\":{\"paramName\" : \"paramValue\"}"), greaterThan(0));
+        assertThat(queryString.indexOf("\"params\":{\"param1\":\"param\",\"param2\":\"param\"}"), greaterThan(0));
 
     }
 
@@ -157,8 +159,9 @@ public class TemplateQueryTest {
     @Test(expected = MandatoryParametersAreMissingException.class)
     public void when_no_query_added_then_exception_is_thrown() throws MandatoryParametersAreMissingException {
 
-        Params params = mock(Params.class);
-        when(params.getQueryString()).thenReturn("{\"paramName\" : \"paramValue\"}");
+        Map<String, String> params = new HashMap<>();
+        params.put("param1","param");
+        params.put("param2", "param");
 
         TemplateQuery query = TemplateQuery
                 .builder()

@@ -7,6 +7,8 @@ import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
+import java.util.Map;
+
 public class TemplateQuery
     implements Queryable {
 
@@ -51,7 +53,7 @@ public class TemplateQuery
             return self();
         }
 
-        public T params(Queryable params) {
+        public T params(Map<String, String> params) {
             queryBag.addItem(Constants.PARAMS, params);
             return self();
         }

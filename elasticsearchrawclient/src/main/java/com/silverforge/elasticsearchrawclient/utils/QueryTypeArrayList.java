@@ -304,15 +304,15 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
     public void addItem(String key, Map<String, ?> value) {
         if (value != null && value.size() > 0 && !containsKey(key)) {
             String[] params = stream(value)
-                .select(q -> q.getKey() + ":" + q.getValue())
+                .select(q -> q.getKey() + "\"" + ":" + "\"" + q.getValue())
                 .toList()
                 .toArray(new String[]{});
 
-            String joinedParams = StringUtils.makeCommaSeparatedList(params);
+            String joinedParams = StringUtils.makeCommaSeparatedListWithQuotationMark(params);
             add((T) T
                 .builder()
                 .name(key)
-                .value("[" + joinedParams + "]")
+                .value("{" + joinedParams + "}")
                 .build());
         }
     }

@@ -44,7 +44,7 @@ public class Script
             return self();
         }
 
-        public T params(Map<String, ?> params) {
+        public T params(Map<String, String> params) {
             queryBag.addItem(Constants.PARAMS, params);
             return self();
         }

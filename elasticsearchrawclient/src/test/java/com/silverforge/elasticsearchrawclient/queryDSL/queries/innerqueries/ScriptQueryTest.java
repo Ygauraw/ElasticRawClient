@@ -27,9 +27,10 @@ public class ScriptQueryTest {
 
     @Test
     public void when_all_field_name_defined_with_value_then_minimum_best_query_generated_well() {
-        Map<String, Integer> params = new HashMap<>();
-        params.put("param1", 1);
-        params.put("param2", 2);
+        Map<String, String> params = new HashMap<>();
+        params.put("param1", "1");
+        params.put("param2", "2");
+
         ScriptQuery query = ScriptQuery
             .builder()
             .script(Script
@@ -50,7 +51,7 @@ public class ScriptQueryTest {
 
         assertThat(queryString.indexOf("\"inline\":\"inline_script_value\""), greaterThan(0));
         assertThat(queryString.indexOf("\"lang\":\"lang\""), greaterThan(0));
-        assertThat(queryString.indexOf("\"params\":[param1:1,param2:2]"), greaterThan(0));
+        assertThat(queryString.indexOf("\"params\":{\"param1\":\"1\",\"param2\":\"2\"}"), greaterThan(0));
 
     }
 
