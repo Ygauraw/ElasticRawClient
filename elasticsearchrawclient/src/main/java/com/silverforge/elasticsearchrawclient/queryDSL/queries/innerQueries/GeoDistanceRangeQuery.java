@@ -6,10 +6,11 @@ import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.GeoDistanceBaseQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public class GeoDistanceRangeQuery
-        implements Queryable {
+        extends GeoDistanceBaseQuery {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
 
@@ -20,11 +21,11 @@ public class GeoDistanceRangeQuery
     @Override
     public String getQueryString() {
         return QueryFactory
-            .geoDistanceQueryGenerator()
+            .geoDistanceRangeQueryGenerator()
             .generate(queryBag);
     }
 
-    public static GeoDistanceRangeQueryBuilder builder() {
+    public static Init<?> builder() {
         return new GeoDistanceRangeQueryBuilder();
     }
 
@@ -37,25 +38,8 @@ public class GeoDistanceRangeQuery
         }
     }
 
-    public static abstract class Init<T extends Init<T>> {
-        private QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
-
-        protected abstract T self();
-
-        public T fieldName(String fieldName) {
-            queryBag.addParentItem(Constants.FIELD_NAME, fieldName);
-            return self();
-        }
-
-        public T location(GeoPoint geoPoint) {
-            queryBag.addItem(Constants.VALUE, geoPoint);
-            return self();
-        }
-
-        public T locationGeohash(String geohash) {
-            queryBag.addItem(Constants.VALUE, geohash);
-            return self();
-        }
+    public static abstract class Init<T extends Init<T>>
+            extends GeoInit<T> {
 
         public T from(String distance) {
             queryBag.addItem(Constants.FROM, distance);
@@ -64,6 +48,26 @@ public class GeoDistanceRangeQuery
 
         public T to(String distance) {
             queryBag.addItem(Constants.TO, distance);
+            return self();
+        }
+
+        public T gt(String gt) {
+            queryBag.addItem(Constants.GT, gt);
+            return self();
+        }
+
+        public T gte(String gte) {
+            queryBag.addItem(Constants.GTE, gte);
+            return self();
+        }
+
+        public T lt(String lt) {
+            queryBag.addItem(Constants.LT, lt);
+            return self();
+        }
+
+        public T lte(String lte) {
+            queryBag.addItem(Constants.LTE, lte);
             return self();
         }
 

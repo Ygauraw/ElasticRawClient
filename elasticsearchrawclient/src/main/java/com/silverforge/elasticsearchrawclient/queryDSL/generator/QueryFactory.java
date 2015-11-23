@@ -76,6 +76,10 @@ public final class QueryFactory {
         return new GeoDistanceQueryGenerator();
     }
 
+    public static GeoDistanceRangeQueryGenerator geoDistanceRangeQueryGenerator() {
+        return new GeoDistanceRangeQueryGenerator();
+    }
+
     public static IndicesQueryGenerator indicesQueryGenerator() {
         return new IndicesQueryGenerator();
     }
@@ -444,6 +448,25 @@ public final class QueryFactory {
                 .firstOrNull(q -> q.isParent());
 
             return generateGeoDistance("geo_distance", parent, childItems);
+        }
+    }
+
+    public final static class GeoDistanceRangeQueryGenerator
+            extends QueryGenerator {
+
+        private GeoDistanceRangeQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                .firstOrNull(q -> q.isParent());
+
+            return generateGeoDistance("geo_distance_range", parent, childItems);
         }
     }
 
