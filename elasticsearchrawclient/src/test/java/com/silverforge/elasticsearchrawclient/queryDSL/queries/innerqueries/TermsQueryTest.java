@@ -29,7 +29,8 @@ public class TermsQueryTest {
 
         TermsQuery query = TermsQuery
                 .builder()
-                .values("fieldname", "value1", "value2")
+                .fieldName("fieldname")
+                .values("value1", "value2")
                 .build();
 
         String queryString = query.getQueryString();
@@ -48,7 +49,8 @@ public class TermsQueryTest {
 
         TermsQuery query = TermsQuery
                 .builder()
-                .values("fieldname", "value1", "value2")
+                .fieldName("fieldname")
+                .values("value1", "value2")
                 .build();
 
         String queryString = query.getQueryString();

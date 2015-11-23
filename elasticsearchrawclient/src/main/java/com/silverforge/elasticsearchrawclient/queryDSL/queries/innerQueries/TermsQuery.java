@@ -43,14 +43,21 @@ public class TermsQuery
 
         protected abstract T self();
 
-        public T values(String fieldName, String... values) {
+        private String fieldName;
+
+        public T fieldName(String fieldname) {
+            this.fieldName = fieldname;
+            return self();
+        }
+
+        public T values(String... values) {
             queryBag.addItemsWithParenthesis(fieldName, values);
             return self();
         }
 
         public TermsQuery build() throws MandatoryParametersAreMissingException {
             if(queryBag.isEmpty()) {
-                throw new MandatoryParametersAreMissingException(Constants.FIELD_NAME);
+                throw new MandatoryParametersAreMissingException(Constants.FIELD_NAME, Constants.VALUES);
             }
             return new TermsQuery(queryBag);
         }
