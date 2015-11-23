@@ -13,7 +13,9 @@ public final class Constants {
     public final static String BOOST_MODE = "boost_mode";
     public final static String BOTTOM_LEFT = "bottom_left";
     public final static String BOTTOM_RIGHT = "bottom_right";
+    public final static String CLAUSES = "clauses";
     public final static String COERCE = "coerce";
+    public final static String COLLECT_PAYLOADS = "collect_payloads";
     public final static String COORDINATES = "coordinates";
     public final static String CUTOFF_FREQUENCY = "cutoff_frequency";
     public final static String DECAY = "decay";
@@ -49,6 +51,7 @@ public final class Constants {
     public final static String INDEXED_SHAPE = "indexed_shape";
     public final static String INDICES = "indices";
     public final static String INLINE = "inline";
+    public final static String IN_ORDER = "in_order";
     public final static String LANG = "lang";
     public final static String LENIENT = "lenient";
     public final static String LIKE = "like";
@@ -98,6 +101,7 @@ public final class Constants {
     public final static String SHAPE = "shape";
     public final static String SHOULD = "should";
     public final static String SIZE = "size";
+    public final static String SLOP = "slop";
     public final static String TIE_BREAKER = "tie_breaker";
     public final static String TIME_ZONE = "time_zone";
     public final static String TO = "to";

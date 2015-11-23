@@ -164,6 +164,10 @@ public final class QueryFactory {
         return new SpanTermQueryGenerator();
     }
 
+    public static SpanNearQueryGenerator spanNearQueryGenerator() {
+        return new SpanNearQueryGenerator();
+    }
+
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -804,6 +808,21 @@ public final class QueryFactory {
                     .firstOrNull(q -> q.isParent());
 
             return generateFuzzyChildren("span_term", parent, childItems);
+        }
+    }
+
+    public final static class SpanNearQueryGenerator
+            extends QueryGenerator {
+
+        private SpanNearQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("span_near", childItems);
         }
     }
 
