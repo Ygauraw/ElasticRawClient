@@ -80,6 +80,10 @@ public final class QueryFactory {
         return new GeoPolygonQueryGenerator();
     }
 
+    public static GeohashCellQueryGenerator geohashCellQueryGenerator() {
+        return new GeohashCellQueryGenerator();
+    }
+
     public static IndicesQueryGenerator indicesQueryGenerator() {
         return new IndicesQueryGenerator();
     }
@@ -483,6 +487,25 @@ public final class QueryFactory {
                 .firstOrNull(q -> q.isParent());
 
             return generateGeoPolygon("geo_polygon", parent, childItems);
+        }
+    }
+
+    public final static class GeohashCellQueryGenerator
+            extends QueryGenerator {
+
+        private GeohashCellQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                .firstOrNull(q -> q.isParent());
+
+            return generateGeoDistance("geohash_cell", parent, childItems);
         }
     }
 

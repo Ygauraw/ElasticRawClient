@@ -78,6 +78,7 @@ public final class Constants {
     public final static String NAME = "name";
     public final static String NEGATIVE = "negative";
     public final static String NEGATIVE_BOOST = "negative_boost";
+    public final static String NEIGHBORS = "neighbors";
     public final static String NO_MATCH_QUERY = "no_match_query";
     public final static String NULL_VALUE = "null_value";
     public final static String OFFSET = "offset";
@@ -90,6 +91,7 @@ public final class Constants {
     public final static String PHRASE_SLOP = "phrase_slop";
     public final static String POINTS = "points";
     public final static String POSITIVE = "positive";
+    public final static String PRECISION = "precision";
     public final static String PREFIX_LENGTH = "prefix_length";
     public final static String QUERIES = "queries";
     public final static String QUERY = "query";
