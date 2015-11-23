@@ -356,11 +356,22 @@ public class QueryGenerator
     protected String generateGeoPolygon(String queryName, QueryTypeItem parent, Map<String, String> childItems) {
         String retValue = "";
         try {
+
+            Map<String, String> points = stream(childItems)
+                .where(ci -> ci.getKey().equals(Constants.POINTS))
+                .toMap(ci -> ci.getKey(), ci -> ci.getValue());
+
+            Map<String, String> children = stream(childItems)
+                .where(ci -> !ci.getKey().equals(Constants.POINTS))
+                .toMap(ci -> ci.getKey(), ci -> ci.getValue());
+
+
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart(queryName);
             jsonGenerator.writeObjectFieldStart(parent.getValue());
-            writeEntries(childItems);
+            writeEntries(points);
             jsonGenerator.writeEndObject();
+            writeEntries(children);
             jsonGenerator.writeEndObject();
             jsonGenerator.close();
             retValue = getOutputStreamValue();

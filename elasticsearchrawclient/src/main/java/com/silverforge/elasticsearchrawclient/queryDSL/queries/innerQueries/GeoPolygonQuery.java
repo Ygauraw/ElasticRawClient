@@ -72,6 +72,16 @@ public class GeoPolygonQuery
             return self();
         }
 
+        public T queryName(String name) {
+            queryBag.addItem(Constants._NAME, name);
+            return self();
+        }
+
+        public T coerce(boolean coerce) {
+            queryBag.addItem(Constants.COERCE, coerce);
+            return self();
+        }
+
         public GeoPolygonQuery build()
                 throws MandatoryParametersAreMissingException {
 
