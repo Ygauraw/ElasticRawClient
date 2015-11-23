@@ -3,7 +3,6 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
-import com.silverforge.elasticsearchrawclient.queryDSL.params.Params;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

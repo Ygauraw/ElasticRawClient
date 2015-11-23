@@ -156,18 +156,6 @@ public final class QueryFactory {
         return new LimitQueryGenerator();
     }
 
-    public static OrQueryGenerator orQueryGenerator() {
-        return new OrQueryGenerator();
-    }
-
-    public static AndQueryGenerator andQueryGenerator() {
-        return new AndQueryGenerator();
-    }
-
-    public static ParamsGenerator paramsGenerator() {
-        return new ParamsGenerator();
-    }
-
     public final static class MatchQueryGenerator
             extends QueryGenerator {
 
@@ -667,21 +655,6 @@ public final class QueryFactory {
         }
     }
 
-    public final static class ParamsGenerator
-            extends QueryGenerator {
-
-        private ParamsGenerator() {
-        }
-
-        @Override
-        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
-            Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
-
-            return generateChildren(childItems);
-        }
-    }
-
     public final static class ExistsQueryGenerator
             extends QueryGenerator {
 
@@ -785,33 +758,6 @@ public final class QueryFactory {
         }
     }
 
-    public final static class OrQueryGenerator
-            extends QueryGenerator {
-
-        private OrQueryGenerator() {}
-
-        @Override
-        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
-            Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
-
-            return generateChildren("or", childItems);
-        }
-    }
-
-    public final static class AndQueryGenerator
-            extends QueryGenerator {
-
-        private AndQueryGenerator() {}
-
-        @Override
-        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
-            Map<String, String> childItems = stream(queryBag)
-                    .toMap(q -> q.getName(), q -> q.getValue());
-
-            return generateChildren("and", childItems);
-        }
-    }
 
 }
 
