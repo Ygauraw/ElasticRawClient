@@ -34,8 +34,8 @@ public class GeoShapeQueryTest {
                 .type(GeoShapeTypeOperator.POINT)
                 .coordinates(GeoPoint
                     .builder()
-                    .latitude(4.5652f)
-                    .longitude(6.24345f)
+                    .latitude(4.5652)
+                    .longitude(6.24345)
                     .build())
                 .build()
                 .getQueryString();
@@ -63,8 +63,8 @@ public class GeoShapeQueryTest {
                 .type(GeoShapeTypeOperator.POINT)
                 .coordinates(GeoPoint
                     .builder()
-                    .latitude(4.5652f)
-                    .longitude(6.24345f)
+                    .latitude(4.5652)
+                    .longitude(6.24345)
                     .build())
                 .build()
                 .getQueryString();

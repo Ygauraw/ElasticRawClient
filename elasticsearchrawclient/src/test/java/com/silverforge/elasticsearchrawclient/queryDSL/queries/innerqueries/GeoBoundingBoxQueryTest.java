@@ -29,8 +29,8 @@ public class GeoBoundingBoxQueryTest {
         String queryString = GeoBoundingBoxQuery
             .builder()
             .fieldName("house.location")
-            .topLeft(GeoPoint.builder().longitude(45.454f).latitude(42.34234f).build())
-            .bottomRight(GeoPoint.builder().longitude(45.87543f).latitude(42.123f).build())
+            .topLeft(GeoPoint.builder().longitude(45.454).latitude(42.34234).build())
+            .bottomRight(GeoPoint.builder().longitude(45.87543).latitude(42.123).build())
             .type(GeoBoundingBoxTypeOperator.INDEXED)
             .build()
             .getQueryString();
@@ -77,8 +77,8 @@ public class GeoBoundingBoxQueryTest {
         String queryString = GeoBoundingBoxQuery
             .builder()
             .fieldName("house.location")
-            .topRight(GeoPoint.builder().longitude(45.454f).latitude(42.34234f).build())
-            .bottomLeft(GeoPoint.builder().longitude(45.87543f).latitude(42.123f).build())
+            .topRight(GeoPoint.builder().longitude(45.454).latitude(42.34234).build())
+            .bottomLeft(GeoPoint.builder().longitude(45.87543).latitude(42.123).build())
             .type(GeoBoundingBoxTypeOperator.MEMORY)
             .build()
             .getQueryString();

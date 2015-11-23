@@ -4,6 +4,8 @@ import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.model.GeoPoint;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.DistanceTypeOperator;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.OptimizeBboxOperator;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -33,6 +35,11 @@ public class GeoDistanceQueryTest {
             .fieldName("house.location")
             .location(GeoPoint.builder().longitude(34.4795322).latitude(43.6347854379).build())
             .distance("2km")
+            .distanceType(DistanceTypeOperator.ARC)
+            .optimizeBbox(OptimizeBboxOperator.MEMORY)
+            .queryName("apple")
+            .coerce(true)
+            .ignoreMalformed(false)
             .build()
             .getQueryString();
 
@@ -44,6 +51,11 @@ public class GeoDistanceQueryTest {
 
         assertThat(queryString.indexOf("\"house.location\":[34.4795322,43.6347854379]"), greaterThan(0));
         assertThat(queryString.indexOf("\"distance\":\"2km\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"distance_type\":\"arc\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"optimize_bbox\":\"memory\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"_name\":\"apple\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"coerce\":\"true\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"ignore_malformed\":\"false\""), greaterThan(0));
     }
 
     @Test

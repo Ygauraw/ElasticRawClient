@@ -332,16 +332,16 @@ public class QueryGenerator
                 .firstOrDefault(ci -> ci.getKey().equals(Constants.VALUE),
                     Maps.immutableEntry(Constants.VALUE, ""));
 
-            Map.Entry<String, String> distance = stream(childItems)
-                .firstOrNull(ci -> ci.getKey().equals(Constants.DISTANCE));
+            Map<String, String> children = stream(childItems)
+                .where(ci -> !ci.getKey().equals(Constants.VALUE))
+                .toMap(ci -> ci.getKey(), ci -> ci.getValue());
 
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart(queryName);
 
             jsonGenerator.writeStringField(parent.getValue(), value.getValue());
 
-            if (distance != null)
-                jsonGenerator.writeStringField(distance.getKey(), distance.getValue());
+            writeEntries(children);
 
             jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();

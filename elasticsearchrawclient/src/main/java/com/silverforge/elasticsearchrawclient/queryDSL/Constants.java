@@ -4,6 +4,7 @@ public final class Constants {
     public final static String FIELD_NAME = "FIELDNAME";
     public final static String INNER_QUERY = "INNER_QUERY";
 
+    public final static String _NAME = "_name";
     public final static String ALLOW_LEADING_WILDCARD = "allow_leading_wildcard";
     public final static String ANALYZE_WILDCARD = "analyze_wildcard";
     public final static String ANALYZER = "analyzer";
@@ -12,6 +13,7 @@ public final class Constants {
     public final static String BOOST_MODE = "boost_mode";
     public final static String BOTTOM_LEFT = "bottom_left";
     public final static String BOTTOM_RIGHT = "bottom_right";
+    public final static String COERCE = "coerce";
     public final static String COORDINATES = "coordinates";
     public final static String CUTOFF_FREQUENCY = "cutoff_frequency";
     public final static String DECAY = "decay";
@@ -19,6 +21,7 @@ public final class Constants {
     public final static String DEFAULT_OPERATOR = "default_operator";
     public final static String DISABLE_COORD = "disable_coord";
     public final static String DISTANCE = "distance";
+    public final static String DISTANCE_TYPE = "distance_type";
     public final static String ENABLE_POSITION_INCREMENTS = "enable_position_increments";
     public final static String END = "end";
     public final static String EXISTENCE = "existence";
@@ -41,6 +44,7 @@ public final class Constants {
     public final static String HIGH_FREQ = "high_freq";
     public final static String HIGH_FREQ_OPERATOR = "high_freq_operator";
     public final static String ID = "id";
+    public final static String IGNORE_MALFORMED = "ignore_malformed";
     public final static String INDEX = "index";
     public final static String INDEXED_SHAPE = "indexed_shape";
     public final static String INDICES = "indices";
@@ -75,6 +79,7 @@ public final class Constants {
     public final static String NULL_VALUE = "null_value";
     public final static String OFFSET = "offset";
     public final static String OPERATOR = "operator";
+    public final static String OPTIMIZE_BBOX = "optimize_bbox";
     public final static String ORIGIN = "origin";
     public final static String PARAMS = "params";
     public final static String PARENT_TYPE = "parent_type";
