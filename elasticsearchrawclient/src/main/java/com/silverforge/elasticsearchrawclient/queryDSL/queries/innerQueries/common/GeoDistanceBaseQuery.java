@@ -20,7 +20,6 @@ public abstract class GeoDistanceBaseQuery
         protected QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
         protected abstract T self();
 
-
         public T fieldName(String fieldName) {
             queryBag.addParentItem(Constants.FIELD_NAME, fieldName);
             return self();

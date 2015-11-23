@@ -85,6 +85,7 @@ public final class Constants {
     public final static String PARENT_TYPE = "parent_type";
     public final static String PATH = "path";
     public final static String PHRASE_SLOP = "phrase_slop";
+    public final static String POINTS = "points";
     public final static String POSITIVE = "positive";
     public final static String PREFIX_LENGTH = "prefix_length";
     public final static String QUERIES = "queries";

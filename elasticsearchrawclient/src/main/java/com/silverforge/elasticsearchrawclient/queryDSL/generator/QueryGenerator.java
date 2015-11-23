@@ -327,7 +327,6 @@ public class QueryGenerator
     protected String generateGeoDistance(String queryName, QueryTypeItem parent, Map<String, String> childItems) {
         String retValue = "";
         try {
-
             Map.Entry<String, String> value = stream(childItems)
                 .firstOrDefault(ci -> ci.getKey().equals(Constants.VALUE),
                     Maps.immutableEntry(Constants.VALUE, ""));
@@ -343,6 +342,24 @@ public class QueryGenerator
 
             writeEntries(children);
 
+            jsonGenerator.writeEndObject();
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+            retValue = getOutputStreamValue();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(this.getClass().getName(), e.getMessage());
+        }
+        return retValue;
+    }
+
+    protected String generateGeoPolygon(String queryName, QueryTypeItem parent, Map<String, String> childItems) {
+        String retValue = "";
+        try {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeObjectFieldStart(queryName);
+            jsonGenerator.writeObjectFieldStart(parent.getValue());
+            writeEntries(childItems);
             jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();
             jsonGenerator.close();

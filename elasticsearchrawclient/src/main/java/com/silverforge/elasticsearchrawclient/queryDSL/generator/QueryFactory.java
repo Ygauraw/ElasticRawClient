@@ -52,10 +52,6 @@ public final class QueryFactory {
         return new IdsQueryGenerator();
     }
 
-    public static FunctionGenerator functionGenerator() {
-        return new FunctionGenerator();
-    }
-
     public static ScriptGenerator scriptGenerator() {
         return new ScriptGenerator();
     }
@@ -78,6 +74,10 @@ public final class QueryFactory {
 
     public static GeoDistanceRangeQueryGenerator geoDistanceRangeQueryGenerator() {
         return new GeoDistanceRangeQueryGenerator();
+    }
+
+    public static GeoPolygonQueryGenerator geoPolygonQueryGenerator() {
+        return new GeoPolygonQueryGenerator();
     }
 
     public static IndicesQueryGenerator indicesQueryGenerator() {
@@ -349,21 +349,6 @@ public final class QueryFactory {
         }
     }
 
-    public final static class FunctionGenerator
-            extends QueryGenerator {
-
-        private FunctionGenerator() {
-        }
-
-        @Override
-        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
-            Map<String, String> childItems = stream(queryBag)
-                .toMap(q -> q.getName(), q -> q.getValue());
-
-            return generateChildren(childItems);
-        }
-    }
-
     public final static class ScriptGenerator
             extends QueryGenerator {
 
@@ -471,6 +456,25 @@ public final class QueryFactory {
                 .firstOrNull(q -> q.isParent());
 
             return generateGeoDistance("geo_distance_range", parent, childItems);
+        }
+    }
+
+    public final static class GeoPolygonQueryGenerator
+            extends QueryGenerator {
+
+        private GeoPolygonQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .where(q -> !q.isParent())
+                .toMap(q -> q.getName(), q -> q.getValue());
+
+            QueryTypeItem parent = stream(queryBag)
+                .firstOrNull(q -> q.isParent());
+
+            return generateGeoPolygon("geo_polygon", parent, childItems);
         }
     }
 
