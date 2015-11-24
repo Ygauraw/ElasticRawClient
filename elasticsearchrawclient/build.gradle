@@ -6,7 +6,7 @@ apply plugin: 'android-apt'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-apply plugin: 'jacoco-android'
+//apply plugin: 'jacoco-android'
 
 
 //apply plugin: 'com.android.application'
@@ -22,10 +22,10 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
 
-    productFlavors {
-        free {}
-        paid {}
-    }
+//    productFlavors {
+//        free {}
+//        paid {}
+//    }
     lintOptions {
         abortOnError false
     }
@@ -151,10 +151,10 @@ bintray {
         publish = true
     }
 }
-
-jacocoAndroidUnitTestReport {
-    excludes = ['**/R.class',
-                '**/R$*.class',
-                '**/BuildConfig.*',
-                '**/Manifest*.*']
-}
+//
+//jacocoAndroidUnitTestReport {
+//    excludes = ['**/R.class',
+//                '**/R$*.class',
+//                '**/BuildConfig.*',
+//                '**/Manifest*.*']
+//}
