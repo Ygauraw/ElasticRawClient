@@ -179,6 +179,9 @@ public final class QueryFactory {
     public static SpanNotQueryGenerator spanNotQueryGenerator() {
         return new SpanNotQueryGenerator();
     }
+    public static SpanContainingQueryGenerator spanContainingQueryGenerator() {
+        return new SpanContainingQueryGenerator();
+    }
 
     public final static class MatchQueryGenerator
             extends QueryGenerator {
@@ -884,6 +887,21 @@ public final class QueryFactory {
                     .toMap(q -> q.getName(), q -> q.getValue());
 
             return generateChildren("span_not", childItems);
+        }
+    }
+
+    public final static class SpanContainingQueryGenerator
+            extends QueryGenerator {
+
+        private SpanContainingQueryGenerator() {
+        }
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                    .toMap(q -> q.getName(), q -> q.getValue());
+
+            return generateChildren("span_containing", childItems);
         }
     }
 

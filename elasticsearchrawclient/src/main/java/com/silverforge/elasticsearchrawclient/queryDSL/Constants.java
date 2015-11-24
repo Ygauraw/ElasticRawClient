@@ -9,6 +9,7 @@ public final class Constants {
     public final static String ANALYZE_WILDCARD = "analyze_wildcard";
     public final static String ANALYZER = "analyzer";
     public final static String AUTO_GENERATE_PHRASE_QUERIES = "auto_generate_phrase_queries";
+    public final static String BIG = "big";
     public final static String BOOST = "boost";
     public final static String BOOST_MODE = "boost_mode";
     public final static String BOTTOM_LEFT = "bottom_left";
@@ -57,6 +58,7 @@ public final class Constants {
     public final static String LANG = "lang";
     public final static String LENIENT = "lenient";
     public final static String LIKE = "like";
+    public final static String LITTLE = "little";
     public final static String LT = "lt";
     public final static String LTE = "lte";
     public final static String LOCALE = "locale";
