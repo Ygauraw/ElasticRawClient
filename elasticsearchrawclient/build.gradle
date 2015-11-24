@@ -6,6 +6,9 @@ apply plugin: 'android-apt'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
+apply plugin: 'jacoco-android'
+
+
 //apply plugin: 'com.android.application'
 
 // This is the library version used when deploying the artifact
@@ -19,6 +22,10 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
 
+    productFlavors {
+        free {}
+        paid {}
+    }
     lintOptions {
         abortOnError false
     }
@@ -143,4 +150,11 @@ bintray {
         licenses = ["Apache-2.0"]
         publish = true
     }
+}
+
+jacocoAndroidUnitTestReport {
+    excludes = ['**/R.class',
+                '**/R$*.class',
+                '**/BuildConfig.*',
+                '**/Manifest*.*']
 }
