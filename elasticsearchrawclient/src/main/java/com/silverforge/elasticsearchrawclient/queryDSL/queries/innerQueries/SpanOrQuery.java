@@ -4,11 +4,12 @@ import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreM
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.SpanQueryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public class SpanOrQuery
-        implements Queryable {
+        implements SpanQueryable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
@@ -42,7 +43,7 @@ public class SpanOrQuery
 
         protected abstract T self();
 
-        public T clauses(SpanTermQuery... clauses) {
+        public T clauses(SpanQueryable... clauses) {
             queryBag.addItem(Constants.CLAUSES, clauses);
             return self();
         }

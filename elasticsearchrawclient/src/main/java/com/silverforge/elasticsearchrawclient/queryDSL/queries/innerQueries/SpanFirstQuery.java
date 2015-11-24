@@ -1,19 +1,16 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
-import android.text.TextUtils;
-
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.SpanQueryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.FieldValueQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
-import java.util.Date;
-
 public class SpanFirstQuery
-        extends FieldValueQuery {
+        extends FieldValueQuery
+        implements SpanQueryable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag = new QueryTypeArrayList<>();
 

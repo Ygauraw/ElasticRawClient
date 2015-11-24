@@ -4,6 +4,7 @@ import com.silverforge.elasticsearchrawclient.model.GeoPoint;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Functionable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.SpanQueryable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -257,6 +258,23 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
                 .name(key)
                 .value("[" + joinedQueries + "]")
                 .build());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addItem(String key, SpanQueryable... values) {
+        if (values != null && values.length > 0 && !containsKey(key)) {
+            String[] queries = stream(values)
+                    .select(q -> q.getQueryString())
+                    .toList()
+                    .toArray(new String[]{});
+
+            String joinedQueries = StringUtils.makeCommaSeparatedList(queries);
+            add((T) T
+                    .builder()
+                    .name(key)
+                    .value("[" + joinedQueries + "]")
+                    .build());
         }
     }
 
