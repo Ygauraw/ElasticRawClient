@@ -245,6 +245,17 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
     }
 
     @SuppressWarnings("unchecked")
+    public void addItem(String key, SpanQueryable value) {
+        if (value != null && !containsKey(key)) {
+            add((T) T
+                    .builder()
+                    .name(key)
+                    .value(value.getQueryString())
+                    .build());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     public void addItem(String key, Queryable... values) {
         if (values != null && values.length > 0 && !containsKey(key)) {
             String[] queries = stream(values)

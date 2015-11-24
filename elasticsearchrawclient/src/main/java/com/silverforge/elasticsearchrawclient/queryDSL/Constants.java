@@ -26,6 +26,7 @@ public final class Constants {
     public final static String DISTANCE_TYPE = "distance_type";
     public final static String ENABLE_POSITION_INCREMENTS = "enable_position_increments";
     public final static String END = "end";
+    public final static String EXCLUDE = "exclude";
     public final static String EXISTENCE = "existence";
     public final static String FACTOR = "factor";
     public final static String FIELD_VALUE_FACTOR = "field_value_factor";
@@ -47,6 +48,7 @@ public final class Constants {
     public final static String HIGH_FREQ_OPERATOR = "high_freq_operator";
     public final static String ID = "id";
     public final static String IGNORE_MALFORMED = "ignore_malformed";
+    public final static String INCLUDE = "include";
     public final static String INDEX = "index";
     public final static String INDEXED_SHAPE = "indexed_shape";
     public final static String INDICES = "indices";
