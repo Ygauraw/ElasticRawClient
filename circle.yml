@@ -20,7 +20,4 @@ dependencies:
 test:
     override:
         - (./gradlew assemble -PdisablePreDex):
-            timeout: 720
-    post:
-        - ./gradlew jacocoTestFreeDebugReport
-        - bash <(curl -s https://codecov.io/bash)
+            timeout: 360
