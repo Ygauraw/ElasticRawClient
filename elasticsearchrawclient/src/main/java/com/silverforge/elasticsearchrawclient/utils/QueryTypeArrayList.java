@@ -3,6 +3,7 @@ package com.silverforge.elasticsearchrawclient.utils;
 import com.silverforge.elasticsearchrawclient.model.GeoPoint;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Functionable;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.MultiTermQueryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.SpanQueryable;
 
@@ -246,6 +247,17 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
 
     @SuppressWarnings("unchecked")
     public void addItem(String key, SpanQueryable value) {
+        if (value != null && !containsKey(key)) {
+            add((T) T
+                    .builder()
+                    .name(key)
+                    .value(value.getQueryString())
+                    .build());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addItem(String key, MultiTermQueryable value) {
         if (value != null && !containsKey(key)) {
             add((T) T
                     .builder()

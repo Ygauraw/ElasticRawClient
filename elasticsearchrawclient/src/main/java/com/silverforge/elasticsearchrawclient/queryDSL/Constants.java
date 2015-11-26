@@ -65,6 +65,7 @@ public final class Constants {
     public final static String LOWERCASE_EXPANDED_TERMS = "lowercase_expanded_terms";
     public final static String LOW_FREQ = "low_freq";
     public final static String LOW_FREQ_OPERATOR = "low_freq_operator";
+    public final static String MATCH = "match";
     public final static String MAX_BOOST = "max_boost";
     public final static String MAX_CHILDREN  = "max_children";
     public final static String MAX_DETERMINIZED_STATES = "max_determinized_states";
