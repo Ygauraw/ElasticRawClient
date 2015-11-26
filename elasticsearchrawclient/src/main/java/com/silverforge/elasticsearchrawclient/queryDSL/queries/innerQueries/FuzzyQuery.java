@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.MultiTermQueryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.BoostQuery;
@@ -13,7 +14,7 @@ import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import java.util.Date;
 
 public class FuzzyQuery
-        extends FieldValueQuery {
+        extends FieldValueQuery implements MultiTermQueryable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 

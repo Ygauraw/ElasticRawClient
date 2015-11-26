@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.MultiTermQueryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.TimeZoneOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.BoostQuery;
@@ -17,7 +18,7 @@ import java.util.List;
 import static br.com.zbra.androidlinq.Linq.stream;
 
 public class RangeQuery
-        extends BoostQuery {
+        extends BoostQuery implements MultiTermQueryable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 

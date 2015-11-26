@@ -3,12 +3,13 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.MultiTermQueryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.common.FieldValueQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public class TermQuery
-        extends FieldValueQuery {
+        extends FieldValueQuery implements MultiTermQueryable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
