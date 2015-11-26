@@ -1,9 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.operators;
 
-/**
- * Created by jana on 14/10/15.
- */
 public enum ZeroTermsQueryOperator {
+
     NONE("none"),
     ALL("all");
 

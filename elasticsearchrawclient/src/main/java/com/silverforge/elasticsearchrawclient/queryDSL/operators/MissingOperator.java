@@ -1,15 +1,13 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.operators;
 
-public enum MultiValueModeOperator {
+public enum MissingOperator {
 
-    MIN("min"),
-    MAX("max"),
-    AVG("avg"),
-    SUM("sum");
+    LAST("last"),
+    FIRST("first");
 
     private String value;
 
-    MultiValueModeOperator(String value) {
+    MissingOperator(String value) {
         this.value = value;
     }
 

@@ -4,7 +4,9 @@ public final class Constants {
     public final static String FIELD_NAME = "FIELDNAME";
     public final static String INNER_QUERY = "INNER_QUERY";
 
+    public final static String _GEO_DISTANCE = "_geo_distance";
     public final static String _NAME = "_name";
+    public final static String _SCRIPT = "_script";
     public final static String ALLOW_LEADING_WILDCARD = "allow_leading_wildcard";
     public final static String ANALYZE_WILDCARD = "analyze_wildcard";
     public final static String ANALYZER = "analyzer";
@@ -76,6 +78,7 @@ public final class Constants {
     public final static String MIN_SCORE = "min_score";
     public final static String MIN_TERM_FREQ = "min_term_freq";
     public final static String MISSING = "missing";
+    public final static String MODE = "mode";
     public final static String MODIFIER = "modifier";
     public final static String MULTI_VALUE_MODE = "multi_value_mode";
     public final static String MUST = "must";
@@ -84,11 +87,14 @@ public final class Constants {
     public final static String NEGATIVE = "negative";
     public final static String NEGATIVE_BOOST = "negative_boost";
     public final static String NEIGHBORS = "neighbors";
+    public final static String NESTED_FILTER = "nested_filter";
+    public final static String NESTED_PATH = "nested_path";
     public final static String NO_MATCH_QUERY = "no_match_query";
     public final static String NULL_VALUE = "null_value";
     public final static String OFFSET = "offset";
     public final static String OPERATOR = "operator";
     public final static String OPTIMIZE_BBOX = "optimize_bbox";
+    public final static String ORDER = "order";
     public final static String ORIGIN = "origin";
     public final static String PARAMS = "params";
     public final static String PARENT_TYPE = "parent_type";
@@ -109,12 +115,16 @@ public final class Constants {
     public final static String SHOULD = "should";
     public final static String SIZE = "size";
     public final static String SLOP = "slop";
+    public final static String SORT = "sort";
     public final static String TIE_BREAKER = "tie_breaker";
     public final static String TIME_ZONE = "time_zone";
     public final static String TO = "to";
     public final static String TOP_LEFT = "top_left";
     public final static String TOP_RIGHT = "top_right";
+    public final static String TRACK_SCORES = "track_scores";
     public final static String TYPE = "type";
+    public final static String UNIT = "unit";
+    public final static String UNMAPPED_TYPE = "unmapped_type";
     public final static String USE_DIS_MAX = "use_dis_max";
     public final static String VALUE = "value";
     public final static String VALUES = "values";

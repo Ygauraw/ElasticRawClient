@@ -4,6 +4,8 @@ import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.ComposableQuery;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Sortable;
+import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public final class Query
@@ -55,13 +57,23 @@ public final class Query
             return this;
         }
 
-        public QueryBuilder size(Integer size) {
+        public QueryBuilder size(int size) {
             queryBag.addItem(Constants.SIZE, size);
             return this;
         }
 
-        public QueryBuilder innerQuery(Queryable query) {
+        public QueryBuilder query(Queryable query) {
             queryBag.addItem(Constants.INNER_QUERY, query);
+            return this;
+        }
+
+        public QueryBuilder sort(Sortable... sortables) {
+            queryBag.addItem(Constants.SORT, sortables);
+            return this;
+        }
+
+        public QueryBuilder trackScores(boolean track) {
+            queryBag.addItem(Constants.TRACK_SCORES, track);
             return this;
         }
 

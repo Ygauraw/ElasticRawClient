@@ -5,6 +5,7 @@ import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Functionable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.MultiTermQueryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.queryDSL.definition.Sortable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.SpanQueryable;
 
 import java.text.SimpleDateFormat;
@@ -235,6 +236,23 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
     }
 
     @SuppressWarnings("unchecked")
+    public void addItem(String key, GeoPoint... geoPoints) {
+        if (!containsKey(key)) {
+
+            List<String> geoPointStrings = stream(geoPoints)
+                .select(gp -> String.format("[%s,%s]", gp.getLongitude(), gp.getLatitude()))
+                .toList();
+
+            String value = "[" + StringUtils.makeCommaSeparatedList(geoPointStrings) + "]";
+            add((T) T
+                .builder()
+                .name(key)
+                .value(value)
+                .build());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     public void addItem(String key, Queryable value) {
         if (value != null && !containsKey(key)) {
             add((T) T
@@ -377,6 +395,34 @@ public class QueryTypeArrayList<T extends QueryTypeItem>
                 .builder()
                 .name(key)
                 .value(percentage)
+                .build());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addItem(String key, Sortable sortable) {
+        if (!containsKey(key)) {
+            add((T) T
+                .builder()
+                .name(key)
+                .value(sortable.getSortableQuery())
+                .build());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addItem(String key, Sortable... sortables) {
+        if (sortables != null && sortables.length > 0 && !containsKey(key)) {
+            String[] queries = stream(sortables)
+                .select(q -> q.getSortableQuery())
+                .toList()
+                .toArray(new String[]{});
+
+            String joinedQueries = StringUtils.makeCommaSeparatedList(queries);
+            add((T) T
+                .builder()
+                .name(key)
+                .value("[" + joinedQueries + "]")
                 .build());
         }
     }

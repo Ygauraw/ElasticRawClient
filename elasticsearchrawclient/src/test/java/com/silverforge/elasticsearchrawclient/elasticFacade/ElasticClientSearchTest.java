@@ -131,7 +131,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
             .builder()
             .from(0)
             .size(10)
-            .innerQuery(MatchQuery
+            .query(MatchQuery
                 .builder()
                 .fieldName("name")
                 .value("Karcag")
@@ -152,7 +152,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
             .builder()
             .from(0)
             .size(10)
-            .innerQuery(MatchQuery
+            .query(MatchQuery
                 .builder()
                 .fieldName("name")
                 .query("Karcag Budapest")

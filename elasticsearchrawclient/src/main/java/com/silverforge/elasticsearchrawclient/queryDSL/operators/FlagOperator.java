@@ -1,7 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.operators;
 
 public enum FlagOperator {
-
+    
     ALL("ALL"),
     ANYSTRING("ANYSTRING"),
     COMPLEMENT("COMPLEMENT"),

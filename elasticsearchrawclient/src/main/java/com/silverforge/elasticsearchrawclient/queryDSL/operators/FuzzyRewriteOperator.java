@@ -1,6 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.operators;
 
 public enum FuzzyRewriteOperator {
+
     CONSTANT_SCORE_AUTO("constant_score_auto"),
     SCORING_BOOLEAN("scoring_boolean"),
     CONSTANT_SCORE_BOOLEAN("constant_score_boolean"),

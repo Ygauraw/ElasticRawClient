@@ -1,6 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.operators;
 
 public enum GeoShapeTypeOperator {
+
     POINT("point"),
     LINESTRING("linestring"),
     POLYGON("polygon"),

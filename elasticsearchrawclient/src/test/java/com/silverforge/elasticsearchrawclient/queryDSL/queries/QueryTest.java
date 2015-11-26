@@ -29,7 +29,7 @@ public class QueryTest {
 
         Query query = Query
             .builder()
-            .innerQuery(matchQuery)
+            .query(matchQuery)
             .build();
 
         String queryString = query.getQueryString();
@@ -44,7 +44,7 @@ public class QueryTest {
         Query query = Query
             .builder()
             .size(1)
-            .innerQuery(MatchQuery
+            .query(MatchQuery
                 .builder()
                 .fieldName("name")
                 .value("Budapest")
@@ -64,7 +64,7 @@ public class QueryTest {
             .builder()
             .from(20)
             .size(100)
-            .innerQuery(MatchQuery
+            .query(MatchQuery
                 .builder()
                 .fieldName("name")
                 .value("Budapest")
