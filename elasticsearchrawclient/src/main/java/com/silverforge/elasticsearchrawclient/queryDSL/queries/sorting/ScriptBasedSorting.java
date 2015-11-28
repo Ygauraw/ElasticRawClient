@@ -1,9 +1,11 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting;
 
+import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Scriptable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Sortable;
+import com.silverforge.elasticsearchrawclient.queryDSL.generator.SortQueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortOperator;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
@@ -18,7 +20,13 @@ public class ScriptBasedSorting
 
     @Override
     public String getSortableQuery() {
-        return null;
+        return SortQueryFactory
+            .scriptBasedSortingGenerator()
+            .generate(queryBag);
+    }
+
+    public static ScriptBasedSortingBuilder builder() {
+        return new ScriptBasedSortingBuilder();
     }
 
     public static class ScriptBasedSortingBuilder {
@@ -40,7 +48,12 @@ public class ScriptBasedSorting
             return this;
         }
 
-        public ScriptBasedSorting build() {
+        public ScriptBasedSorting build()
+                throws MandatoryParametersAreMissingException {
+
+            if (!queryBag.containsKey(Constants.SCRIPT))
+                throw new MandatoryParametersAreMissingException(Constants.SCRIPT);
+
             return new ScriptBasedSorting(queryBag);
         }
     }

@@ -9,6 +9,10 @@ import static br.com.zbra.androidlinq.Linq.*;
 
 public final class SortQueryFactory {
 
+    public static ScriptBasedSortingGenerator scriptBasedSortingGenerator() {
+        return new ScriptBasedSortingGenerator();
+    }
+
     public static GeoDistanceSortingGenerator geoDistanceSortingGenerator() {
         return new GeoDistanceSortingGenerator();
     }
@@ -31,4 +35,17 @@ public final class SortQueryFactory {
         }
     }
 
+    public static class ScriptBasedSortingGenerator
+            extends QueryGenerator {
+
+        private ScriptBasedSortingGenerator() {}
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+            Map<String, String> childItems = stream(queryBag)
+                .toMap(qb -> qb.getName(), qb -> qb.getValue());
+
+            return generateChildren("_script", childItems);
+        }
+    }
 }
