@@ -4,6 +4,7 @@ import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Sortable;
+import com.silverforge.elasticsearchrawclient.queryDSL.generator.SortQueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.MissingOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortModeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortOperator;
@@ -11,12 +12,24 @@ import com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting.GeoDistan
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting.ScriptBasedSorting;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
-public class Sort
+public final class Sort
         implements Sortable {
+
+    private QueryTypeArrayList<QueryTypeItem> queryBag;
+
+    public Sort(QueryTypeArrayList<QueryTypeItem> queryBag) {
+        this.queryBag = queryBag;
+    }
 
     @Override
     public String getSortableQuery() {
-        return null;
+        return SortQueryFactory
+            .sortGenerator()
+            .generate(queryBag);
+    }
+
+    public static SortBuilder builder() {
+        return new SortBuilder();
     }
 
     public static class SortBuilder {
@@ -75,6 +88,8 @@ public class Sort
             return this;
         }
 
-
+        public Sort build() {
+            return new Sort(queryBag);
+        }
     }
 }

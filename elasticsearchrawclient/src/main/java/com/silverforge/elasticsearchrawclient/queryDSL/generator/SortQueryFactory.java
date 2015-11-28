@@ -9,6 +9,10 @@ import static br.com.zbra.androidlinq.Linq.*;
 
 public final class SortQueryFactory {
 
+    public static SortGenerator sortGenerator() {
+        return new SortGenerator();
+    }
+
     public static ScriptBasedSortingGenerator scriptBasedSortingGenerator() {
         return new ScriptBasedSortingGenerator();
     }
@@ -46,6 +50,25 @@ public final class SortQueryFactory {
                 .toMap(qb -> qb.getName(), qb -> qb.getValue());
 
             return generateChildren("_script", childItems);
+        }
+    }
+
+    public static class SortGenerator
+            extends QueryGenerator {
+
+        private SortGenerator() {}
+
+        @Override
+        public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
+
+            QueryTypeItem parent = stream(queryBag)
+                .firstOrNull(qb -> qb.isParent());
+
+            Map<String, String> childItems = stream(queryBag)
+                .where(qb -> !qb.isParent())
+                .toMap(qb -> qb.getName(), qb -> qb.getValue());
+
+            return generateParentChildren("sort", parent, childItems);
         }
     }
 }
