@@ -5,6 +5,12 @@
 [![CircleCI](https://circleci.com/gh/silverforge/ElasticRawClient/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/silverforge/ElasticRawClient/tree/master)
 
 
+[![Download](https://img.shields.io/badge/latest%20stable-1.1.1-blue.svg) ](https://bintray.com/silverforge/maven/elastic-raw-client/1.1.1/view)
+
+
+[![Download](https://img.shields.io/badge/latest%20unstable-2.0.0--EARLY__BIRD-lightgrey.svg) ](https://bintray.com/silverforge/maven/elastic-raw-client/_latest)
+
+
 Contents
 --------
 
@@ -38,7 +44,6 @@ The ElasticSearchRawClient is a lightweight [Elastic](https://www.elastic.co/blo
 It's built upon **HttpsURLConnection**. [Connector.java](https://github.com/silverforge/ElasticRawClient/blob/master/elasticsearchrawclient/src/main/java/com/silverforge/elasticsearchrawclient/connector/Connector.java)
 
 The Connector applies a retry pattern, by default it tries three times to get the response from server. 
-
 
 ## How do I get set up? ##
 
