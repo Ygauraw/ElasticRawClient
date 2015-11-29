@@ -1,6 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
+import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.MatchQuery;
@@ -82,11 +83,15 @@ public class QueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
+
+
+
         assertThat(queryString, is("{\"from\":\"20\",\"size\":\"100\",\"query\":{\"match\":{\"name\":\"Budapest\"}}}"));
     }
 
     @Test
-    public void when_sortings_are_added_then_query_generated_well() {
+    public void when_sortings_are_added_then_query_generated_well()
+            throws MandatoryParametersAreMissingException {
 
         ScriptBasedSorting scriptBasedSorting = mock(ScriptBasedSorting.class);
         when(scriptBasedSorting.getSortableQuery()).thenReturn("{\"_script\":{\"type\":\"number\",\"script\":{\"inline\":\"doc['field_name'].value*factor\",\"params\":{\"factor\":\"1.1\"}},\"order\":\"asc\"}}");

@@ -1,5 +1,6 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting;
 
+import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
@@ -76,7 +77,12 @@ public class Sorting
             return this;
         }
 
-        public Sorting build() {
+        public Sorting build()
+                throws MandatoryParametersAreMissingException {
+
+            if (!queryBag.containsKey(Constants.FIELD_NAME))
+                throw new MandatoryParametersAreMissingException(Constants.FIELD_NAME);
+
             return new Sorting(queryBag);
         }
     }
