@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.queryDSL.queries;
+package com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
@@ -8,16 +8,14 @@ import com.silverforge.elasticsearchrawclient.queryDSL.generator.SortQueryFactor
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.MissingOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortModeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortOperator;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting.GeoDistanceSorting;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting.ScriptBasedSorting;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
-public final class Sort
+public class Sorting
         implements Sortable {
 
     private QueryTypeArrayList<QueryTypeItem> queryBag;
 
-    public Sort(QueryTypeArrayList<QueryTypeItem> queryBag) {
+    public Sorting(QueryTypeArrayList<QueryTypeItem> queryBag) {
         this.queryBag = queryBag;
     }
 
@@ -78,18 +76,8 @@ public final class Sort
             return this;
         }
 
-        public SortBuilder geoDistanceSorting(GeoDistanceSorting geoDistanceSorting) {
-            queryBag.addItem(Constants._GEO_DISTANCE, geoDistanceSorting);
-            return this;
-        }
-
-        public SortBuilder scriptBasedSorting(ScriptBasedSorting scriptBasedSorting) {
-            queryBag.addItem(Constants._SCRIPT, scriptBasedSorting);
-            return this;
-        }
-
-        public Sort build() {
-            return new Sort(queryBag);
+        public Sorting build() {
+            return new Sorting(queryBag);
         }
     }
 }

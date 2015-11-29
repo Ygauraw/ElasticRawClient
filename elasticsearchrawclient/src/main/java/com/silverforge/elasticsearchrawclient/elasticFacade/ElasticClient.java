@@ -1,6 +1,7 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.model.BulkActionResult;
 import com.silverforge.elasticsearchrawclient.model.BulkTuple;
@@ -18,6 +19,7 @@ import com.silverforge.webconnector.exceptions.SettingsIsNullException;
 import com.silverforge.webconnector.model.ConnectorSettings;
 import com.silverforge.webconnector.model.InvokeStringResult;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -457,17 +459,17 @@ public class ElasticClient
 
     public <T> Observable<T> getDocumentAsync(String[] ids, Class<T> classType) {
         return Observable.create(subscriber -> {
-            try {
-                List<T> documents = getDocument(ids, classType);
-                Observable
-                    .from(documents)
-                    .subscribe(subscriber::onNext);
-            } catch (IndexCannotBeNullException e) {
-                subscriber.onError(e);
-            } finally {
-                subscriber.onCompleted();
-            }
-        });
+			try {
+				List<T> documents = getDocument(ids, classType);
+				Observable
+					.from(documents)
+					.subscribe(subscriber::onNext);
+			} catch (IndexCannotBeNullException e) {
+				subscriber.onError(e);
+			} finally {
+				subscriber.onCompleted();
+			}
+		});
     }
 
     public <T> Observable<T> getDocumentAsync(String type, String[] ids, Class<T> classType) {

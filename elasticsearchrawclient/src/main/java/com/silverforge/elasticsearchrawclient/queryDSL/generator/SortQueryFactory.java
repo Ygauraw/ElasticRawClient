@@ -68,7 +68,7 @@ public final class SortQueryFactory {
                 .where(qb -> !qb.isParent())
                 .toMap(qb -> qb.getName(), qb -> qb.getValue());
 
-            return generateParentChildren("sort", parent, childItems);
+            return generateParentChildren(parent, childItems);
         }
     }
 }

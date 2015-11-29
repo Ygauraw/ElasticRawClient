@@ -5,6 +5,7 @@ import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.ComposableQuery;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Sortable;
+import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
@@ -23,28 +24,32 @@ public final class Query
 
     @Override
     public String getQueryString() {
-        StringBuilder queryString = new StringBuilder();
-
-        queryString.append("{");
-        for (int i = 0; i < queryBag.size(); i++) {
-            if (i > 0)
-                queryString.append(",");
-
-            QueryTypeItem item = queryBag.get(i);
-            if (item.getName().equals(Constants.INNER_QUERY)) {
-                queryString.append("\"query\":").append(item.getValue());
-            } else {
-                queryString
-                    .append("\"")
-                    .append(item.getName())
-                    .append("\":\"")
-                    .append(item.getValue())
-                    .append("\"");
-            }
-        }
-        queryString.append("}");
-
-        return queryString.toString();
+        return QueryFactory
+            .queryGenerator()
+            .generate(queryBag);
+//
+//        StringBuilder queryString = new StringBuilder();
+//
+//        queryString.append("{");
+//        for (int i = 0; i < queryBag.size(); i++) {
+//            if (i > 0)
+//                queryString.append(",");
+//
+//            QueryTypeItem item = queryBag.get(i);
+//            if (item.getName().equals(Constants.INNER_QUERY)) {
+//                queryString.append("\"query\":").append(item.getValue());
+//            } else {
+//                queryString
+//                    .append("\"")
+//                    .append(item.getName())
+//                    .append("\":\"")
+//                    .append(item.getValue())
+//                    .append("\"");
+//            }
+//        }
+//        queryString.append("}");
+//
+//        return queryString.toString();
     }
 
     public static class QueryBuilder {
@@ -63,7 +68,7 @@ public final class Query
         }
 
         public QueryBuilder query(Queryable query) {
-            queryBag.addItem(Constants.INNER_QUERY, query);
+            queryBag.addItem(Constants.QUERY, query);
             return this;
         }
 

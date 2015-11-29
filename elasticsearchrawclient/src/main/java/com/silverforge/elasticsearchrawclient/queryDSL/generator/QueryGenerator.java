@@ -44,7 +44,10 @@ public class QueryGenerator
 
     @Override
     public String generate(QueryTypeArrayList<QueryTypeItem> queryBag) {
-        return null;
+        Map<String, String> childItems = stream(queryBag)
+            .toMap(qb -> qb.getName(), qb -> qb.getValue());
+
+        return generateChildren(childItems);
     }
 
     protected String generateCommonChildren(String queryName,
@@ -382,15 +385,21 @@ public class QueryGenerator
         return retValue;
     }
 
+    protected String generateParentChildren(QueryTypeItem parent, Map<String, String> childItems) {
+        return generateParentChildren(null, parent, childItems);
+    }
+
     protected String generateParentChildren(String queryName, QueryTypeItem parent, Map<String, String> childItems) {
         String retValue = "";
         try {
             jsonGenerator.writeStartObject();
-            jsonGenerator.writeObjectFieldStart(queryName);
+            if (!TextUtils.isEmpty(queryName))
+                jsonGenerator.writeObjectFieldStart(queryName);
             jsonGenerator.writeObjectFieldStart(parent.getValue());
             writeEntries(childItems);
             jsonGenerator.writeEndObject();
-            jsonGenerator.writeEndObject();
+            if (!TextUtils.isEmpty(queryName))
+                jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();
             jsonGenerator.close();
             retValue = getOutputStreamValue();

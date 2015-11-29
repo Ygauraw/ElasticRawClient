@@ -8,6 +8,11 @@ import java.util.Map;
 import static br.com.zbra.androidlinq.Linq.stream;
 
 public final class QueryFactory {
+
+    public static QueryGenerator queryGenerator() {
+        return new QueryGenerator();
+    }
+
     public static MatchQueryGenerator matchQueryGenerator() {
         return new MatchQueryGenerator();
     }
@@ -943,6 +948,5 @@ public final class QueryFactory {
             return generateChildren("span_multi", childItems);
         }
     }
-
 }
 

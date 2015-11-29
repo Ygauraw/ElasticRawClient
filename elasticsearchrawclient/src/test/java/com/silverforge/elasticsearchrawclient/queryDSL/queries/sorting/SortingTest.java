@@ -1,12 +1,10 @@
-package com.silverforge.elasticsearchrawclient.queryDSL.queries;
+package com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.MissingOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortModeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortOperator;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting.GeoDistanceSorting;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting.ScriptBasedSorting;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -24,7 +22,7 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
 @Category(value = com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest.class)
-public class SortTest {
+public class SortingTest {
 
     // region Happy path
 
@@ -39,23 +37,24 @@ public class SortTest {
         Queryable matchAllQueryable = mock(Queryable.class);
         when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
 
-        String sortableQuery = Sort
+        String sortableQuery = Sorting
             .builder()
             .order(SortOperator.DESC)
             .fieldName("apple")
-            .geoDistanceSorting(geoDistanceSorting)
+//            .geoDistanceSorting(geoDistanceSorting)
             .missing(MissingOperator.LAST)
             .mode(SortModeOperator.MAX)
             .nestedFilter(matchAllQueryable)
             .nestedPath("path.of.nested.field")
             .unmappedType("number")
-            .scriptBasedSorting(scriptBasedSorting)
+//            .scriptBasedSorting(scriptBasedSorting)
             .build()
             .getSortableQuery();
 
         assertThat(sortableQuery, notNullValue());
         assertThat(sortableQuery, not(""));
     }
+
 
     // endregion
 
