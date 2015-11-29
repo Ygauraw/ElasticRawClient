@@ -8,7 +8,7 @@
 [![Download](https://img.shields.io/badge/latest%20stable-1.1.1-blue.svg) ](https://bintray.com/silverforge/maven/elastic-raw-client/1.1.1/view)
 
 
-[![Download](https://img.shields.io/badge/latest%20unstable-2.0.0--EARLY__BIRD-lightgrey.svg) ](https://bintray.com/silverforge/maven/elastic-raw-client/_latest)
+[![Download](https://img.shields.io/badge/latest%20unstable-2.0.0--EARLY__BIRD-lightgrey.svg) ](https://bintray.com/silverforge/maven/elastic-raw-client/_latestVersion)
 
 
 Contents
