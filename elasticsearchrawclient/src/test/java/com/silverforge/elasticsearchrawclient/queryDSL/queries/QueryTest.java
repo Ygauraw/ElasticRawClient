@@ -147,5 +147,19 @@ public class QueryTest {
 
     // region Sad path
 
+    @Test
+    public void when_no_parameters_added_then_query_generated_well()
+            throws MandatoryParametersAreMissingException {
+        String queryString = Query
+            .builder()
+            .build()
+            .getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString, is("{}"));
+    }
+
     // endregion
 }
