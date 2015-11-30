@@ -10,7 +10,7 @@ import java.net.URISyntaxException;
 
 import static org.junit.Assert.fail;
 
-public class ElasticClientBaseTest {
+public abstract class ElasticClientBaseTest {
     private static final String TAG = ElasticClientSearchTest.class.getName();
     protected static final String ELASTIC_URL = "https://mgj.east-us.azr.facetflow.io";
     protected static final String ELASTIC_APIKEY = "wihIilbbekmCeppKlgQXDwpSZEUekkk0";

@@ -157,12 +157,12 @@ public abstract class Operations {
             case QUERY:
             case SEARCH:
                 if (indices == null || indices.length == 0)
-                    pathBuilder.append("_all/");
+                    pathBuilder.append("_all");
                 else
-                    pathBuilder.append(StringUtils.makeCommaSeparatedList(indices)).append("/");
+                    pathBuilder.append(StringUtils.makeCommaSeparatedList(indices));
 
                 if (types != null && types.length > 0)
-                    pathBuilder.append(StringUtils.makeCommaSeparatedList(types));
+                    pathBuilder.append("/").append(StringUtils.makeCommaSeparatedList(types));
 
                 String operationPath = operationType.getOperationTypePath();
                 if (!TextUtils.isEmpty(operationPath))

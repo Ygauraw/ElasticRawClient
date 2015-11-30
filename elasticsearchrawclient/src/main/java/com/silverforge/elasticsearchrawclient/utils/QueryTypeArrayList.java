@@ -2,11 +2,11 @@ package com.silverforge.elasticsearchrawclient.utils;
 
 import com.silverforge.elasticsearchrawclient.model.GeoPoint;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Functionable;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.MultiTermQueryable;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Sortable;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.SpanQueryable;
+import com.silverforge.elasticsearchrawclient.definition.Functionable;
+import com.silverforge.elasticsearchrawclient.definition.MultiTermQueryable;
+import com.silverforge.elasticsearchrawclient.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.definition.Sortable;
+import com.silverforge.elasticsearchrawclient.definition.SpanQueryable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

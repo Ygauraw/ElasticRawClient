@@ -1,9 +1,7 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
-import android.app.VoiceInteractor;
 import android.util.Log;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
@@ -11,12 +9,11 @@ import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreM
 import com.silverforge.elasticsearchrawclient.model.LikeDoc;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static br.com.zbra.androidlinq.Linq.*;

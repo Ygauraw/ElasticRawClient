@@ -8,7 +8,7 @@ import com.silverforge.elasticsearchrawclient.elasticFacade.mappers.ElasticClien
 import com.silverforge.elasticsearchrawclient.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.elasticsearchrawclient.utils.StringUtils;
 import com.silverforge.webconnector.definitions.Connectable;
@@ -87,7 +87,7 @@ public class QueryOperations extends Operations {
 
         try {
             String queryPath;
-            if (TextUtils.isEmpty(index))
+            if (!TextUtils.isEmpty(index))
                 queryPath = getOperationPath(index, null, OperationType.SEARCH);
             else
                 queryPath = getOperationPath(OperationType.SEARCH);

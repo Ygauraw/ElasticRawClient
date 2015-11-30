@@ -5,7 +5,7 @@ import android.util.Log;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
-import com.silverforge.elasticsearchrawclient.testModel.City;
+import com.silverforge.elasticsearchrawclient.testModel.SimpleCity;
 import com.silverforge.webconnector.exceptions.SettingsIsNullException;
 import com.silverforge.webconnector.model.ConnectorSettings;
 
@@ -42,7 +42,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
                     "karcag",
                     "customCity"};
 
-            List<City> cities = client.getDocument(docIds, City.class);
+            List<SimpleCity> cities = client.getDocument(docIds, SimpleCity.class);
 
             assertThat(cities, notNullValue());
             assertThat(cities.size(), greaterThan(0));
@@ -59,7 +59,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
                     "karcag",
                     "customCity"};
 
-            List<City> cities = client.getDocument(docIds, City.class);
+            List<SimpleCity> cities = client.getDocument(docIds, SimpleCity.class);
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(1));
@@ -90,12 +90,12 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             ElasticRawClient customClient = new ElasticClient(customSettings, elasticSettings);
 
-            List<City> cities = customClient.getDocument(docIds, City.class);
+            List<SimpleCity> cities = customClient.getDocument(docIds, SimpleCity.class);
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(2));
-            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
-            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTesting"))));
+            assertThat(cities, hasItem(Matchers.<SimpleCity>hasProperty("name", equalTo("Karcag"))));
+            assertThat(cities, hasItem(Matchers.<SimpleCity>hasProperty("name", equalTo("customCityForTesting"))));
         } catch (URISyntaxException | IndexCannotBeNullException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
@@ -123,11 +123,11 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             ElasticRawClient customClient = new ElasticClient(customSettings, elasticSettings);
 
-            List<City> cities = customClient.getDocument("city", docIds, City.class);
+            List<SimpleCity> cities = customClient.getDocument("city", docIds, SimpleCity.class);
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(1));
-            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
+            assertThat(cities, hasItem(Matchers.<SimpleCity>hasProperty("name", equalTo("Karcag"))));
         } catch (URISyntaxException | IndexCannotBeNullException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
@@ -141,15 +141,15 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
                 "karcag",
                 "customCity"};
 
-        TestSubscriber<City> testSubscriber = new TestSubscriber<>();
+        TestSubscriber<SimpleCity> testSubscriber = new TestSubscriber<>();
         client
-            .getDocumentAsync(docIds, City.class)
+            .getDocumentAsync(docIds, SimpleCity.class)
             .subscribe(testSubscriber);
 
         testSubscriber.assertNoErrors();
         testSubscriber.assertUnsubscribed();
 
-        List<City> cities = testSubscriber.getOnNextEvents();
+        List<SimpleCity> cities = testSubscriber.getOnNextEvents();
         assertThat(cities, notNullValue());
         assertThat(cities.size(), equalTo(1));
         assertThat(cities.get(0).getName(), is("Karcag"));
@@ -175,21 +175,21 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
             ElasticRawClient customClient = new ElasticClient(customSettings, elasticSettings);
 
-            TestSubscriber<City> testSubscriber = new TestSubscriber<>();
+            TestSubscriber<SimpleCity> testSubscriber = new TestSubscriber<>();
 
             customClient
-                    .getDocumentAsync(docIds, City.class)
+                    .getDocumentAsync(docIds, SimpleCity.class)
                     .subscribe(testSubscriber);
 
             testSubscriber.assertNoErrors();
             testSubscriber.assertUnsubscribed();
 
-            List<City> cities = testSubscriber.getOnNextEvents();
+            List<SimpleCity> cities = testSubscriber.getOnNextEvents();
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(2));
-            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
-            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTesting"))));
+            assertThat(cities, hasItem(Matchers.<SimpleCity>hasProperty("name", equalTo("Karcag"))));
+            assertThat(cities, hasItem(Matchers.<SimpleCity>hasProperty("name", equalTo("customCityForTesting"))));
         } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             fail(e.getMessage());
@@ -216,20 +216,20 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
 
             ElasticRawClient customClient = new ElasticClient(customSettings, elasticSettings);
 
-            TestSubscriber<City> testSubscriber = new TestSubscriber<>();
+            TestSubscriber<SimpleCity> testSubscriber = new TestSubscriber<>();
 
             customClient
-                    .getDocumentAsync("city", docIds, City.class)
+                    .getDocumentAsync("city", docIds, SimpleCity.class)
                     .subscribe(testSubscriber);
 
             testSubscriber.assertNoErrors();
             testSubscriber.assertUnsubscribed();
 
-            List<City> cities = testSubscriber.getOnNextEvents();
+            List<SimpleCity> cities = testSubscriber.getOnNextEvents();
 
             assertThat(cities, is(notNullValue()));
             assertThat(cities.size(), equalTo(1));
-            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
+            assertThat(cities, hasItem(Matchers.<SimpleCity>hasProperty("name", equalTo("Karcag"))));
         } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             fail(e.getMessage());
@@ -254,7 +254,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             ElasticRawClient customClient = new ElasticClient(customSettings);
 
-            customClient.getDocument(docIds, City.class);
+            customClient.getDocument(docIds, SimpleCity.class);
         } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
@@ -276,7 +276,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             ElasticRawClient customClient = new ElasticClient(customSettings);
 
-            List<City> cities = customClient.getDocument("city", docIds, City.class);
+            List<SimpleCity> cities = customClient.getDocument("city", docIds, SimpleCity.class);
 
         } catch (URISyntaxException | SettingsIsNullException e) {
             e.printStackTrace();
@@ -305,7 +305,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
         try {
             ElasticRawClient customClient = new ElasticClient(customSettings, elasticSettings);
 
-            List<City> cities = customClient.getDocument(" -d", docIds, City.class);
+            List<SimpleCity> cities = customClient.getDocument(" -d", docIds, SimpleCity.class);
 
             assertThat(cities, notNullValue());
             assertThat(cities.size(), equalTo(0));
@@ -320,7 +320,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     public void getDocumetsWithNullMap() {
         try {
             String[] docIds = null;
-            List<City> cities = client.getDocument(docIds, City.class);
+            List<SimpleCity> cities = client.getDocument(docIds, SimpleCity.class);
 
             assertThat(cities, notNullValue());
             assertThat(cities.size(), equalTo(0));
@@ -334,7 +334,7 @@ public class ElasticClientGetDocumentTest extends ElasticClientBaseTest {
     public void getDocumetsWithEmptyMap() {
         try {
             String[] docIds = {""};
-            List<City> cities = client.getDocument(docIds, City.class);
+            List<SimpleCity> cities = client.getDocument(docIds, SimpleCity.class);
 
             assertThat(cities, notNullValue());
             assertThat(cities.size(), equalTo(0));

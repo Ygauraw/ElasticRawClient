@@ -1,4 +1,4 @@
-package com.silverforge.elasticsearchrawclient.queryDSL.definition;
+package com.silverforge.elasticsearchrawclient.definition;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;

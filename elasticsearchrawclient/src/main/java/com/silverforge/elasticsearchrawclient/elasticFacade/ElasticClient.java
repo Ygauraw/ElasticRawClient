@@ -1,7 +1,6 @@
 package com.silverforge.elasticsearchrawclient.elasticFacade;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.silverforge.elasticsearchrawclient.model.BulkActionResult;
 import com.silverforge.elasticsearchrawclient.model.BulkTuple;
@@ -12,14 +11,13 @@ import com.silverforge.elasticsearchrawclient.elasticFacade.operations.IndexOper
 import com.silverforge.elasticsearchrawclient.elasticFacade.operations.QueryOperations;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.definition.Queryable;
 import com.silverforge.webconnector.EndpointConnector;
 import com.silverforge.webconnector.definitions.Connectable;
 import com.silverforge.webconnector.exceptions.SettingsIsNullException;
 import com.silverforge.webconnector.model.ConnectorSettings;
 import com.silverforge.webconnector.model.InvokeStringResult;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 

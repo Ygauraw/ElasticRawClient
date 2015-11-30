@@ -1,8 +1,8 @@
 package com.silverforge.elasticsearchrawclient.queryDSL.functions;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.FunctionTest;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.definition.FunctionTest;
+import com.silverforge.elasticsearchrawclient.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.ModifierOperator;
 
 import org.junit.Test;

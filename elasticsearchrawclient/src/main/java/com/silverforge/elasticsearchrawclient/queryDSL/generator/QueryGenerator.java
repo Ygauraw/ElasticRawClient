@@ -6,21 +6,15 @@ import android.util.Log;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.google.common.base.Optional;
-import com.google.common.base.Supplier;
 import com.google.common.collect.Maps;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Generator;
+import com.silverforge.elasticsearchrawclient.definition.Generator;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.ConstantScoreQuery;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.AbstractMap;
-import java.util.HashMap;
 import java.util.Map;
-
-import br.com.zbra.androidlinq.Stream;
 
 import static br.com.zbra.androidlinq.Linq.stream;
 

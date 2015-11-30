@@ -2,9 +2,8 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortOperator;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.MatchQuery;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting.GeoDistanceSorting;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting.ScriptBasedSorting;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting.Sorting;
@@ -22,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-@Category(value = com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest.class)
+@Category(value = com.silverforge.elasticsearchrawclient.definition.QueryTest.class)
 public class QueryTest {
 
     // region Happy path

@@ -2,7 +2,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.functions;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.FunctionTest;
+import com.silverforge.elasticsearchrawclient.definition.FunctionTest;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.MultiValueModeOperator;
 
 import org.junit.Rule;

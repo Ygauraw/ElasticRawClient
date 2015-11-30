@@ -3,7 +3,7 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.model.BulkActionResult;
 import com.silverforge.elasticsearchrawclient.model.BulkTuple;
-import com.silverforge.elasticsearchrawclient.testModel.City;
+import com.silverforge.elasticsearchrawclient.testModel.SimpleCity;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +29,7 @@ public class ElasticClientBulkTest extends ElasticClientBaseTest {
                         .indexName("cities")
                         .typeName("city")
                         .id("szekesfehervar")
-                        .entity(new City("Székesfehérvár"))
+                        .entity(new SimpleCity("Székesfehérvár"))
                         .operationType(OperationType.CREATE)
                         .build()
         );
@@ -39,7 +39,7 @@ public class ElasticClientBulkTest extends ElasticClientBaseTest {
                         .indexName("cities")
                         .typeName("city")
                         .id("bekescsaba")
-                        .entity(new City("Békéscsaba"))
+                        .entity(new SimpleCity("Békéscsaba"))
                         .operationType(OperationType.CREATE)
                         .build()
         );
@@ -58,7 +58,7 @@ public class ElasticClientBulkTest extends ElasticClientBaseTest {
                         .indexName("cities")
                         .typeName("city")
                         .id("debrecen")
-                        .entity(new City("Debrecen"))
+                        .entity(new SimpleCity("Debrecen"))
                         .operationType(OperationType.INDEX)
                         .build()
         );

@@ -7,7 +7,7 @@ import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreM
 import com.silverforge.elasticsearchrawclient.model.GeoPoint;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.GeoShapeTypeOperator;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;

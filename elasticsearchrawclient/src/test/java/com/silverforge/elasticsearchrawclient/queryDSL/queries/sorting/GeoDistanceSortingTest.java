@@ -3,7 +3,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.model.GeoPoint;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
+import com.silverforge.elasticsearchrawclient.definition.QueryTest;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.DistanceTypeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortModeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortOperator;

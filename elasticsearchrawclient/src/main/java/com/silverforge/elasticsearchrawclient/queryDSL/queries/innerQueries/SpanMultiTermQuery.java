@@ -3,8 +3,8 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.MultiTermQueryable;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.SpanQueryable;
+import com.silverforge.elasticsearchrawclient.definition.MultiTermQueryable;
+import com.silverforge.elasticsearchrawclient.definition.SpanQueryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 

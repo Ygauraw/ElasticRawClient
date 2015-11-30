@@ -4,7 +4,7 @@ import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreM
 import com.silverforge.elasticsearchrawclient.model.GeoPoint;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Sortable;
+import com.silverforge.elasticsearchrawclient.definition.Sortable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.SortQueryFactory;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.DistanceTypeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortModeOperator;

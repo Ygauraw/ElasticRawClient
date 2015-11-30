@@ -6,9 +6,8 @@ import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.model.ElasticSettings;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Query;
-import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.MatchAllQuery;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.MatchQuery;
-import com.silverforge.elasticsearchrawclient.testModel.City;
+import com.silverforge.elasticsearchrawclient.testModel.SimpleCity;
 import com.silverforge.webconnector.exceptions.SettingsIsNullException;
 import com.silverforge.webconnector.model.ConnectorSettings;
 
@@ -35,7 +34,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
 
     @Test
     public void searchWithIndexWithTypeTest() {
-        List<City> cities = client.search("{\"query\":{\"match_all\": {}}}", City.class);
+        List<SimpleCity> cities = client.search("{\"query\":{\"match_all\": {}}}", SimpleCity.class);
         assertNotNull(cities);
     }
 
@@ -49,7 +48,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
 
         try {
             ElasticRawClient testClient = new ElasticClient(settings);
-            List<City> cities = testClient.search("{\"query\":{\"match_all\": {}}}", City.class);
+            List<SimpleCity> cities = testClient.search("{\"query\":{\"match_all\": {}}}", SimpleCity.class);
 
             assertNotNull(cities);
         } catch (URISyntaxException | SettingsIsNullException e) {
@@ -74,7 +73,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
 
         try {
             ElasticRawClient testClient = new ElasticClient(settings, elasticSettings);
-            List<City> cities = testClient.search("{\"query\":{\"match_all\": {}}}", City.class);
+            List<SimpleCity> cities = testClient.search("{\"query\":{\"match_all\": {}}}", SimpleCity.class);
 
             assertNotNull(cities);
         } catch (URISyntaxException | SettingsIsNullException e) {
@@ -99,7 +98,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
 
         try {
             ElasticRawClient testClient = new ElasticClient(settings, elasticSettings);
-            List<City> cities = testClient.search("{\"query\":{\"match_all\": {}}}", City.class);
+            List<SimpleCity> cities = testClient.search("{\"query\":{\"match_all\": {}}}", SimpleCity.class);
 
             assertNotNull(cities);
         } catch (URISyntaxException | SettingsIsNullException e) {
@@ -111,16 +110,16 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
 
     @Test
     public void searchAsyncTest() {
-        Observable<City> cityObservable
+        Observable<SimpleCity> cityObservable
                 = client
-                    .searchAsync("{\"query\":{\"match_all\": {}}}", City.class);
+                    .searchAsync("{\"query\":{\"match_all\": {}}}", SimpleCity.class);
 
-        TestSubscriber<City> testSubscriber = new TestSubscriber<>();
+        TestSubscriber<SimpleCity> testSubscriber = new TestSubscriber<>();
         cityObservable.subscribe(testSubscriber);
         testSubscriber.assertNoErrors();
         testSubscriber.assertUnsubscribed();
 
-        List<City> cityList = testSubscriber.getOnNextEvents();
+        List<SimpleCity> cityList = testSubscriber.getOnNextEvents();
         assertThat(cityList, not(nullValue()));
         assertThat(cityList.size(), greaterThan(0));
     }
@@ -139,7 +138,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
                 .build())
             .build();
 
-        List<City> cities = client.search(query, City.class);
+        List<SimpleCity> cities = client.search(query, SimpleCity.class);
 
         assertThat(cities, notNullValue());
         assertThat(cities.size(), is(1));
@@ -161,7 +160,7 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
                 .build())
             .build();
 
-        List<City> cities = client.search(query, City.class);
+        List<SimpleCity> cities = client.search(query, SimpleCity.class);
 
         assertThat(cities, notNullValue());
         assertThat(cities.size(), is(2));
@@ -173,21 +172,21 @@ public class ElasticClientSearchTest extends ElasticClientBaseTest {
 
     @Test
     public void searchEmptyQueryTest() {
-        List<City> cities = client.search("{}", City.class);
+        List<SimpleCity> cities = client.search("{}", SimpleCity.class);
 
         assertNotNull(cities);
     }
 
     @Test
     public void searchNullTest() {
-        List<City> cities = client.search((String)null, City.class);
+        List<SimpleCity> cities = client.search((String)null, SimpleCity.class);
 
         assertNotNull(cities);
     }
 
     @Test
     public void searchEmptyTest() {
-        List<City> cities = client.search("", City.class);
+        List<SimpleCity> cities = client.search("", SimpleCity.class);
 
         assertNotNull(cities);
     }

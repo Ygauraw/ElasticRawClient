@@ -2,9 +2,8 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.QueryTest;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Scriptable;
+import com.silverforge.elasticsearchrawclient.definition.QueryTest;
+import com.silverforge.elasticsearchrawclient.definition.Scriptable;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortOperator;
 
 import org.junit.Test;

@@ -5,7 +5,7 @@ import android.util.Log;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.ElasticClientApp;
 import com.silverforge.elasticsearchrawclient.R;
-import com.silverforge.elasticsearchrawclient.testModel.City;
+import com.silverforge.elasticsearchrawclient.testModel.SimpleCity;
 import com.silverforge.elasticsearchrawclient.utils.StreamUtils;
 import com.silverforge.webconnector.exceptions.SettingsIsNullException;
 import com.silverforge.webconnector.model.ConnectorSettings;
@@ -59,9 +59,9 @@ public final class DatabaseCreator {
         client.createIndex("cities", createCityData);
         client.createIndex("testcities", createTestCityData);
 
-        client.addDocument("cities", "city", "karcag", new City("Karcag"));
-        client.addDocument("cities", "city", "budapest", new City("Budapest"));
+        client.addDocument("cities", "city", "karcag", new SimpleCity("Karcag"));
+        client.addDocument("cities", "city", "budapest", new SimpleCity("Budapest"));
 
-        client.addDocument("testcities", "testcity", "customCity", new City("customCityForTesting"));
+        client.addDocument("testcities", "testcity", "customCity", new SimpleCity("customCityForTesting"));
     }
 }

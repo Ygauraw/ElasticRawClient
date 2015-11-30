@@ -3,7 +3,7 @@ package com.silverforge.elasticsearchrawclient.elasticFacade;
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.exceptions.IndexCannotBeNullException;
 import com.silverforge.elasticsearchrawclient.exceptions.TypeCannotBeNullException;
-import com.silverforge.elasticsearchrawclient.testModel.City;
+import com.silverforge.elasticsearchrawclient.testModel.SimpleCity;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -29,28 +29,28 @@ public class ElasticClientUpdateDocumentTest extends ElasticClientBaseTest {
         try {
             String cityId = "karcag";
 
-            City city = new City("karcagTest");
+            SimpleCity city = new SimpleCity("karcagTest");
             client.updateDocument(cityId, city);
 
             Thread.sleep(1000);
 
-            List<City> cities = client.getDocument(new String[]{cityId}, City.class);
+            List<SimpleCity> cities = client.getDocument(new String[]{cityId}, SimpleCity.class);
 
             assertThat(cities, not(nullValue()));
             assertThat(cities.size(), equalTo(1));
-            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("karcagTest"))));
+            assertThat(cities, hasItem(Matchers.<SimpleCity>hasProperty("name", equalTo("karcagTest"))));
 
-            City retCity = new City("Karcag");
+            SimpleCity retCity = new SimpleCity("Karcag");
 
             client.updateDocument(cityId, retCity);
 
             Thread.sleep(1000);
 
-            List<City> retCities = client.getDocument(new String[]{cityId}, City.class);
+            List<SimpleCity> retCities = client.getDocument(new String[]{cityId}, SimpleCity.class);
 
             assertThat(retCities, not(nullValue()));
             assertThat(retCities.size(), equalTo(1));
-            assertThat(retCities, hasItem(Matchers.<City>hasProperty("name", equalTo("Karcag"))));
+            assertThat(retCities, hasItem(Matchers.<SimpleCity>hasProperty("name", equalTo("Karcag"))));
         } catch (IndexCannotBeNullException | TypeCannotBeNullException e) {
             e.printStackTrace();
             fail(e.getMessage());
@@ -64,27 +64,27 @@ public class ElasticClientUpdateDocumentTest extends ElasticClientBaseTest {
     public void updateDocumentIndexTest() {
         try {
             String cityId = "customCity";
-            City city = new City("customCityForTestingTest");
+            SimpleCity city = new SimpleCity("customCityForTestingTest");
             client.updateDocument("testcities", "testcity", cityId, city);
 
             Thread.sleep(1000);
 
-            List<City> cities = client.getDocument("testcities", "testcity", new String[]{cityId}, City.class);
+            List<SimpleCity> cities = client.getDocument("testcities", "testcity", new String[]{cityId}, SimpleCity.class);
 
             assertThat(cities, not(nullValue()));
             assertThat(cities.size(), equalTo(1));
-            assertThat(cities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTestingTest"))));
+            assertThat(cities, hasItem(Matchers.<SimpleCity>hasProperty("name", equalTo("customCityForTestingTest"))));
 
-            City retCity = new City("customCityForTesting");
+            SimpleCity retCity = new SimpleCity("customCityForTesting");
             client.updateDocument("testcities", "testcity", cityId, retCity);
 
             Thread.sleep(1000);
 
-            List<City> retCities = client.getDocument("testcities", "testcity", new String[]{cityId}, City.class);
+            List<SimpleCity> retCities = client.getDocument("testcities", "testcity", new String[]{cityId}, SimpleCity.class);
 
             assertThat(retCities, not(nullValue()));
             assertThat(retCities.size(), equalTo(1));
-            assertThat(retCities, hasItem(Matchers.<City>hasProperty("name", equalTo("customCityForTesting"))));
+            assertThat(retCities, hasItem(Matchers.<SimpleCity>hasProperty("name", equalTo("customCityForTesting"))));
         } catch (InterruptedException e) {
             e.printStackTrace();
             fail(e.getMessage());

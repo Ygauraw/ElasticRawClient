@@ -2,11 +2,10 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries;
 
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.ComposableQuery;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Sortable;
+import com.silverforge.elasticsearchrawclient.definition.ComposableQuery;
+import com.silverforge.elasticsearchrawclient.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.definition.Sortable;
 import com.silverforge.elasticsearchrawclient.queryDSL.generator.QueryFactory;
-import com.silverforge.elasticsearchrawclient.utils.BooleanUtils;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
 
 public final class Query

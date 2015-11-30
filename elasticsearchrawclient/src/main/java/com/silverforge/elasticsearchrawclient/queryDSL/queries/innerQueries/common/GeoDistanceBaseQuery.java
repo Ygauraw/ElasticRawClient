@@ -3,7 +3,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.com
 import com.silverforge.elasticsearchrawclient.model.GeoPoint;
 import com.silverforge.elasticsearchrawclient.model.QueryTypeItem;
 import com.silverforge.elasticsearchrawclient.queryDSL.Constants;
-import com.silverforge.elasticsearchrawclient.queryDSL.definition.Queryable;
+import com.silverforge.elasticsearchrawclient.definition.Queryable;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.DistanceTypeOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.OptimizeBboxOperator;
 import com.silverforge.elasticsearchrawclient.utils.QueryTypeArrayList;
