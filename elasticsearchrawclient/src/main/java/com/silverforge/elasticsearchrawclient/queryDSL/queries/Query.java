@@ -27,29 +27,6 @@ public final class Query
         return QueryFactory
             .queryGenerator()
             .generate(queryBag);
-//
-//        StringBuilder queryString = new StringBuilder();
-//
-//        queryString.append("{");
-//        for (int i = 0; i < queryBag.size(); i++) {
-//            if (i > 0)
-//                queryString.append(",");
-//
-//            QueryTypeItem item = queryBag.get(i);
-//            if (item.getName().equals(Constants.INNER_QUERY)) {
-//                queryString.append("\"query\":").append(item.getValue());
-//            } else {
-//                queryString
-//                    .append("\"")
-//                    .append(item.getName())
-//                    .append("\":\"")
-//                    .append(item.getValue())
-//                    .append("\"");
-//            }
-//        }
-//        queryString.append("}");
-//
-//        return queryString.toString();
     }
 
     public static class QueryBuilder {

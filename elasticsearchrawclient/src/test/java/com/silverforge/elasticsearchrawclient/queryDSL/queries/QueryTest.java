@@ -29,54 +29,33 @@ public class QueryTest {
 
     @Test
     public void when_inner_query_added_then_query_generated_well() {
-        MatchQuery matchQuery = MatchQuery
-            .builder()
-            .fieldName("name")
-            .value("Budapest")
-            .build();
+
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
 
         Query query = Query
             .builder()
-            .query(matchQuery)
+            .query(matchAllQueryable)
             .build();
 
         String queryString = query.getQueryString();
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
-        assertThat(queryString, is("{\"query\":{\"match\":{\"name\":\"Budapest\"}}}"));
-    }
-
-    @Test
-    public void when_inner_query_and_size_added_then_query_generated_well() {
-        Query query = Query
-            .builder()
-            .size(1)
-            .query(MatchQuery
-                .builder()
-                .fieldName("name")
-                .value("Budapest")
-                .build())
-            .build();
-
-        String queryString = query.getQueryString();
-
-        assertThat(queryString, notNullValue());
-        assertThat(queryString, not(""));
-        assertThat(queryString, is("{\"size\":\"1\",\"query\":{\"match\":{\"name\":\"Budapest\"}}}"));
+        assertThat(queryString, is("{\"query\":{\"match_all\":{}}}"));
     }
 
     @Test
     public void when_inner_query_and_from_and_size_added_then_query_generated_well() {
+
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
+
         Query query = Query
             .builder()
             .from(20)
             .size(100)
-            .query(MatchQuery
-                .builder()
-                .fieldName("name")
-                .value("Budapest")
-                .build())
+            .query(matchAllQueryable)
             .build();
 
         String queryString = query.getQueryString();
@@ -84,9 +63,40 @@ public class QueryTest {
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
 
+        assertThat(queryString.startsWith("{"), is(true));
+        assertThat(queryString.endsWith("}"), is(true));
 
+        assertThat(queryString.indexOf("\"query\":{\"match_all\":{}}"), greaterThan(0));
+        assertThat(queryString.indexOf("\"from\":\"20\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"size\":\"100\""), greaterThan(0));
+    }
 
-        assertThat(queryString, is("{\"from\":\"20\",\"size\":\"100\",\"query\":{\"match\":{\"name\":\"Budapest\"}}}"));
+    @Test
+    public void when_sorting_is_added_then_query_generated_well()
+            throws MandatoryParametersAreMissingException {
+        Queryable matchAllQueryable = mock(Queryable.class);
+        when(matchAllQueryable.getQueryString()).thenReturn("{\"match_all\":{}}");
+
+        String queryString = Query
+            .builder()
+            .query(matchAllQueryable)
+            .sort(
+                Sorting
+                    .builder()
+                    .fieldName("name")
+                    .order(SortOperator.DESC)
+                    .build())
+            .build()
+            .getQueryString();
+
+        assertThat(queryString, notNullValue());
+        assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{"), is(true));
+        assertThat(queryString.endsWith("}"), is(true));
+
+        assertThat(queryString.indexOf("\"query\":{\"match_all\":{}}"), greaterThan(0));
+        assertThat(queryString.indexOf("\"sort\":[{\"name\":{\"order\":\"desc\"}}]"), greaterThan(0));
     }
 
     @Test
@@ -105,6 +115,7 @@ public class QueryTest {
         String queryString = Query
             .builder()
             .query(matchAllQueryable)
+            .trackScores(false)
             .sort(
                 scriptBasedSorting,
                 geoDistanceSorting,
@@ -118,6 +129,18 @@ public class QueryTest {
 
         assertThat(queryString, notNullValue());
         assertThat(queryString, not(""));
+
+        assertThat(queryString.startsWith("{"), is(true));
+        assertThat(queryString.endsWith("}"), is(true));
+
+        assertThat(queryString.indexOf("\"track_scores\":\"false\""), greaterThan(0));
+        assertThat(queryString.indexOf("\"query\":{\"match_all\":{}}"), greaterThan(0));
+        assertThat(queryString.indexOf("\"sort\":[{"), greaterThan(0));
+        assertThat(queryString.indexOf("}]"), greaterThan(0));
+
+        assertThat(queryString.indexOf("{\"_script\":{\"type\":\"number\",\"script\":{\"inline\":\"doc['field_name'].value*factor\",\"params\":{\"factor\":\"1.1\"}},\"order\":\"asc\"}}"), greaterThan(0));
+        assertThat(queryString.indexOf("{\"_geo_distance\":{\"pin.location\":[-70, 40],\"order\":\"asc\",\"unit\":\"km\"}}"), greaterThan(0));
+        assertThat(queryString.indexOf("{\"name\":{\"order\":\"desc\"}}"), greaterThan(0));
     }
 
     // endregion
@@ -125,5 +148,4 @@ public class QueryTest {
     // region Sad path
 
     // endregion
-
 }
