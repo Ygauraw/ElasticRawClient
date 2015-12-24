@@ -33,7 +33,7 @@ public class SimpleQueryStringQueryTest {
 
         SimpleQueryStringQuery query = SimpleQueryStringQuery
             .builder()
-            .query("\"fried eggs\" +(eggplant | potato) -frittata")
+            .query("\\\"fried eggs\\\" +(eggplant | potato) -frittata")
             .build();
 
         String queryString = query.getQueryString();

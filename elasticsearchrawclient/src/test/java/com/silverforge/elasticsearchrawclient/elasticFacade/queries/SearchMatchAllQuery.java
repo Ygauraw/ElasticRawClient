@@ -2,8 +2,11 @@ package com.silverforge.elasticsearchrawclient.elasticFacade.queries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.definition.QueryIntegrationTest;
+import com.silverforge.elasticsearchrawclient.exceptions.MandatoryParametersAreMissingException;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.SortOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.Query;
 import com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries.MatchAllQuery;
+import com.silverforge.elasticsearchrawclient.queryDSL.queries.sorting.Sorting;
 import com.silverforge.elasticsearchrawclient.testModel.City;
 import com.silverforge.elasticsearchrawclient.testModel.SimpleCity;
 
@@ -32,9 +35,9 @@ public class SearchMatchAllQuery
             .query(
                 MatchAllQuery
                     .builder()
+                    .boost(2)
                     .build())
             .build();
-
 
         List<City> cities = client.search(query, City.class);
 

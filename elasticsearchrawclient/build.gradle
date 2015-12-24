@@ -12,7 +12,7 @@ apply plugin: 'com.jfrog.bintray'
 //apply plugin: 'com.android.application'
 
 // This is the library version used when deploying the artifact
-version = "2.0.0-EARLY_BIRD"
+version = "2.0.0-XMAS"
 
 boolean isReleaseBuild = gradle.startParameter.taskNames.contains('bintrayUpload')
 version = isReleaseBuild ? version : "$version-SNAPSHOT"
@@ -108,7 +108,7 @@ dependencies {
 //    compile 'com.google.android.gms:play-services-maps:8.3.0'
 //    compile 'com.google.maps.android:android-maps-utils:0.4'
 
-    compile "com.github.rholder:guava-retrying:2.0.0"
+    provided "com.github.rholder:guava-retrying:2.0.0"
     compile 'com.silverforge.net:webconnector:1.1.0@aar'
 
 //    compile('com.silverforge.net:webconnector:1.0.0') {

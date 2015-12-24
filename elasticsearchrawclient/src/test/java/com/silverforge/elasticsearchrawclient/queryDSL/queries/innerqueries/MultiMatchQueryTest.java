@@ -31,7 +31,7 @@ public class MultiMatchQueryTest {
 
         MultiMatchQuery query = MultiMatchQuery
             .builder()
-            .fields(new String[]{"name", "population"})
+            .fields("name", "population")
             .query("12")
             .build();
 
@@ -52,7 +52,7 @@ public class MultiMatchQueryTest {
 
         MultiMatchQuery query = MultiMatchQuery
             .builder()
-            .fields(new String[]{"name", "population"})
+            .fields("name", "population")
             .query("Karcag Budapest")
             .tieBreaker(ZeroToOneRangeOperator._0_3)
             .useDisMax(true)

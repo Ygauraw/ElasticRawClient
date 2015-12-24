@@ -2,6 +2,7 @@ package com.silverforge.elasticsearchrawclient.queryDSL.queries.innerQueries;
 
 import com.silverforge.elasticsearchrawclient.BuildConfig;
 import com.silverforge.elasticsearchrawclient.definition.QueryTest;
+import com.silverforge.elasticsearchrawclient.queryDSL.operators.AnalyzerOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzinessOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.FuzzyRewriteOperator;
 import com.silverforge.elasticsearchrawclient.queryDSL.operators.LogicOperator;
@@ -65,7 +66,7 @@ public class MatchQueryTest {
             .builder()
             .fieldName("name")
             .query("Karcag Budapest")
-            .analyzer("standard")
+            .analyzer(AnalyzerOperator.STANDARD)
             .fuzziness(FuzzinessOperator._0)
             .fuzzyRewrite(FuzzyRewriteOperator.TOP_TERMS_BOOST_N, (byte)3)
             .lenient(false)
