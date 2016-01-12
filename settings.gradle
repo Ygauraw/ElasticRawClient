@@ -1,1 +1,1 @@
-include ':app', ':elasticsearchrawclient'
+include ':app', ':elasticsearchrawclient', ':webconnector'

@@ -105,11 +105,17 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.0-rc3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0-rc3'
 
+    compile 'com.google.guava:guava:19.0'
+
+    compile project(':webconnector')
+
 //    compile 'com.google.android.gms:play-services-maps:8.3.0'
 //    compile 'com.google.maps.android:android-maps-utils:0.4'
-
-    provided "com.github.rholder:guava-retrying:2.0.0"
-    compile 'com.silverforge.net:webconnector:1.1.0@aar'
+//
+//    provided "com.github.rholder:guava-retrying:2.0.0"
+//    compile('com.silverforge.net:webconnector:1.2.0@aar') {
+//        transitive = false
+//    }
 
 //    compile('com.silverforge.net:webconnector:1.0.0') {
 //        exclude group: 'org.androidannotations', module : 'androidannotations'
